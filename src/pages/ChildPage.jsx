@@ -1,12 +1,12 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-const ChildPage = () => (
+const ChildHomePage = () => (
   <View>
     <Text>
-      ChildPage
+      ChildHomePage
     </Text>
   </View>
 );
 
-export default ChildPage;
+export default ChildHomePage;
