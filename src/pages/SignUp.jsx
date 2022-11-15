@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Button } from 'react-native';
 import { Formik } from 'formik'
 import  axios  from 'axios'
 import * as Yup from 'yup' 
-
+import Spinner from 'react-native-loading-spinner-overlay'
 import WelcomePage from './WelcomePage';
 import SignIn from './SignIn';
+import { AuthContext } from '../Context/AuthContext';
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string()
@@ -37,7 +38,7 @@ const SignupSchema = Yup.object().shape({
   
 })
 
-export default function SignUp({ navigation }) {
+export default function SignUp({ navigation: { navigate, goBack  } }) {
 
   // const onSubmit = (values) => {
 
@@ -51,23 +52,24 @@ export default function SignUp({ navigation }) {
   //     .then(data => {Alert.alert('succes'), console.log(data.data);})
   //   }
 
+  const [fullName, setFullName] = useState(null)
+  const [email, setEmail] = useState(null)
+  const [phoneNumber, setPhoneNumber] = useState(null)
+  const [password, setPassword] = useState(null)
+  const [confirmPassword, setConfirmPassword] = useState(null)
+
+  const {isLoading,userInfo,register} = useContext(AuthContext)
   return (
 
-    <Formik initialValues={{
-      fullName: '',  
-      email: '',
-      password: '',
-      confirmPassword: '',
-      phoneNumber: ''
-    }}
+    <Formik 
     validationSchema={SignupSchema}
-    onSubmit={values => onSubmit(values)}
+   
     >
 
       {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
 
         <View style={styles.container}>
-          
+          <Spinner visible={isLoading}/>
           <StatusBar barStyle={'dark-content'} />
 
           <Text style={styles.title}>Sign Up</Text>
@@ -76,8 +78,8 @@ export default function SignUp({ navigation }) {
               <TextInput style={styles.inputStyle} 
                 placeholder="Email Address" 
                 autoCapitalize={false}
-                value={values.email}
-                onChangeText={handleChange('email')}
+                value={email}
+                onChangeText={(text)=>{setEmail(text)}}
                 onBlur={() => setFieldTouched('email')}/>
             </View>
   
@@ -89,8 +91,8 @@ export default function SignUp({ navigation }) {
               <TextInput style={styles.inputStyle} 
                 placeholder="phoneNumber"
                 keyboardType='phone-pad'
-                value={values.phoneNumber}
-                onChangeText={handleChange('phoneNumber')}
+                value={phoneNumber}
+                onChangeText={(text)=>{setPhoneNumber(text)}}
                 onBlur={() => setFieldTouched('phoneNumber')}/>
             </View>
             
@@ -102,9 +104,9 @@ export default function SignUp({ navigation }) {
             <TextInput style={styles.inputStyle} 
               placeholder="fullName" 
               autoCapitalize={false}
-              value={values.fullName}
-              secureTextEntry={true}
-              onChangeText={handleChange('fullName')}
+              value={fullName}
+              
+              onChangeText={(text)=>{setFullName(text)}}
               onBlur={() => setFieldTouched('fullName')}/>
           </View>
 
@@ -116,9 +118,9 @@ export default function SignUp({ navigation }) {
             <TextInput style={styles.inputStyle} 
               placeholder="Password" 
               autoCapitalize={false}
-              value={values.password}
+              value={password}
               secureTextEntry={true}
-              onChangeText={handleChange('password')}
+              onChangeText={(text)=>{setPassword(text)}}
               onBlur={() => setFieldTouched('password')}/>
           </View>
 
@@ -129,9 +131,9 @@ export default function SignUp({ navigation }) {
           <View style={styles.inputWrapper}>
             <TextInput style={styles.inputStyle} 
               placeholder="Confirm Password"
-              value={values.confirmPassword}
+              value={confirmPassword}
               secureTextEntry={true}
-              onChangeText={handleChange('confirmPassword')}
+              onChangeText={(text)=>{setConfirmPassword(text)}}
               onBlur={() => setFieldTouched('confirmPassword')}/>
           </View>
 
@@ -141,10 +143,7 @@ export default function SignUp({ navigation }) {
 
           <TouchableOpacity 
             onPress={handleSubmit} 
-            disabled={!isValid}
-            style={[styles.submitBtn,
-              {backgroundColor: isValid ? '#395B64' : '#A5C9CA'}
-          ]}>
+            >
 
             <Text styles={styles.submitBtnTxt}>Submit</Text>
 
@@ -153,14 +152,14 @@ export default function SignUp({ navigation }) {
 
           <Button 
             styles={styles.submitBtn}
-            title="Sign Up"
-            onPress={() => navigation.navigate(SignIn)}
+            title="Register"
+            onPress={() =>register(fullName,email,phoneNumber,password,confirmPassword)}
           /> 
         
         <Button 
             styles={styles.submitBtn}
             title="Back to welcome page"
-            onPress={() => navigation.navigate(WelcomePage)}
+            onPress={() => goBack()}
           /> 
 
         </View>

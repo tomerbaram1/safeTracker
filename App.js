@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 //react native
 import { StyleSheet, Text, View } from 'react-native';
@@ -32,11 +32,11 @@ const Stack = createNativeStackNavigator();
 // need to uninstall this package
 
 import { Provider as PaperProvider } from 'react-native-paper';
-import { AuthProvider } from './src/Context/UserContext';
+import { AuthContext, AuthProvider } from './src/Context/AuthContext';
 
 
 export default function App() {
-
+  const {userInfo} = useContext(AuthContext)
 
   const [isSignedIn, setIsSignedIn] = useState(false)
 return(
@@ -45,7 +45,7 @@ return(
   
   <NavigationContainer>
 
-  {isSignedIn? (
+  {userInfo? (
   
   <PaperProvider>
   <Tab.Navigator>
