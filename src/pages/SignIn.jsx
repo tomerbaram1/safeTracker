@@ -56,7 +56,7 @@ export default function SignIn({ navigation }) {
 
       {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
 
-        <View style={styles.container}>
+        <View style={styles.wrapper}>
           
           <StatusBar barStyle={'dark-content'} />
 
@@ -88,35 +88,28 @@ export default function SignIn({ navigation }) {
           {touched.password && errors.password && (
             <Text style={styles.errorTxt}>{errors.password}</Text>
           )}
-{/* 
-          <TouchableOpacity 
-            onPress={handleSubmit} 
-            disabled={!isValid}
-            style={[styles.submitBtn,
-              {backgroundColor: isValid ? '#395B64' : '#A5C9CA'}
-          ]}>
-
-            <Text styles={styles.submitBtnTxt}>Submit</Text>
-
-          </TouchableOpacity> */}
 
           <Button 
             styles={styles.submitBtn}
-            title="Sign Up"
-            onPress={() => navigation.navigate(SignUp)}
-          /> 
-
-          <Button 
-            styles={styles.submitBtn}
-            title="Back to welcome page"
-            onPress={() => navigation.navigate(WelcomePage)}
-          /> 
-          
-          <Button 
-            styles={styles.submitBtn}
-            title="submit"
+            title="Log In"
             onPress={() => navigation.navigate(ParentPage)}
           /> 
+          <View >
+            <Text>Dont have an account? Sign up here.</Text>
+          <Button 
+            styles={styles.submitBtn}
+            title="Sign up"
+            onPress={() => navigation.navigate(SignUp)}
+          /> 
+          </View>
+            <View>
+          <Button 
+            styles={styles.submitBtn}
+            title="Go Back"
+            onPress={() => navigation.navigate(WelcomePage)}
+          /> 
+              
+            </View>
 
         </View>
       )}
@@ -128,8 +121,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2C3333',
     paddingHorizontal: 15,
   },
 

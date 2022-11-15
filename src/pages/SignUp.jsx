@@ -52,57 +52,7 @@ export default function SignUp({ navigation }) {
   //   }
 
   return (
-    // <>
-    // <View>
-    // <Button
-    //   title='Homepage'
-    //   styles={{
-    //     textAlign:"center"
-    //   }}
-    //   onPress={()=>{navigate('ParentHomePage')}}
-    //   />
-    // <Button
-    //   title='Homepage'
-    //   styles={{
-    //     textAlign:"center"
-    //   }}
-    //   onPress={()=>{navigate('ParentHomePage')}}
-    //   />
-    // <Button
-    //   title='Homepage'
-    //   styles={{
-    //     textAlign:"center"
-    //   }}
-    //   onPress={()=>{navigate('ParentHomePage')}}
-    //   />
-    // <Button
-    //   title='Homepage'
-    //   styles={{
-    //     textAlign:"center"
-    //   }}
-    //   onPress={()=>{navigate('ParentHomePage')}}
-    //   />
-    // <Button
-    //   title='Homepage'
-    //   styles={{
-    //     textAlign:"center"
-    //   }}
-    //   onPress={()=>{navigate('ParentHomePage')}}
-    //   />
-    // <Button
-    //   title='Homepage'
-    //   styles={{
-    //     textAlign:"center"
-    //   }}
-    //   onPress={()=>{navigate('ParentHomePage')}}
-    //   />
-    //   <Button 
-    //   styles={{
-    //     textAlign:"center"
-    //   }}
-    //   onPress={() => goBack()} title="Go back from ProfileScreen" />
-    // </View>
-    // </>
+
     <Formik initialValues={{
       fullName: '',  
       email: '',

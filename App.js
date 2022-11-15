@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { UserContext } from './src/Context/UserContext';
+
 //react native
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -8,8 +8,6 @@ import { StyleSheet, Text, View } from 'react-native';
 //components
 import WelcomePage from './src/pages/WelcomePage';
 import SignUp from './src/pages/SignUp';
-import SignIn from './src/pages/SignIn';
-
 import SignIn from './src/pages/SignIn';
 import Notification from './src/pages/NotificationsScreen';
 import Chat from './src/pages/Chat';
@@ -34,42 +32,42 @@ const Stack = createNativeStackNavigator();
 // need to uninstall this package
 
 import { Provider as PaperProvider } from 'react-native-paper';
+import { AuthProvider } from './src/Context/UserContext';
 
 
 export default function App() {
 
 
   const [isSignedIn, setIsSignedIn] = useState(false)
+return(
+  <AuthProvider>
 
-  {if (isSignedIn == true) {
-    return (
-      <NavigationContainer styles={styles.container}>
-      <UserContext.Provider>
-        <PaperProvider>
-          <Tab.Navigator>
-            <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
-            <Tab.Screen name="Notification" component={Notification}/>
-            <Tab.Screen name="AddLocation" component={AddLocation}/>
-            <Tab.Screen name="Chat" component={Chat}/>
-            <Tab.Screen name="Settings" component={Settings}/>
-          </Tab.Navigator>
-        </PaperProvider>
-        </UserContext.Provider>
-      </NavigationContainer>
-      )} else {
-          return (
-            <NavigationContainer styles={styles.container}>
-              <UserContext.Provider>
-              <Stack.Navigator>
-                <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
-                <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}}/>
-                <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}}/>
+  
+  <NavigationContainer>
 
-              </Stack.Navigator>
-              </UserContext.Provider>
-            </NavigationContainer>
-          )}
-    }
+  {isSignedIn? (
+  
+  <PaperProvider>
+  <Tab.Navigator>
+    <Tab.Screen name="ParentPage" component={ParentPage}/>
+    <Tab.Screen name="Notification" component={Notification}/>
+    <Tab.Screen name="AddLocation" component={AddLocation}/>
+    <Tab.Screen name="Chat" component={Chat}/>
+    <Tab.Screen name="Settings" component={Settings}/>
+  </Tab.Navigator>
+</PaperProvider>
+
+  ):(
+    <Stack.Navigator>
+    <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
+    <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}}/>
+    <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}}/>
+  </Stack.Navigator>
+  )}
+
+</NavigationContainer>
+</AuthProvider>
+)
 
   // return (
 
@@ -86,6 +84,15 @@ export default function App() {
 
 
 }
+
+
+
+
+
+
+
+
+
 
 
 const styles = StyleSheet.create({
