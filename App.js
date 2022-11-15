@@ -9,13 +9,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import WelcomePage from './src/pages/WelcomePage';
 import SignUp from './src/pages/SignUp';
 
-import ParentHomePage from './src/pages/ParentPage';
-
-
+import SignIn from './src/pages/SignIn';
 import Notification from './src/pages/NotificationsScreen';
 import Chat from './src/pages/Chat';
 import AddLocation from './src/pages/AddLocation';
 import Settings from './src/pages/settings/Settings'
+import ParentPage from './src/pages/ParentPage';
 
 //navigations: 
 import { NavigationContainer } from '@react-navigation/native';
@@ -34,7 +33,6 @@ const Stack = createNativeStackNavigator();
 // need to uninstall this package
 
 import { Provider as PaperProvider } from 'react-native-paper';
-import SignIn from './src/pages/SignIn';
 
 export default function App() {
 
@@ -60,8 +58,13 @@ export default function App() {
             <NavigationContainer styles={styles.container}>
               <Stack.Navigator>
                 <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
-                <Stack.Screen name="SignUp" component={SignUp}  options={{headerShown:false}}/>
+                <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}}/>
                 <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}}/>
+                <Stack.Screen name="ParentPage" component={ParentPage} options={{headerShown:false}}/>
+                <Stack.Screen name="Notification" component={Notification} options={{headerShown:false}}/>
+                <Stack.Screen name="AddLocation" component={AddLocation} options={{headerShown:false}}/>
+                <Stack.Screen name="Chat" component={Chat} options={{headerShown:false}}/>
+                <Stack.Screen name="Settings" component={Settings} options={{headerShown:false}}/>
               </Stack.Navigator>
             </NavigationContainer>
           )}
