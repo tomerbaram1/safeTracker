@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import {Text, View, Image, Button, TouchableOpacity, Pressable, StyleSheet} from 'react-native';
 
@@ -38,6 +39,7 @@ const WelcomePage = () => (
   </View>
 
 );
+
 
 export default WelcomePage;
 
