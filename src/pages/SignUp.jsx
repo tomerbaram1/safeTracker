@@ -41,7 +41,7 @@ const SignupSchema = Yup.object().shape({
 export default function SignUp({ navigation: { navigate, goBack  } }) {
 
   const onSubmit = (values) => {
-    navigation.navigate('Content')
+    navigate('Content')
 
   //     axios.post('http://192.168.1.174:4000/users/signup', {
   //       email: values.email,
@@ -163,7 +163,7 @@ export default function SignUp({ navigation: { navigate, goBack  } }) {
             styles={styles.submitBtn}
 
             title="Already have an account? Sign in here"
-            onPress={() => navigation.navigate(SignIn)}
+            onPress={() => navigate('SignIn')}
               /> 
             <Button 
             title="Register"

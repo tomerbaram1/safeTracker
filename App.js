@@ -9,13 +9,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import WelcomePage from './src/pages/WelcomePage';
 import SignUp from './src/pages/SignUp';
 import SignIn from './src/pages/SignIn';
-import Notification from './src/pages/NotificationsScreen';
 import Chat from './src/pages/Chat';
-import AddLocation from './src/pages/AddLocation';
 import Settings from './src/pages/settings/Settings'
 import ParentPage from './src/pages/ParentPage';
 
-import HomeContent from './src/pages/HomeContent';
+
 
 //navigations: 
 import { NavigationContainer } from '@react-navigation/native';
@@ -84,7 +82,5 @@ const styles = StyleSheet.create({
 
   
 
-}
 
-</NavigationContainer> */}
 

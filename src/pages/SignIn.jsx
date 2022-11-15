@@ -50,7 +50,7 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
   //   }
 
   const onSubmit = async () => {
-    navigation.navigate('Content')
+    navigate('Content')
   }
 
   return (
@@ -110,7 +110,7 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
             <Button 
               styles={styles.submitBtn}
               title="Dont have an account? Sign up here"
-              onPress={() => navigation.navigate(SignUp)}
+              onPress={() => navigate('SignUp')}
             /> 
           </View>
 
@@ -118,7 +118,7 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
             <Button 
               styles={styles.submitBtn}
               title="Go Back"
-              onPress={() => navigation.navigate(WelcomePage)}
+              onPress={() => goBack()}
             /> 
           </View>
 
