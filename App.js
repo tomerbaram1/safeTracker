@@ -1,7 +1,9 @@
+
 import { useState } from 'react';
 
 //react native
 import { StyleSheet, Text, View } from 'react-native';
+
 
 //components
 import WelcomePage from './src/pages/WelcomePage';
@@ -35,6 +37,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 
 export default function App() {
 
+
   const [isSignedIn, setIsSignedIn] = useState(true)
 
   {if (isSignedIn == true) {
@@ -61,6 +64,21 @@ export default function App() {
             </NavigationContainer>
           )}
     }
+
+  return (
+
+    <NavigationContainer styles={styles.container}>
+      <Tab.Navigator>
+        <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
+        <Tab.Screen name="Notification" component={Notification}/>
+        <Tab.Screen name="AddLocation" component={AddLocation}/>
+        <Tab.Screen name="Chat" component={Chat}/>
+        <Tab.Screen name="Settings" component={Settings}/>
+    </Tab.Navigator>
+  </NavigationContainer>
+  )
+
+
 }
 
 
