@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 //react native
 import { StyleSheet, Text, View } from 'react-native';
@@ -28,17 +28,16 @@ const Tab = createBottomTabNavigator();
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
-//use navigate
-// import { useNavigation } from '@react-navigation/native';
-// const navigation = useNavigation();
-// need to uninstall this package
+
 
 import { Provider as PaperProvider } from 'react-native-paper';
-import { AuthProvider } from './src/Context/UserContext';
+import { AuthContext, AuthProvider } from './src/Context/AuthContext';
 
 const Content = () => {
 
+
   return (
+
 
     <Tab.Navigator>
       <Tab.Screen name="ParentPage" component={ParentPage} options={{headerShown:false}}/>
@@ -84,21 +83,6 @@ const styles = StyleSheet.create({
 });
 
   
-{/* <NavigationContainer styles={styles.container}>
-
-{islogged ? (
-
-   <Tab.Navigator>
-      <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
-      <Tab.Screen name="Notification" component={Notification}/>
-      <Tab.Screen name="AddLocation" component={AddLocation}/>
-      <Tab.Screen name="Chat" component={Chat}/>
-      <Tab.Screen name="Settings" component={Settings}/>
-    </Tab.Navigator>
-  
-  ) :
-      
-  <WelcomePage />
 
 }
 
