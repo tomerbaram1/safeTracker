@@ -101,10 +101,10 @@ const styles = StyleSheet.create({
     fontWeight:"800"
   },
   msgs:{
-    // display:'flex',
-    // justifyContent:'center',
-    // alignItems:'center',
-    // alignContent:'center'
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
+    alignContent:'center'
   },
   msgBtn:{
     backgroundColor:"lightgray",
