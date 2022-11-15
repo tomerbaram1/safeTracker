@@ -10,7 +10,7 @@ import WelcomePage from './src/pages/WelcomePage';
 import SignUp from './src/pages/SignUp';
 
 import ParentHomePage from './src/pages/ParentPage';
-import ChildHomePage from './src/pages/ChildPage';
+
 
 import Notification from './src/pages/NotificationsScreen';
 import Chat from './src/pages/Chat';
@@ -34,11 +34,12 @@ const Stack = createNativeStackNavigator();
 // need to uninstall this package
 
 import { Provider as PaperProvider } from 'react-native-paper';
+import SignIn from './src/pages/SignIn';
 
 export default function App() {
 
 
-  const [isSignedIn, setIsSignedIn] = useState(true)
+  const [isSignedIn, setIsSignedIn] = useState(false)
 
   {if (isSignedIn == true) {
     return (
@@ -59,24 +60,25 @@ export default function App() {
             <NavigationContainer styles={styles.container}>
               <Stack.Navigator>
                 <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
-                <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}}/>
+                <Stack.Screen name="SignUp" component={SignUp}  options={{headerShown:false}}/>
+                <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}}/>
               </Stack.Navigator>
             </NavigationContainer>
           )}
     }
 
-  return (
+  // return (
 
-    <NavigationContainer styles={styles.container}>
-      <Tab.Navigator>
-        <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
-        <Tab.Screen name="Notification" component={Notification}/>
-        <Tab.Screen name="AddLocation" component={AddLocation}/>
-        <Tab.Screen name="Chat" component={Chat}/>
-        <Tab.Screen name="Settings" component={Settings}/>
-    </Tab.Navigator>
-  </NavigationContainer>
-  )
+  //   <NavigationContainer styles={styles.container}>
+  //     <Tab.Navigator>
+  //       <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
+  //       <Tab.Screen name="Notification" component={Notification}/>
+  //       <Tab.Screen name="AddLocation" component={AddLocation}/>
+  //       <Tab.Screen name="Chat" component={Chat}/>
+  //       <Tab.Screen name="Settings" component={Settings}/>
+  //   </Tab.Navigator>
+  // </NavigationContainer>
+  // )
 
 
 }

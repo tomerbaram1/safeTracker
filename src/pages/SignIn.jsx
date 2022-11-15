@@ -2,105 +2,107 @@ import React from 'react';
 import { StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, AsyncStorage, Button } from 'react-native';
 import { Formik } from 'formik'
 import  axios  from 'axios'
-import * as Yup from 'yup' 
 
-const SigninSchema = Yup.object().shape({
 
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Please enter your email address'),
-    
-  password: Yup.string()
-    .min(8)
-    .required('Please enter your password')
-    .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/, 
-    'Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character'
-    )
-  
-})
 
-export default function SignIn({ navigation }) {
+export default function SignIn({ navigation: { navigate,goBack  } }) {
 
-  const onSubmit = async (values) => {
+  // const onSubmit = async (values) => {
 
-    // console.log('=======================================>>>>>>')
-    // const token = await AsyncStorage.getItem('signInToken')
-    // console.log('token:' + token);
+  //   // console.log('=======================================>>>>>>')
+  //   // const token = await AsyncStorage.getItem('signInToken')
+  //   // console.log('token:' + token);
 
-      axios.post('http://192.168.1.174:4000/users/signin', {
-        email: values.email,
-        phoneNumber: values.phoneNumber,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        password: values.password,
-        confirmPassword: values.confirmPassword
-      })
-      .then(res => {Alert.alert('succes'),
-        // console.log('=======================================>>>>>>'), 
-        // console.log(res.data), 
-        AsyncStorage.setItem('signInToken', `${res.data.token}`)})
-        .then(()=>{})
-    }
+  //     axios.post('http://192.168.1.174:4000/users/signin', {
+  //       email: values.email,
+  //       phoneNumber: values.phoneNumber,
+  //       firstName: values.firstName,
+  //       lastName: values.lastName,
+  //       password: values.password,
+  //       confirmPassword: values.confirmPassword
+  //     })
+  //     .then(res => {Alert.alert('succes'),
+  //       // console.log('=======================================>>>>>>'), 
+  //       // console.log(res.data), 
+  //       AsyncStorage.setItem('signInToken', `${res.data.token}`)})
+  //       .then(()=>{})
+  //   }
 
   return (
-    <Formik initialValues={{
-      email: '',
-      password: '',
-    }}
-    validationSchema={SigninSchema}
-    onSubmit={values => onSubmit(values)}
-    >
+    <>
+       <View>
+      <Button
+      styles={{
+        textAlign:"center"
+      }}
+      title='Homepage'
+      onPress={()=>{navigate('ParentHomePage')}}
+      />
 
-      {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
+      <Button
+      styles={{
+        textAlign:"center"
+      }}
+       onPress={() => goBack()} title="Go back from Profile Screen" />
+    </View>
+    </>
+    // <Formik initialValues={{
+    //   email: '',
+    //   password: '',
+    // }}
+    //     // onSubmit={values => onSubmit(values)}
+    // >
 
-        <View style={styles.container}>
+    //   {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
+
+    //     <View style={styles.container}>
           
-          <StatusBar barStyle={'dark-content'} />
+    //       <StatusBar barStyle={'dark-content'} />
 
-          <Text style={styles.title}>Sign In</Text>
+    //       <Text style={styles.title}>Sign In</Text>
 
           
-          <View style={styles.inputWrapper}>
-            <TextInput style={styles.inputStyle} 
-              placeholder="Email Address" 
-              autoCapitalize={false}
-              value={values.email}
-              onChangeText={handleChange('email')}
-              onBlur={() => setFieldTouched('email')}/>
-          </View>
+    //       <View style={styles.inputWrapper}>
+    //         <TextInput style={styles.inputStyle} 
+    //           placeholder="Email Address" 
+    //           autoCapitalize={false}
+    //           value={values.email}
+    //           onChangeText={handleChange('email')}
+    //           onBlur={() => setFieldTouched('email')}/>
+    //       </View>
 
-          {touched.email && errors.email && (
-            <Text style={styles.errorTxt}>{errors.email}</Text>
-          )}
+    //       {touched.email && errors.email && (
+    //         <Text style={styles.errorTxt}>{errors.email}</Text>
+    //       )}
 
-          <View style={styles.inputWrapper}>
-            <TextInput style={styles.inputStyle} 
-              placeholder="Password" 
-              autoCapitalize={false}
-              value={values.password}
-              secureTextEntry={true}
-              onChangeText={handleChange('password')}
-              onBlur={() => setFieldTouched('password')}/>
-          </View>
+    //       <View style={styles.inputWrapper}>
+    //         <TextInput style={styles.inputStyle} 
+    //           placeholder="Password" 
+    //           autoCapitalize={false}
+    //           value={values.password}
+    //           secureTextEntry={true}
+    //           onChangeText={handleChange('password')}
+    //           onBlur={() => setFieldTouched('password')}/>
+    //       </View>
 
-          {touched.password && errors.password && (
-            <Text style={styles.errorTxt}>{errors.password}</Text>
-          )}
+    //       {touched.password && errors.password && (
+    //         <Text style={styles.errorTxt}>{errors.password}</Text>
+    //       )}
 
-          <TouchableOpacity 
-            onPress={handleSubmit} 
-            disabled={!isValid}
-            style={[styles.submitBtn,
-              {backgroundColor: isValid ? '#395B64' : '#A5C9CA'}
-          ]}>
+    //       <TouchableOpacity 
+    //         onPress={handleSubmit} 
+    //         disabled={!isValid}
+    //         style={[styles.submitBtn,
+    //           {backgroundColor: isValid ? '#395B64' : '#A5C9CA'}
+    //       ]}>
 
-            <Text styles={styles.submitBtnTxt}>Submit</Text>
+    //         <Text styles={styles.submitBtnTxt}>Submit</Text>
 
-          </TouchableOpacity> 
+    //       </TouchableOpacity> 
 
-        </View>
-      )}
-    </Formik>
+    //     </View>
+    //   )}
+    // </Formik>
   );
 }
 

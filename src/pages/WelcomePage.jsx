@@ -1,9 +1,10 @@
 
-
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {Text, View, Image, Button, TouchableOpacity, Pressable, StyleSheet} from 'react-native';
 
-const WelcomePage = () => (
+const WelcomePage = ({ navigation: { navigate } }) => (
+  
   <View>
   <View
   style={styles.imgView}>
@@ -21,6 +22,7 @@ const WelcomePage = () => (
         </Text>
     </Text>
     <Pressable
+    onPress={()=>{navigate('SignUp')}}
     style={styles.signupBtn}
     >
     <Text
@@ -30,6 +32,7 @@ const WelcomePage = () => (
    </Pressable>
     <Pressable
        style={styles.signinBtn}
+       onPress={()=>{navigate('SignIn')}}
     >
     <Text
     style={styles.signinText}>
