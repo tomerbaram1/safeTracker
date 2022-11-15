@@ -40,7 +40,8 @@ const SignupSchema = Yup.object().shape({
 
 export default function SignUp({ navigation: { navigate, goBack  } }) {
 
-  // const onSubmit = (values) => {
+  const onSubmit = (values) => {
+    navigation.navigate('Content')
 
   //     axios.post('http://192.168.1.174:4000/users/signup', {
   //       email: values.email,
@@ -50,7 +51,7 @@ export default function SignUp({ navigation: { navigate, goBack  } }) {
   //       confirmPassword: values.confirmPassword
   //     })
   //     .then(data => {Alert.alert('succes'), console.log(data.data);})
-  //   }
+  }
 
   const [fullName, setFullName] = useState(null)
   const [email, setEmail] = useState(null)
@@ -142,19 +143,34 @@ export default function SignUp({ navigation: { navigate, goBack  } }) {
           )}
 
           <TouchableOpacity 
-            onPress={handleSubmit} 
-            >
 
-            <Text styles={styles.submitBtnTxt}>Submit</Text>
+            onPress={onSubmit} 
+            disabled={!isValid}
+            style={[styles.submitBtn,
+              {backgroundColor: isValid ? '#395B64' : '#A5C9CA'}
+            ]}>
+
+            
+         
+
+
+            <Text styles={styles.submitBtnTxt}>Sign Up Now</Text>
 
           </TouchableOpacity>
 
 
           <Button 
             styles={styles.submitBtn}
+
+            title="Already have an account? Sign in here"
+            onPress={() => navigation.navigate(SignIn)}
+              /> 
+            <Button 
             title="Register"
             onPress={() =>register(fullName,email,phoneNumber,password,confirmPassword)}
-          /> 
+             />
+
+
         
         <Button 
             styles={styles.submitBtn}

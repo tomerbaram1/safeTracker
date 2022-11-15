@@ -10,11 +10,21 @@ import Chat from './Chat';
 const Tab = createBottomTabNavigator();
 
 const ParentPage = () => (
-  <Tab.Navigator>
-    <Tab.Screen name="ParentPage" component={ParentPage} options={{headerShown:false}}/>
-    <Tab.Screen name="Settings" component={Settings} options={{headerShown:false}}/>
-    <Tab.Screen name="Chat" component={Chat} options={{headerShown:false}}/>
-  </Tab.Navigator>
+  <View>
+    <Text>
+      Parent
+    </Text>
+    <Text>
+      Parent
+    </Text>
+    <Text>
+      Parent
+    </Text>
+    <Text>
+      Parent
+    </Text>
+  </View>
+
 );
 
 export default ParentPage;
