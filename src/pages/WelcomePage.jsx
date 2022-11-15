@@ -1,37 +1,32 @@
-
 import {Text, StyleSheet, View, Button, Image} from 'react-native';
 // import images from '../constans/images'
+
+import { useNavigation } from '@react-navigation/native';
 
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 
-const WelcomePage = ({ navigation }) => (
+const WelcomePage = () => {
+
+  const navigation = useNavigation();
+  
+  return (
 
     <View>
       
       <Text>Welcome page</Text>
 
-      {/* <Image 
-        source={images.Map_bg}
-        styles={{
-
-        }}
-      /> */}
+      <SignIn />
 
       <Button 
           styles={styles.submitBtn}
-          title="Sign Up"
+          title="Havn't registerd yet ? press here"
           onPress={() => navigation.navigate(SignUp)}
-      /> 
-
-       <Button 
-          styles={styles.submitBtn}
-          title="Sign In"
-          onPress={() => navigation.navigate(SignIn)}
-      />
+          /> 
       
     </View>
-);
+  )
+};
 
 export default WelcomePage;
 
