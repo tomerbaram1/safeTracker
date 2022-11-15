@@ -15,6 +15,8 @@ import AddLocation from './src/pages/AddLocation';
 import Settings from './src/pages/settings/Settings'
 import ParentPage from './src/pages/ParentPage';
 
+import HomeContent from './src/pages/HomeContent';
+
 //navigations: 
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -34,66 +36,34 @@ const Stack = createNativeStackNavigator();
 import { Provider as PaperProvider } from 'react-native-paper';
 import { AuthProvider } from './src/Context/UserContext';
 
+const Content = () => {
+
+  return (
+
+    <Tab.Navigator>
+      <Tab.Screen name="ParentPage" component={ParentPage} options={{headerShown:false}}/>
+      <Tab.Screen name="Settings" component={Settings} options={{headerShown:false}}/>
+      <Tab.Screen name="Chat" component={Chat} options={{headerShown:false}}/>
+    </Tab.Navigator>
+  )
+}
 
 export default function App() {
 
+  return(
 
-  const [isSignedIn, setIsSignedIn] = useState(false)
-return(
-  <AuthProvider>
-
-  
-  <NavigationContainer>
-
-  {isSignedIn? (
-  
-  <PaperProvider>
-  <Tab.Navigator>
-    <Tab.Screen name="ParentPage" component={ParentPage}/>
-    <Tab.Screen name="Notification" component={Notification}/>
-    <Tab.Screen name="AddLocation" component={AddLocation}/>
-    <Tab.Screen name="Chat" component={Chat}/>
-    <Tab.Screen name="Settings" component={Settings}/>
-  </Tab.Navigator>
-</PaperProvider>
-
-  ):(
-    <Stack.Navigator>
-    <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
-    <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}}/>
-    <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}}/>
-  </Stack.Navigator>
-  )}
-
-</NavigationContainer>
-</AuthProvider>
-)
-
-  // return (
-
-  //   <NavigationContainer styles={styles.container}>
-  //     <Tab.Navigator>
-  //       <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
-  //       <Tab.Screen name="Notification" component={Notification}/>
-  //       <Tab.Screen name="AddLocation" component={AddLocation}/>
-  //       <Tab.Screen name="Chat" component={Chat}/>
-  //       <Tab.Screen name="Settings" component={Settings}/>
-  //   </Tab.Navigator>
-  // </NavigationContainer>
-  // )
-
-
+    <AuthProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
+          <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}}/>
+          <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}}/>
+          <Stack.Screen name="Content" component={Content} options={{headerShown:false}}/>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthProvider>
+  )
 }
-
-
-
-
-
-
-
-
-
-
 
 const styles = StyleSheet.create({
   container: {

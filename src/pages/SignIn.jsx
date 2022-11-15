@@ -45,6 +45,10 @@ export default function SignIn({ navigation }) {
   //       AsyncStorage.setItem('signInToken', `${res.data.token}`)})
   //   }
 
+  const onSubmit = async () => {
+    navigation.navigate('Content')
+  }
+
   return (
     <Formik initialValues={{
       email: '',
@@ -89,27 +93,32 @@ export default function SignIn({ navigation }) {
             <Text style={styles.errorTxt}>{errors.password}</Text>
           )}
 
-          <Button 
-            styles={styles.submitBtn}
-            title="Log In"
-            onPress={() => navigation.navigate(ParentPage)}
-          /> 
+          <TouchableOpacity 
+            onPress={onSubmit} 
+            disabled={!isValid}
+            style={[styles.submitBtn,
+              {backgroundColor: isValid ? '#395B64' : '#A5C9CA'}
+          ]}>
+
+            <Text styles={styles.submitBtnTxt}>Submit</Text>
+
+          </TouchableOpacity>
+
           <View >
-            <Text>Dont have an account? Sign up here.</Text>
-          <Button 
-            styles={styles.submitBtn}
-            title="Sign up"
-            onPress={() => navigation.navigate(SignUp)}
-          /> 
+            <Button 
+              styles={styles.submitBtn}
+              title="Dont have an account? Sign up here"
+              onPress={() => navigation.navigate(SignUp)}
+            /> 
           </View>
-            <View>
-          <Button 
-            styles={styles.submitBtn}
-            title="Go Back"
-            onPress={() => navigation.navigate(WelcomePage)}
-          /> 
-              
-            </View>
+
+          <View>
+            <Button 
+              styles={styles.submitBtn}
+              title="Go Back"
+              onPress={() => navigation.navigate(WelcomePage)}
+            /> 
+          </View>
 
         </View>
       )}
