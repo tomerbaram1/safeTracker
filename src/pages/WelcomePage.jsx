@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {Text, View, Image, Button, TouchableOpacity, Pressable, StyleSheet} from 'react-native';
 
@@ -35,11 +36,13 @@ const WelcomePage = () => (
     </Text>
     </Pressable>
   </View>
+
 );
 
 export default WelcomePage;
 
 const styles = StyleSheet.create({
+
 imgView : {
   shadowColor: '#171717',
     shadowOffset: {width: -2, height: 4},
@@ -104,3 +107,4 @@ tracker:{
     }
 
 });
+

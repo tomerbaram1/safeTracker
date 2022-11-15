@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, StyleSheet, Pressable, Touchable} from 'react-native';
 
-const ChildPage = () => (
+const ChildHomePage = () => (
   <View>
   <Pressable
   style={styles.trackBtn}
@@ -23,7 +23,9 @@ const ChildPage = () => (
     {/* MESSAGES */}
 
     <Text>
+
       Send your parent a message
+
     </Text>
     <View
     style={styles.msgs}
@@ -56,6 +58,7 @@ const ChildPage = () => (
     </View>
   </View>
 );
+
 
 export default ChildPage;
 
@@ -113,3 +116,6 @@ const styles = StyleSheet.create({
     margin:10,
   }
 });
+
+export default ChildHomePage;
+
