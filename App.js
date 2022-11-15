@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-
+import { UserContext } from './src/Context/UserContext';
 //react native
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -8,6 +8,7 @@ import { StyleSheet, Text, View } from 'react-native';
 //components
 import WelcomePage from './src/pages/WelcomePage';
 import SignUp from './src/pages/SignUp';
+import SignIn from './src/pages/SignIn';
 
 import SignIn from './src/pages/SignIn';
 import Notification from './src/pages/NotificationsScreen';
@@ -34,6 +35,7 @@ const Stack = createNativeStackNavigator();
 
 import { Provider as PaperProvider } from 'react-native-paper';
 
+
 export default function App() {
 
 
@@ -42,6 +44,7 @@ export default function App() {
   {if (isSignedIn == true) {
     return (
       <NavigationContainer styles={styles.container}>
+      <UserContext.Provider>
         <PaperProvider>
           <Tab.Navigator>
             <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
@@ -51,21 +54,19 @@ export default function App() {
             <Tab.Screen name="Settings" component={Settings}/>
           </Tab.Navigator>
         </PaperProvider>
-
+        </UserContext.Provider>
       </NavigationContainer>
       )} else {
           return (
             <NavigationContainer styles={styles.container}>
+              <UserContext.Provider>
               <Stack.Navigator>
                 <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
                 <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}}/>
                 <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}}/>
-                <Stack.Screen name="ParentPage" component={ParentPage} options={{headerShown:false}}/>
-                <Stack.Screen name="Notification" component={Notification} options={{headerShown:false}}/>
-                <Stack.Screen name="AddLocation" component={AddLocation} options={{headerShown:false}}/>
-                <Stack.Screen name="Chat" component={Chat} options={{headerShown:false}}/>
-                <Stack.Screen name="Settings" component={Settings} options={{headerShown:false}}/>
+
               </Stack.Navigator>
+              </UserContext.Provider>
             </NavigationContainer>
           )}
     }
