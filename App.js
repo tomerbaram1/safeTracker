@@ -1,5 +1,5 @@
-//react native
-import { StyleSheet, Text, View } from 'react-native';
+
+
 
 //components
 import WelcomePage from './src/pages/WelcomePage';
@@ -26,6 +26,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
 
   return (
+
     <NavigationContainer styles={styles.container}>
       <Tab.Navigator>
         <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
@@ -36,6 +37,7 @@ export default function App() {
     </Tab.Navigator>
   </NavigationContainer>
   )
+
 }
 
 const styles = StyleSheet.create({
