@@ -35,6 +35,7 @@ const Stack = createNativeStackNavigator();
 
 import { Provider as PaperProvider } from 'react-native-paper';
 import SignIn from './src/pages/SignIn';
+import { UserContext } from './src/Context/UserContext';
 
 export default function App() {
 
@@ -44,6 +45,7 @@ export default function App() {
   {if (isSignedIn == true) {
     return (
       <NavigationContainer styles={styles.container}>
+      <UserContext.Provider>
         <PaperProvider>
           <Tab.Navigator>
             <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
@@ -53,16 +55,18 @@ export default function App() {
             <Tab.Screen name="Settings" component={Settings}/>
           </Tab.Navigator>
         </PaperProvider>
-
+        </UserContext.Provider>
       </NavigationContainer>
       )} else {
           return (
             <NavigationContainer styles={styles.container}>
+              <UserContext.Provider>
               <Stack.Navigator>
                 <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
                 <Stack.Screen name="SignUp" component={SignUp}  options={{headerShown:false}}/>
                 <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}}/>
               </Stack.Navigator>
+              </UserContext.Provider>
             </NavigationContainer>
           )}
     }
