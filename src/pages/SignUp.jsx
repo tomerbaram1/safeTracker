@@ -7,51 +7,52 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import WelcomePage from './WelcomePage';
 import SignIn from './SignIn';
 import { AuthContext } from '../Context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
 
-const SignupSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Please enter your email address'),
+// const SignupSchema = Yup.object().shape({
+//   email: Yup.string()
+//     .email('Invalid email')
+//     .required('Please enter your email address'),
     
-  fullName: Yup.string()
-    .min(2, 'Too Short')
-    .max(50, 'Too Long')
-    .required('Please enter your full name'),
+//   fullName: Yup.string()
+//     .min(2, 'Too Short')
+//     .max(50, 'Too Long')
+//     .required('Please enter your full name'),
 
-  password: Yup.string()
-    .min(8)
-    .required('Please enter your password')
-    .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/, 
-    'Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character'
-    ),
+//   password: Yup.string()
+//     .min(8)
+//     .required('Please enter your password')
+//     .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/, 
+//     'Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character'
+//     ),
 
-  confirmPassword: Yup.string()
-    .min(8, 'must contain at least 8 characters')
-    .oneOf([Yup.ref('password')], 'your passwords do NOT match')
-    .required('Confirm password is required'),
+//   confirmPassword: Yup.string()
+//     .min(8, 'must contain at least 8 characters')
+//     .oneOf([Yup.ref('password')], 'your passwords do NOT match')
+//     .required('Confirm password is required'),
 
-  phoneNumber: Yup.string()
-    .min(10, 'must be 10 digits')
-    .max(10, 'must be 10 digits')
-    .matches(/^[0-9]+$/, 'Must be only digits')
-    .required('enter your phoneNumber number')
+//   phoneNumber: Yup.string()
+//     .min(10, 'must be 10 digits')
+//     .max(10, 'must be 10 digits')
+//     .matches(/^[0-9]+$/, 'Must be only digits')
+//     .required('enter your phoneNumber number')
   
-})
+// })
 
 export default function SignUp({ navigation: { navigate, goBack  } }) {
 
-  const onSubmit = (values) => {
-    navigate('Content')
+  // const onSubmit = (values) => {
+  //   navigate('Content')
 
-  //     axios.post('http://192.168.1.174:4000/users/signup', {
-  //       email: values.email,
-  //       phoneNumber: values.phoneNumber,
-  //       fulName: values.fulName,
-  //       password: values.password,
-  //       confirmPassword: values.confirmPassword
-  //     })
-  //     .then(data => {Alert.alert('succes'), console.log(data.data);})
-  }
+  // //     axios.post('http://192.168.1.174:4000/users/signup', {
+  // //       email: values.email,
+  // //       phoneNumber: values.phoneNumber,
+  // //       fulName: values.fulName,
+  // //       password: values.password,
+  // //       confirmPassword: values.confirmPassword
+  // //     })
+  // //     .then(data => {Alert.alert('succes'), console.log(data.data);})
+  // }
 
   const [fullName, setFullName] = useState(null)
   const [email, setEmail] = useState(null)
@@ -59,18 +60,38 @@ export default function SignUp({ navigation: { navigate, goBack  } }) {
   const [password, setPassword] = useState(null)
   const [confirmPassword, setConfirmPassword] = useState(null)
 
-  const {isLoading,userInfo,register} = useContext(AuthContext)
+  const dispatch = useDispatch();
+  
+  const { user, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      console.log("Passwords do not match");
+    } else {
+      const userData = {
+        fullName,
+        phoneNumber,
+        email,
+        password,
+      };
+
+      dispatch(register(userData));
+    }
+
   return (
 
     <Formik 
-    validationSchema={SignupSchema}
+    // validationSchema={SignupSchema}
    
     >
 
       {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
 
         <View style={styles.container}>
-          <Spinner visible={isLoading}/>
           <StatusBar barStyle={'dark-content'} />
 
           <Text style={styles.title}>Sign Up</Text>
@@ -236,4 +257,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 700
   }
-});
+})}

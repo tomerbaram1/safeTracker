@@ -4,6 +4,15 @@ import { useContext, useState } from 'react';
 //react native
 import { StyleSheet, Text, View } from 'react-native';
 
+// redux
+import { Provider } from 'react-redux';
+import { store } from './src/redux/store';
+// redux-persist wrappers
+
+// import { persistStore, persistReducer } from 'redux-persist'// the local storage we'll be using to persist data
+// import AsyncStorage from '@react-native-community/async-storage'// redux-persist merge level
+// import autoMergeLevel2 from 'redux persist/lib/stateReconciler/autoMergeLevel2'// root reducer - reducers/index.js
+// import { PersistGate } from 'redux-persist/lib/integration/react';
 
 //components
 import WelcomePage from './src/pages/WelcomePage';
@@ -24,12 +33,22 @@ const Tab = createBottomTabNavigator();
 
 //stack
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useSelector } from 'react-redux';
 const Stack = createNativeStackNavigator();
 
+// // redux persist
+// // persist config
+// const persistConfig = {
+//   key: 'root',
+//   storage: AsyncStorage,
+//   stateReconciler: autoMergeLevel2
+// };// wrap persist API around root reducer and store
+// const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// export const store = createStore(persistedReducer);
+// export const persistor = persistStore(store);
 
 
-import { Provider as PaperProvider } from 'react-native-paper';
-import { AuthContext, AuthProvider } from './src/Context/AuthContext';
 
 const Content = () => {
 
@@ -49,7 +68,8 @@ export default function App() {
 
   return(
 
-    <AuthProvider>
+    <Provider store={store}>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
@@ -58,7 +78,9 @@ export default function App() {
           <Stack.Screen name="Content" component={Content} options={{headerShown:false}}/>
         </Stack.Navigator>
       </NavigationContainer>
-    </AuthProvider>
+      {/* </PersistGate> */}
+      </Provider>
+    
   )
 }
 
