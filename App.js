@@ -20,8 +20,7 @@ import EntryScreen from './src/pages/EntryScreen';
 //navigations: 
 
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
-=======
-import { NavigationContainer } from '@react-navigation/native';
+
 
 //bottom navigator
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -48,7 +47,7 @@ const Stack = createNativeStackNavigator();
 
 
 // import { Provider as PaperProvider } from 'react-native-paper';
-import { AuthProvider } from './src/Context/UserContext';
+
 
 export default function App() {
 
