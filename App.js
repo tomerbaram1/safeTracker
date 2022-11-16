@@ -1,5 +1,8 @@
 //react native 
-import { StyleSheet, Text, View } from 'react-native';
+// import { useContext, useState } from 'react';
+
+//react native
+// import { StyleSheet, Text, View } from 'react-native';
 
 //components
 import EntryScreen from './src/pages/EntryScreen';
@@ -44,5 +47,6 @@ export default function App() {
 //   },
 
 // });
+
 
 

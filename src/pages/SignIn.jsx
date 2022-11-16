@@ -1,29 +1,32 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, AsyncStorage, Button } from 'react-native';
 import { Formik } from 'formik'
 import  axios  from 'axios'
 import * as Yup from 'yup' 
+import Spinner from 'react-native-loading-spinner-overlay'
 
-import SignUp from './SignUp';
-import WelcomePage from './WelcomePage';
+// import { AuthProvider } from './src/Context/UserContext';
 
 const SigninSchema = Yup.object().shape({
-
+  
   email: Yup.string()
-    .email('Invalid email')
-    .required('Please enter your email address'),
-    
+  .email('Invalid email')
+  .required('Please enter your email address'),
+  
   password: Yup.string()
-    .min(8)
-    .required('Please enter your password')
-    .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/, 
-    'Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character'
-    )
+  .min(8)
+  .required('Please enter your password')
+  .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/, 
+  'Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character'
+  )
   
 })
 
-export default function SignIn({ navigation }) {
-
+export default function SignIn({ navigation: { navigate, goBack }  }) {
+  
+  const [email, setEmail] = useState(null)
+  const [password, setPassword] = useState(null)
+  const {login,isLoading} = useContext(AuthContext)
   // const onSubmit = async (values) => {
 
   //   console.log('=======================================>>>>>>')
@@ -45,33 +48,28 @@ export default function SignIn({ navigation }) {
   //   }
 
   const onSubmit = async () => {
-    navigation.navigate('Content')
+    navigate('Content')
   }
 
   return (
-    <Formik initialValues={{
-      email: '',
-      password: '',
-    }}
+    <Formik 
     validationSchema={SigninSchema}
-    onSubmit={values => onSubmit(values)}
     >
 
       {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
 
         <View style={styles.wrapper}>
-          
+          <Spinner visible={isLoading}/>
           <StatusBar barStyle={'dark-content'} />
 
           <Text style={styles.title}>Sign In</Text>
-
-          
+        
           <View style={styles.inputWrapper}>
             <TextInput style={styles.inputStyle} 
               placeholder="Email Address" 
               autoCapitalize={false}
-              value={values.email}
-              onChangeText={handleChange('email')}
+              value={email}
+              onChangeText={(text)=>{setEmail(text)}}
               onBlur={() => setFieldTouched('email')}/>
           </View>
 
@@ -83,8 +81,9 @@ export default function SignIn({ navigation }) {
             <TextInput style={styles.inputStyle} 
               placeholder="Password" 
               autoCapitalize={false}
-              value={values.password}
-              onChangeText={handleChange('password')}
+              value={password}
+              secureTextEntry
+              onChangeText={(text)=>{setPassword(text)}}
               onBlur={() => setFieldTouched('password')}/>
           </View>
 
@@ -107,7 +106,7 @@ export default function SignIn({ navigation }) {
             <Button 
               styles={styles.submitBtn}
               title="Dont have an account? Sign up here"
-              onPress={() => navigation.navigate(SignUp)}
+              onPress={() => navigate('SignUp')}
             /> 
           </View>
 
@@ -115,9 +114,15 @@ export default function SignIn({ navigation }) {
             <Button 
               styles={styles.submitBtn}
               title="Go Back"
-              onPress={() => navigation.navigate(WelcomePage)}
+              onPress={() => goBack()}
             /> 
           </View>
+
+          <Button 
+            styles={styles.submitBtn}
+            title="Log In"
+            onPress={() => {login(email,password)}}
+          /> 
 
         </View>
       )}
