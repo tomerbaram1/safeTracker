@@ -6,7 +6,6 @@ import * as Yup from 'yup'
 
 import SignUp from './SignUp';
 import WelcomePage from './WelcomePage';
-import ParentPage from './ParentPage';
 
 const SigninSchema = Yup.object().shape({
 
