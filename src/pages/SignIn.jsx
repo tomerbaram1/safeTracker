@@ -4,12 +4,16 @@ import { Form, Formik } from 'formik'
 import  axios  from 'axios'
 import * as Yup from 'yup' 
 import Spinner from 'react-native-loading-spinner-overlay'
+
+
+
 import SignUp from './SignUp';
 import WelcomePage from './WelcomePage';
 import ParentPage from './ParentPage';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { login, reset } from '../redux/AuthSlice';
+
 
 
 const SigninSchema = Yup.object().shape({
@@ -112,15 +116,12 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
         
 
           
-        <TouchableOpacity onPress={() => navigate('SignUp')}>
-        <Text style={styles.forgot_button}>Dont have an account? Sign up here</Text>
-        </TouchableOpacity>
-          
         <View>
           <Button 
             styles={styles.submitBtn}
             title="Go Back"
             onPress={() => goBack()}
+
             /> 
         </View>
 
@@ -136,7 +137,9 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
 
 
 
+
 );
+
 }
 
 const styles = StyleSheet.create({
