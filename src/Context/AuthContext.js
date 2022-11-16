@@ -1,4 +1,4 @@
-import React, {useMemo, useReducer, useContext, createContext, useState} from "react";
+import React, {useEffect, useReducer, useContext, createContext, useState} from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import { BASE_URL } from "../config";
@@ -8,12 +8,17 @@ export const AuthContext = createContext()
 
 export const AuthProvider =({children}) =>{
     const [userInfo,setUserInfo] = useState({})
+    const [splashLoading, setSplashLoading] = useState(false);
     const [isLoading,setIsLoading] = useState(false)
+    const API_URL_REGISTER = "/api/register";
+    const API_URL_LOGIN = "/api/login";
+    
 
 
-    const register = (email,fullName,password,phoneNumber) =>{
+
+    const register =  (email,fullName,password,phoneNumber) =>{
         setIsLoading(true)
-        axios.post(`${BASE_URL}/api/register`,{
+        axios.post(API_URL_REGISTER,{
             email,
             fullName,
             password,
@@ -30,30 +35,66 @@ export const AuthProvider =({children}) =>{
             setIsLoading(false)
         })
     }
-    const login =(email,password) =>{
+    const login = async(email,password) =>{
         setIsLoading(true)
-        axios.post(`${BASE_URL}/api/login`,{
+        console.log('1');
+        console.log(userInfo);
+        await axios.post(API_URL_LOGIN,{
             email,password
         }).then(res=>{
-           let userInfo = res.data 
-           console.log(userInfo);
-           setUserInfo(userInfo)
-           AsyncStorage.setItem('userInfo',JSON.stringify(userInfo))
-           setIsLoading(false)
+            
+            
+            let userInfo = res.data 
+            console.log(userInfo);
+            setUserInfo(userInfo)
+            AsyncStorage.setItem('userInfo',JSON.stringify(userInfo))
+            setIsLoading(false)
+            console.log('3');
+            
         })
         .catch(e=>{
-            console.log('login error');
+            console.log(`login error ${e}`);
             setIsLoading(false)
         })
     }
-    return(
 
-<AuthContext.Provider value={{
-    isLoading,
-    userInfo,
-    register,
-    login
-    }}>
+    const logout = async (userData) => {
+        AsyncStorage.removeItem("userInfo");
+      };
+
+      
+  const isLoggedIn = async () => {
+    try {
+      setSplashLoading(true);
+
+      let userInfo = await AsyncStorage.getItem('userInfo');
+      userInfo = JSON.parse(userInfo);
+
+      if (userInfo) {
+        setUserInfo(userInfo);
+      }
+
+      setSplashLoading(false);
+    } catch (e) {
+      setSplashLoading(false);
+      console.log(`is logged in error ${e}`);
+    }
+  };
+  useEffect(() => {
+    isLoggedIn();
+  }, []);
+
+
+    return(
+        
+        <AuthContext.Provider value={{
+            isLoading,
+            userInfo,
+            splashLoading,
+            register,
+            login,
+            logout
+        }}>
     {children}
 </AuthContext.Provider>
     )  
@@ -61,13 +102,17 @@ export const AuthProvider =({children}) =>{
 
 
 
+// const register = async (userData) =>{
+//     setIsLoading(true)
+//     const response= await axios.post(API_URL_REGISTER,userData)
 
-
-
-
-
-
-
+//     if(response.data){
+//         AsyncStorage.setItem('user',JSON.stringify(response.data))
+//         setIsLoading(false)
+//         console.log(response.data);
+//     }
+//     return response.data 
+// }
 
 
 
