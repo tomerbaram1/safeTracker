@@ -52,7 +52,7 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
     }
 
     if ( isSuccess || user) {
-      alert("Logged In")
+      null
         
       
       

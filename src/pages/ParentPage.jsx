@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Text, View, Button, StyleSheet} from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,6 +12,7 @@ import { logout, reset } from '../redux/AuthSlice';
 const Tab = createBottomTabNavigator();
 
 const ParentPage = ({ navigation: { navigate, goBack }  }) => {
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const onLogout = () => {
     dispatch(logout());
@@ -20,19 +21,20 @@ const ParentPage = ({ navigation: { navigate, goBack }  }) => {
     console.log('logged out');
   
 };
+useEffect(()=>{
+  console.log("this is the user connected",user);
+},[user])
 
-
-  const { user } = useSelector((state) => state.auth);
   return(
   <View>
     <Text>
       Parent
     </Text>
     <Text>
-      {user.fullName}
+      {user?.fullName}
     </Text>
     <Text>
-    {user.fullName}
+    {user?.fullName}
     </Text>
     <View>
           <Button 
