@@ -76,7 +76,7 @@ async function registerForPushNotificationsAsync() {
 
 
 
-export default function AddLocation() {
+export default function MainMap() {
      
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);

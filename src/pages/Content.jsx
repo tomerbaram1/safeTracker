@@ -6,6 +6,9 @@ const Tab = createBottomTabNavigator();
 import ParentPage from "./ParentPage";
 import Settings from "./settings/Settings";
 import Chat from "./Chat";
+import ChildHomePage from './ChildPage';
+import MainMap from './mainMap';
+import AddLocation from './AddLocation';
 
 const Content = () => {
 
@@ -14,7 +17,9 @@ const Content = () => {
       <Tab.Navigator>
         <Tab.Screen name="ParentPage" component={ParentPage} options={{headerShown:false}}/>
         <Tab.Screen name="Settings" component={Settings} options={{headerShown:false}}/>
-        <Tab.Screen name="Chat" component={Chat} options={{headerShown:false}}/>
+        <Tab.Screen name="Settings" component={ChildHomePage} options={{headerShown:false}}/>
+        <Tab.Screen name="Settings" component={MainMap} options={{headerShown:false}}/>
+        <Tab.Screen name="Settings" component={AddLocation} options={{headerShown:false}}/>
       </Tab.Navigator>
   
     )
