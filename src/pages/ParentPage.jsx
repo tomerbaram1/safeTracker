@@ -1,8 +1,8 @@
 
 
 import React, { useEffect } from 'react';
-import {Text, View, Button, StyleSheet} from 'react-native';
-
+import {Text, View, StyleSheet, Linking} from 'react-native';
+import { Button } from "@rneui/base";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -10,22 +10,19 @@ import Settings from './settings/Settings';
 import Chat from './Chat';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, reset } from '../redux/AuthSlice';
+import { sosTrue } from '../redux/SosSlice';
 
 const Tab = createBottomTabNavigator();
 
-const ParentPage = ({ navigation: { navigate, goBack }  }) => {
+const ParentPage = ({ navigate, sos, setSos } ) => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const onLogout = () => {
     dispatch(logout());
     dispatch(reset());
     navigate("WelcomePage")
-    console.log('logged out');
   
-};
-useEffect(()=>{
-  console.log("this is the user connected",user);
-},[user])
+  };
 
   return(
   <View>
@@ -46,11 +43,18 @@ useEffect(()=>{
 
             /> 
         </View>
+    {sos && (
+      <View style={styles.SosCall}>
+       <Text style={styles.SosCall}>
+        SOS call from your child!
+      </Text>
+      <Button color={'black'} onPress={() => Linking.openURL('tel: 0525848456')} title='Call The Police'/>
+      <Button color={'black'} onPress={() => setSos(false)} title='Close'/>
+      </View>
+    )}
   </View>
 
-  )
-
-  }
+  )}
 
 export default ParentPage;
 

@@ -52,7 +52,6 @@ const Stack = createNativeStackNavigator();
 
 
 export default function App() {
-  const [sos, setSos] = useState(false)
 
   return(
 

@@ -1,6 +1,4 @@
 
-
-
 import {Text, View, StyleSheet, Pressable, Touchable} from 'react-native';
 
 import axios from "axios"
@@ -11,7 +9,7 @@ import {Platform,Linking,AppState} from 'react-native';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import MapView, { Callout, Circle, Marker } from "react-native-maps"
 
-
+import {useSelector, useDispatch} from 'react-redux'
 import { useState } from "react"
 // import Geolocation from 'react-native-geolocation-service';
 import * as Location from 'expo-location';
@@ -24,6 +22,7 @@ import * as Notification from 'expo-notifications';
 import { useRef } from "react";
 import * as Application from 'expo-application';
 import IO from "socket.io-client";
+import SosSlice from '../redux/SosSlice';
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
@@ -37,7 +36,8 @@ const ChildPage = ({sos, setSos}) => {
   const [sosMsg, setSosMsg] = useState(false)
   const [sosactive, setSosactive] = useState(false)
    const responseListener = useRef();
-
+  // const { sos } = useSelector((state) => state.sos);
+  // const dispatch = useDispatch
 
   useEffect(() => {
     (async () => {
@@ -48,7 +48,7 @@ const ChildPage = ({sos, setSos}) => {
        
         return;
       }
-  
+  // console.log('sos:',sos);
     })();
   }, []);
 
