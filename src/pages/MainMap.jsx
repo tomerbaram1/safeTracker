@@ -2,7 +2,7 @@
 import axios from "axios"
 import * as React from "react"
 import { useEffect } from "react"
-import { Dimensions, StyleSheet, Text, View,Button, ScrollView, PermissionsAndroid, Alert } from "react-native"
+import { Dimensions, StyleSheet, Text, View,Button, ScrollView, PermissionsAndroid, Alert, Platform } from "react-native"
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import MapView, { Callout, Circle, Marker } from "react-native-maps"
 // import Geolocation from 'react-native-geolocation-service'r
@@ -14,18 +14,65 @@ import * as Notification from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { useRef } from "react";
 import { TextInput } from "react-native-paper"
-
+import IO, { Socket } from "socket.io-client";
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://10.0.0.11:4000";
+const SERVER_URL="http://10.195.25.104:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
 
-
-
+Notification.setNotificationHandler({
+	handleNotification: async () => {
+	  return {
+		shouldShowAlert: true,
+		shouldPlaySound: true
+	  };
+	}
+  });
   
+
+  const socket = IO(SERVER_URL, {
+});
+
+
+async function registerForPushNotificationsAsync() {
+	let token;
+  
+	const { status: existingStatus } = await Notification.getPermissionsAsync();
+	let finalStatus = existingStatus;
+  
+	if (existingStatus !== 'granted') {
+		const { status } = await Notification.requestPermissionsAsync();
+		finalStatus = status;
+	}
+	if (finalStatus !== 'granted') {
+		alert('Failed to get push token for push notification!');
+		return;
+	}
+	if (finalStatus == 'granted') {
+		if(Platform.OS==="android")
+		{
+			Notification.setNotificationChannelAsync("default",{
+				name:"default",
+				importance:Notification.AndroidImportance.MAX
+			})
+		}
+	}
+	token = (await Notification.getExpoPushTokenAsync()).data;
+	console.log(token+"%%%%%%%%%%%%%%%%%%%%%%%%");
+  
+	await AsyncStorage.setItem("NotificationToken",`${token}`)
+  
+  
+	alert(await AsyncStorage.getItem("NotificationToken"))
+  }
+
+
+
+
+
 
 
 
@@ -35,7 +82,7 @@ export default function AddLocation() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-
+  const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
 
 
   const[myLocatin,setMyLocation]=useState({
@@ -57,86 +104,52 @@ export default function AddLocation() {
 		longitudeDelta: 0.0421
 	})
   const [ baseLocations, setBaseLocations ] = React.useState([])
-  const [locationName,setLocationName]=useState("");
+  const responseListener = useRef();
+
+  useEffect(()=>{
+	const id="63738fb9e33a0195e497e318"
+
+	socket.on('connection', function(socket){
+		console.log(`${socket.id} is connected`)
+		
+		socket.on(`${id}`, (socketKidsLocations) => {
+		  socket.join(socket.id)
+		  console.log("socket**************************")
+		 setKidsLocations([...socketKidsLocations])
+		})
+	  
+	  
+	//   console.log("***")
+	// 	socket.on('disOn', (location,id) => {
+	// 	  console.log("on")
+	// 	  socket.emit('disTo', getDis(location,String(id)))
+	// 	  console.log(`user ${socket.id} joined room ${socket.id}`);
+	// 	})
+	   
+	  
+	  socket.on('disconnect',()=>{
+		console.log("user"+socket.id+" disconnected")
+	  })
+
+	  });
+ })
+ useEffect(()=> {
+
+    responseListener.current = Notification.addNotificationResponseReceivedListener(response => {
+        console.log('--- notification tapped ---');
+        console.log(response);
+        console.log('------');
+    })
+},[])
+
+
+ useEffect(()=>{
+	const id="63738fb9e33a0195e497e318"
+		 axios.post(SERVER_URL+"/api-map/users/parent/getChildrenLocation",{id:id})
+	.then(data=>setKidsLocations(data.data))
+ },[])
 
  
-
-
-
-
-
-  
-
-
- 
-
-
-  
-
-
-//   useEffect(() => {
-//     //When app is closed
-//     const backgroundSubscription = Notification.addNotificationResponseReceivedListener(response => {
-//       console.log(response);
-//     });
-//     //When the app is open
-//     const foregroundSubscription = Notification.addNotificationReceivedListener(notification => {
-//       console.log(notification);
-//     });
-
-//     return () => {
-//       backgroundSubscription.remove();
-//       foregroundSubscription.remove();
-//     }
-//   }, []);
-
-
-
-
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
-//////////////////////register
- 
-
-
-
-TaskManager.defineTask(TASK_FETCH_LOCATION, async ({ data: { locations }, error }) => {
-  
-  if (error) {
-    console.error(error);
-    return;
-  }
- 
-  const [location] = locations;
-  try {
-  
-    setPin({latitude:location.coords.latitude,longitude:location.coords.longitude})
-    Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-useEffect(() => {
-  Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
-    accuracy: Location.Accuracy.Highest,
-    distanceInterval: 1, // minimum change (in meters) betweens updates
-    deferredUpdatesInterval: 1, // minimum interval (in milliseconds) between updates
-   
-    // foregroundService is how you get the task to be updated as often as would be if the app was open
-    foregroundService: {
-      notificationTitle: 'Using your location',
-      notificationBody: 'To turn off, go back to the app and switch something off.'
- } })
-}, []); 
-
-
-
-
 
 
   useEffect(() => {
@@ -150,26 +163,6 @@ useEffect(() => {
         }
        ).catch(error => console.log(error));
  }, []); 
-
-
-
-
-  const handleAddPlace=()=>{
-    const id="63738fb9e33a0195e497e318"
-    const obj={latitude:pin.latitude,longitude:pin.longitude,name:locationName}
-
-  let newLocationsBaseArray=[...baseLocations];
-  newLocationsBaseArray.push(obj)
-  console.log(locationName)
-  newLocationsBaseArray[newLocationsBaseArray.length-1].locationName=locationName;
-  console.log("sa"+newLocationsBaseArray[0].locationName)
-  
- 
-  setBaseLocations(newLocationsBaseArray)
-   axios.patch(SERVER_URL+"/api-map/users/parent/addBaseLocations",{id:id,newLocationsBaseArray:newLocationsBaseArray})
-  .then(data=>console.log(data+"sss")) .catch(error => console.log(error));
-
- }
 
 
 
@@ -268,6 +261,27 @@ useEffect(() => {
        
 
 
+				{kidsLocations.map((marker, index) => (
+					
+				marker.location[marker.location.length-1]?	
+          <>
+    <Marker
+      key={index}
+      coordinate={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
+		, longitude: parseFloat(marker.location[marker.location.length-1].longitude) }}
+        title={marker.connectionToken}
+    />
+    <Circle key ={index+199} center={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
+		, longitude: parseFloat(marker.location[marker.location.length-1].latitude) }}
+         radius={75} />
+		
+    </>
+	:""
+  ))}
+
+
+
+
         {baseLocations.map((marker, index) => (
           <>
     <Marker
@@ -285,9 +299,8 @@ useEffect(() => {
         
 			</MapView>
       <View style={{ marginTop: 50, flex: 1 ,flexDirection:"column"}}>
-      <TextInput value={locationName}onChangeText={(input) =>  setLocationName(`${input}`)} style={styles.inputStyle}/>
-        <Button title="add place" onPress={()=>handleAddPlace()}/>
-      <Text> {"lat:" + latitude+ " long :"+ longitude+" text-"}</Text>
+      
+      <Text> {"mainMap"}</Text>
    
       
       </View>
