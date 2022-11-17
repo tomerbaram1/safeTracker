@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, AsyncStorage, Button } from 'react-native';
+import { StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, AsyncStorage } from 'react-native';
 import { Form, Formik } from 'formik'
 import  axios  from 'axios'
 import * as Yup from 'yup' 
@@ -12,8 +12,9 @@ import WelcomePage from './WelcomePage';
 import ParentPage from './ParentPage';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { Input } from '@rneui/base';
 import { login, reset } from '../redux/AuthSlice';
-
+import { Button } from '@rneui/base';
 
 
 const SigninSchema = Yup.object().shape({
@@ -96,9 +97,9 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
     <View style={styles.container}>
         <StatusBar style="auto" />
         <View style={styles.inputView}>
-        <TextInput
+        <Input
         value={email}
-        style={styles.TextInput}
+        style={styles.Input}
         placeholder="Email."
         placeholderTextColor="#003f5c"
         onChangeText={(text)=>{setEmail(text)}}
@@ -106,9 +107,9 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
         </View>
           
         <View style={styles.inputView}>
-        <TextInput
+        <Input
         value={password}
-        style={styles.TextInput}
+        style={styles.Input}
         placeholder="Password."
         placeholderTextColor="#003f5c"
         secureTextEntry={true}
@@ -119,19 +120,54 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
 
           
         <View>
-          <Button 
-            styles={styles.submitBtn}
-            title="Go Back"
-            onPress={() => goBack()}
-
-            /> 
+            <Button
+              title="Go Back"
+              onPress={() => goBack()}
+              icon={{
+                name: "home",
+                type: "font-awesome",
+                size: 15,
+                color: "white",
+              }}
+              iconContainerStyle={{ marginRight: 10 }}
+              titleStyle={{ fontWeight: "700" }}
+              buttonStyle={{
+                backgroundColor: "#495867",
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 30,
+              }}
+              containerStyle={{
+                width: 200,
+                marginHorizontal: 50,
+                marginVertical: 10,
+              }}
+            />
         </View>
 
-        <Button 
-          styles={styles.submitBtn}
-          title="Log In"
-          onPress={onSubmit}
-        /> 
+        <Button
+            title="Log In"
+            onPress={onSubmit}
+            icon={{
+              name: "arrow-right",
+              type: "font-awesome",
+              size: 15,
+              color: "white",
+            }}
+            iconContainerStyle={{ marginRight: 10 }}
+            titleStyle={{ fontWeight: "700" }}
+            buttonStyle={{
+              backgroundColor: "#577399",
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              width: 200,
+              marginHorizontal: 50,
+              marginVertical: 10,
+            }}
+          />
 
 </View>
  )}
@@ -157,16 +193,14 @@ const styles = StyleSheet.create({
   },
   
   inputView: {
-    backgroundColor: "#FFC0CB",
     borderRadius: 30,
     width: "70%",
     height: 45,
     marginBottom: 20,
-    
     alignItems: "center",
   },
   
-  TextInput: {
+  Input: {
     height: 50,
     flex: 1,
     padding: 10,
