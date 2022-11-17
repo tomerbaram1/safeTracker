@@ -96,7 +96,7 @@ const ChildHomePage = () => {
 
 
     
-      
+      ""
       useEffect(() => {
         console.log("notification")
         Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
