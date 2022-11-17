@@ -17,7 +17,7 @@ const Content = () => {
     return (
   
       <Tab.Navigator>
-        <Tab.Screen  name="ParentPage" component={() => { return (<ParentPage sos={sos} setSos = {setSos}/>)}} options={{headerShown:false}}/>
+        <Tab.Screen  name="ParentPage" component={() => {return (<ParentPage sos={sos} setSos = {setSos}/>)}} options={{headerShown:false}}/>
         <Tab.Screen name="Settings" component={Settings} options={{headerShown:false}}/>
         <Tab.Screen  name="ChildHomePage" component={() =>  { return (<ChildPage sos={sos} setSos = {setSos}/>)}} options={{headerShown:false}} />
         <Tab.Screen name="MainMap" component={MainMap} options={{headerShown:false}}/>
