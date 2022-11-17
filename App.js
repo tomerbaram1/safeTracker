@@ -1,3 +1,4 @@
+
 import { useContext, useState } from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
@@ -48,10 +49,11 @@ const Stack = createNativeStackNavigator();
 
 
 // import { Provider as PaperProvider } from 'react-native-paper';
+import { useState } from 'react';
 
 
 export default function App() {
-  
+  const [sos, setSos] = useState(false)
 
   return(
 

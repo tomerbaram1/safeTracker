@@ -1,3 +1,5 @@
+
+
 import React, { useEffect } from 'react';
 import {Text, View, Button, StyleSheet} from 'react-native';
 
@@ -53,6 +55,20 @@ useEffect(()=>{
 export default ParentPage;
 
 const styles = StyleSheet.create({
+
+  text:{
+    marginTop:100,
+    textAlign:'center'
+  },
+  SosCall:{
+    backgroundColor:'#D51807',
+    textAlign:'center',
+    padding:5,
+    color:'white',
+    fontWeight:'700',
+    borderRadius:10
+  }
+
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -77,3 +93,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF1493",
   },
 });
+
