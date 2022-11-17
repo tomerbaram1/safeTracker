@@ -1,10 +1,17 @@
 
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Text, View, Image, Button, TouchableOpacity, Pressable, StyleSheet} from 'react-native';
+import { useSelector } from 'react-redux';
 
-const WelcomePage = ({ navigation: { navigate } }) => (
-  
+const WelcomePage = ({ navigation: { navigate } }) => {
+  const { user } = useSelector((state) => state.auth);
+
+
+
+  return(
+
+
   <View>
   <View
   style={styles.imgView}>
@@ -41,7 +48,12 @@ const WelcomePage = ({ navigation: { navigate } }) => (
     </Pressable>
   </View>
 
-);
+  )
+
+
+
+
+  };
 
 
 export default WelcomePage;

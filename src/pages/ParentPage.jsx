@@ -1,33 +1,61 @@
-import React from 'react';
-import {Text, View, StyleSheet, Button} from 'react-native';
-import {Linking} from 'react-native'
 
 
-const ParentPage = ({sos, setSos}) => {
-  return(
-    <View style={styles.container}>
-    <Text style={styles.text}>
-      ParentPage
-    </Text>
-    {sos && (
-      <View style={styles.SosCall}>
-        <Text style={styles.SosCall}>
-          SOS call from your child!
-        </Text>
-        <Button color={'white'} onPress={()=>Linking.openURL('tel: 0525848456')} title='Call the police'/>
-        <Button color={'white'} title='Close' onPress={() => setSos(false)}/>
-      </View>
-    )}
-  </View>
-    )
+import React, { useEffect } from 'react';
+import {Text, View, Button, StyleSheet} from 'react-native';
+
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+import Settings from './settings/Settings';
+import Chat from './Chat';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, reset } from '../redux/AuthSlice';
+
+const Tab = createBottomTabNavigator();
+
+const ParentPage = ({ navigation: { navigate, goBack }  }) => {
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const onLogout = () => {
+    dispatch(logout());
+    dispatch(reset());
+    navigate("WelcomePage")
+    console.log('logged out');
+  
 };
+useEffect(()=>{
+  console.log("this is the user connected",user);
+},[user])
 
-export default ParentPage
+  return(
+  <View>
+    <Text>
+      Parent
+    </Text>
+    <Text>
+      {user?.fullName}
+    </Text>
+    <Text>
+    {user?.fullName}
+    </Text>
+    <View>
+          <Button 
+            styles={styles.logoutBtn}
+            title="Log Out"
+            onPress={onLogout}
+
+            /> 
+        </View>
+  </View>
+
+  )
+
+  }
+
+export default ParentPage;
 
 const styles = StyleSheet.create({
-  container:{
 
-  },
   text:{
     marginTop:100,
     textAlign:'center'
@@ -41,5 +69,28 @@ const styles = StyleSheet.create({
     borderRadius:10
   }
 
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
-})
+  title: {
+    marginTop: 50,
+    color: '#16213E',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15
+  },
+  logoutBtn: {
+    width: "80%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    backgroundColor: "#FF1493",
+  },
+});
+
