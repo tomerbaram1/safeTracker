@@ -193,7 +193,7 @@ const ChildPage = ({sos, setSos}) => {
 
 
 
-export default ChildHomePage;
+export default ChildPage;
 
 const styles = StyleSheet.create({
   container:{

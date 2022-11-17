@@ -49,7 +49,6 @@ const Stack = createNativeStackNavigator();
 
 
 // import { Provider as PaperProvider } from 'react-native-paper';
-import { useState } from 'react';
 
 
 export default function App() {

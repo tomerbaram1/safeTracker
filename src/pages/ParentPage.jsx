@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     color:'white',
     fontWeight:'700',
     borderRadius:10
-  }
+  },
 
   container: {
     flex: 1,
