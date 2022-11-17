@@ -39,7 +39,7 @@ export const AuthProvider =({children}) =>{
         setIsLoading(true)
         console.log('1');
         console.log(userInfo);
-        await axios.post(API_URL_LOGIN,{
+        await axios.post('http://10.195.25.169:4000/api/login',{
             email,password
         }).then(res=>{
             

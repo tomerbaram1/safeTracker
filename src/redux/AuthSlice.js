@@ -15,10 +15,12 @@ const initialState = {
 
 // Register user
 export const register = createAsyncThunk(
-  "api/register",
+  "http://10.195.25.169:4000/api/register",
   async (user, thunkAPI) => {
     try {
+
       return await AuthService.register(user);
+
     } catch (error) {
       const message =
         (error.response &&
@@ -26,19 +28,19 @@ export const register = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-      return thunkAPI.rejectWithValue(message);
+        return thunkAPI.rejectWithValue(message);
+      }
     }
-  }
 );
 
 // login user
 export const login = createAsyncThunk("http://10.195.25.169:4000/api/login", async (user, thunkAPI) => {
+  
   try {
-    console.log('first');
-    return await AuthService.login(user);
-    
+  
+    return (AuthService.login(user)) 
   } catch (error) {
-    console.log('third');
+
     const message =
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||

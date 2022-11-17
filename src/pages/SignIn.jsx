@@ -51,8 +51,10 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
       console.log(message);
     }
 
-    if ( isSuccess) {
+    if ( isSuccess || user) {
       alert("Logged In")
+        
+      
       
       
     }
@@ -77,8 +79,8 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
     
     console.log("data",email,password);
     dispatch(login({email,password}));
-    console.log('disatch');
     navigate('Content')
+
     
   };
 

@@ -1,260 +1,245 @@
-import React, { useContext, useState } from 'react';
-import { StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, Button } from 'react-native';
-import { Formik } from 'formik'
+
+
+import React, { useContext, useEffect, useState } from 'react';
+import { StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, AsyncStorage, Button } from 'react-native';
+import { Form, Formik } from 'formik'
 import  axios  from 'axios'
 import * as Yup from 'yup' 
 import Spinner from 'react-native-loading-spinner-overlay'
+
+
+
+import SignUp from './SignUp';
 import WelcomePage from './WelcomePage';
-import SignIn from './SignIn';
-import { AuthContext } from '../Context/AuthContext';
-import { useDispatch, useSelector } from 'react-redux';
+import ParentPage from './ParentPage';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { register, reset } from '../redux/AuthSlice';
 
-// const SignupSchema = Yup.object().shape({
-//   email: Yup.string()
-//     .email('Invalid email')
-//     .required('Please enter your email address'),
+
+
+const SignupSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Invalid email')
+    .required('Please enter your email address'),
     
-//   fullName: Yup.string()
-//     .min(2, 'Too Short')
-//     .max(50, 'Too Long')
-//     .required('Please enter your full name'),
+  fullName: Yup.string()
+    .min(2, 'Too Short')
+    .max(50, 'Too Long')
+    .required('Please enter your full name'),
 
-//   password: Yup.string()
-//     .min(8)
-//     .required('Please enter your password')
-//     .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/, 
-//     'Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character'
-//     ),
+  password: Yup.string()
+    .min(8)
+    .required('Please enter your password')
+    .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/, 
+    'Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character'
+    ),
 
-//   confirmPassword: Yup.string()
-//     .min(8, 'must contain at least 8 characters')
-//     .oneOf([Yup.ref('password')], 'your passwords do NOT match')
-//     .required('Confirm password is required'),
+  confirmPassword: Yup.string()
+    .min(8, 'must contain at least 8 characters')
+    .oneOf([Yup.ref('password')], 'your passwords do NOT match')
+    .required('Confirm password is required'),
 
-//   phoneNumber: Yup.string()
-//     .min(10, 'must be 10 digits')
-//     .max(10, 'must be 10 digits')
-//     .matches(/^[0-9]+$/, 'Must be only digits')
-//     .required('enter your phoneNumber number')
+  phoneNumber: Yup.string()
+    .min(10, 'must be 10 digits')
+    .max(10, 'must be 10 digits')
+    .matches(/^[0-9]+$/, 'Must be only digits')
+    .required('enter your phoneNumber number')
   
-// })
+})
 
-export default function SignUp({ navigation: { navigate, goBack  } }) {
 
-  // const onSubmit = (values) => {
-  //   navigate('Content')
+export default function SignIn({ navigation: { navigate, goBack }  }) {
 
-  // //     axios.post('http://192.168.1.174:4000/users/signup', {
-  // //       email: values.email,
-  // //       phoneNumber: values.phoneNumber,
-  // //       fulName: values.fulName,
-  // //       password: values.password,
-  // //       confirmPassword: values.confirmPassword
-  // //     })
-  // //     .then(data => {Alert.alert('succes'), console.log(data.data);})
-  // }
-
-  const [fullName, setFullName] = useState(null)
-  const [email, setEmail] = useState(null)
-  const [phoneNumber, setPhoneNumber] = useState(null)
-  const [password, setPassword] = useState(null)
-  const [confirmPassword, setConfirmPassword] = useState(null)
-
+  const [email,setEmail] = useState("")
+  const [fullName,setFullName] = useState("")
+  const [phoneNumber,setPhoneNumber] = useState("")
+  const [password,setPassword] = useState("")
+  const [confirmPassword,setConfirmPassword] = useState("")
+  // const { email, password } = formData;
   const dispatch = useDispatch();
   
   const { user, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
 
+  useEffect(() => {
+    if (isError) {
+      console.log(message);
+    }
+
+    if ( isSuccess || user) {
+      alert("User Registered")
+      
+      
+      
+    }
+
+    dispatch(reset);
+  }, [user, isError, isSuccess, message, dispatch]);
+
+
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   const onSubmit = (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      console.log("Passwords do not match");
+      alert("Passwords do not match");
     } else {
-      const userData = {
-        fullName,
-        phoneNumber,
-        email,
-        password,
-      };
+    
+    
+    const userData = {
+      fullName,
+      email,
+      password,
+      phoneNumber
+    };
+    dispatch(register(userData))
+    navigate('Content')
 
-      dispatch(register(userData));
-    }
+ 
+    // navigate('Content')
+    
+  }};
 
   return (
-
-    <Formik 
-    // validationSchema={SignupSchema}
    
-    >
-
-      {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
-
-        <View style={styles.container}>
-          <StatusBar barStyle={'dark-content'} />
-
-          <Text style={styles.title}>Sign Up</Text>
-
-            <View style={styles.inputWrapper}>
-              <TextInput style={styles.inputStyle} 
-                placeholder="Email Address" 
-                autoCapitalize={false}
-                value={email}
-                onChangeText={(text)=>{setEmail(text)}}
-                onBlur={() => setFieldTouched('email')}/>
-            </View>
-  
-            {touched.email && errors.email && (
-              <Text style={styles.errorTxt}>{errors.email}</Text>
-              )}
-              
-            <View style={styles.inputWrapper}>
-              <TextInput style={styles.inputStyle} 
-                placeholder="phoneNumber"
-                keyboardType='phone-pad'
-                value={phoneNumber}
-                onChangeText={(text)=>{setPhoneNumber(text)}}
-                onBlur={() => setFieldTouched('phoneNumber')}/>
-            </View>
-            
-            {touched.phoneNumber && errors.phoneNumber && (
-              <Text style={styles.errorTxt}>{errors.phoneNumber}</Text>
-              )}
-
-          <View style={styles.inputWrapper}>
-            <TextInput style={styles.inputStyle} 
-              placeholder="fullName" 
-              autoCapitalize={false}
-              value={fullName}
-              
-              onChangeText={(text)=>{setFullName(text)}}
-              onBlur={() => setFieldTouched('fullName')}/>
-          </View>
-
-          {touched.fullName && errors.fullName && (
-            <Text style={styles.errorTxt}>{errors.fullName}</Text>
-          )}
-
-          <View style={styles.inputWrapper}>
-            <TextInput style={styles.inputStyle} 
-              placeholder="Password" 
-              autoCapitalize={false}
-              value={password}
-              secureTextEntry={true}
-              onChangeText={(text)=>{setPassword(text)}}
-              onBlur={() => setFieldTouched('password')}/>
-          </View>
-
-          {touched.password && errors.password && (
-            <Text style={styles.errorTxt}>{errors.password}</Text>
-          )}
-
-          <View style={styles.inputWrapper}>
-            <TextInput style={styles.inputStyle} 
-              placeholder="Confirm Password"
-              value={confirmPassword}
-              secureTextEntry={true}
-              onChangeText={(text)=>{setConfirmPassword(text)}}
-              onBlur={() => setFieldTouched('confirmPassword')}/>
-          </View>
-
-          {touched.confirmPassword && errors.confirmPassword && (
-            <Text style={styles.errorTxt}>{errors.confirmPassword}</Text>
-          )}
-
-          <TouchableOpacity 
-
-            onPress={onSubmit} 
-            disabled={!isValid}
-            style={[styles.submitBtn,
-              {backgroundColor: isValid ? '#395B64' : '#A5C9CA'}
-            ]}>
-
-            
-         
+    
+    <Formik
+      initialValue={{    email: "",
+      password: "", fullName: "", phoneNumber:"", confirmPassword:""}}
+      // validationSchema={SignupSchema}
+      >
+      {({ handleChange, handleBlur, handleSubmit, values }) => (
+    <View style={styles.container}>
+        <StatusBar style="auto" />
 
 
-            <Text styles={styles.submitBtnTxt}>Sign Up Now</Text>
-
-          </TouchableOpacity>
-
-
-          <Button 
-            styles={styles.submitBtn}
-
-            title="Already have an account? Sign in here"
-            onPress={() => navigate('SignIn')}
-              /> 
-            <Button 
-            title="Register"
-            onPress={() =>register(fullName,email,phoneNumber,password,confirmPassword)}
-             />
-
+        <View style={styles.inputView}>
+        <TextInput
+        value={fullName}
+        style={styles.TextInput}
+        placeholder="Full name"
+        placeholderTextColor="#003f5c"
+        onChangeText={(text)=>{setFullName(text)}}
+        />
+        </View>
+    
+        <View style={styles.inputView}>
+        <TextInput
+        value={email}
+        style={styles.TextInput}
+        placeholder="Email."
+        placeholderTextColor="#003f5c"
+        onChangeText={(text)=>{setEmail(text)}}
+        />
+        </View>
+   
+        <View style={styles.inputView}>
+        <TextInput
+        value={phoneNumber}
+        style={styles.TextInput}
+        placeholder="Enter your phone number"
+        placeholderTextColor="#003f5c"
+        onChangeText={(text)=>{setPhoneNumber(text)}}
+        />
+        </View>
+          
+        <View style={styles.inputView}>
+        <TextInput
+        value={password}
+        style={styles.TextInput}
+        placeholder="Password"
+        placeholderTextColor="#003f5c"
+        secureTextEntry={true}
+        onChangeText={(text)=>{setPassword(text)}}
+        />
+        </View>
+        <View style={styles.inputView}>
+        <TextInput
+        value={confirmPassword}
+        style={styles.TextInput}
+        placeholder="Confirm Password"
+        placeholderTextColor="#003f5c"
+        secureTextEntry={true}
+        onChangeText={(text)=>{setConfirmPassword(text)}}
+        />
+        </View>
+        
 
         
-        <Button 
+          
+        <View>
+          <Button 
             styles={styles.submitBtn}
-            title="Back to welcome page"
+            title="Go Back"
             onPress={() => goBack()}
-          /> 
 
+            /> 
         </View>
-      )}
-    </Formik>
-  );
-}
+
+        <Button 
+         styles={styles.submitBtn}
+          title="Register"
+          onPress={onSubmit}
+        /> 
+        
+        </View>
+        
+
+)}
+      </Formik>
+
+)}
+
 
 const styles = StyleSheet.create({
-  wrapper: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2C3333',
-    paddingHorizontal: 15,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
-
-  formContainer: {
-    backgroundColor: '#F5EDDC',
-    padding: 20, 
-    borderRadius: 20,
-    width: '100%'
+  
+  image: {
+    marginBottom: 40,
   },
-
-  title: {
-    marginTop: 50,
-    color: '#16213E',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15
+  
+  inputView: {
+    backgroundColor: "#FFC0CB",
+    borderRadius: 30,
+    width: "70%",
+    height: 45,
+    marginBottom: 20,
+    
+    alignItems: "center",
   },
-
-  inputWrapper: {
-    marginBottom: 15
-  },
-
-  inputStyle: {
-    borderColor: '#16213E',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10
-  },
-
-  errorTxt: {
-    fontSize: 12,
-    color: '#FF0D10'
-  },
-
-  submitBtn: {
+  
+  TextInput: {
+    height: 50,
+    flex: 1,
     padding: 10,
-    borderRadius: 15,
-    justifyContent: 'center'
+    marginLeft: 20,
   },
-
-  submitBtnTxt: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 700
-  }
-})}
+  
+  forgot_button: {
+    height: 30,
+    marginBottom: 30,
+  },
+  
+  loginBtn: {
+    width: "80%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 40,
+    backgroundColor: "#FF1493",
+  },
+});
