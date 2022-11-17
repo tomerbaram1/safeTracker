@@ -9,16 +9,16 @@ import {Platform,Linking,AppState} from 'react-native';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import MapView, { Callout, Circle, Marker } from "react-native-maps"
 
-// import Geolocation from 'react-native-geolocation-service'r
+
 import { useState } from "react"
-import Geolocation from 'react-native-geolocation-service';
+// import Geolocation from 'react-native-geolocation-service';
 import * as Location from 'expo-location';
 import Modal from 'react-native-modal';
 import Constants from 'expo-constants';
 import * as TaskManager from 'expo-task-manager';
 import { AsyncStorage } from 'react-native';
 import * as Notification from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
+// import * as Permissions from 'expo-permissions';
 import { useRef } from "react";
 import * as Application from 'expo-application';
 import IO from "socket.io-client";
@@ -49,16 +49,6 @@ const ChildHomePage = () => {
   const responseListener = useRef();
 
 
-
-
-
-
-
-
-
- 
-
-
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestBackgroundPermissionsAsync();
@@ -73,22 +63,22 @@ const ChildHomePage = () => {
   }, []);
 
 
-    // useEffect(() => {
-    // Permissions.getAsync(Permissions.NOTIFICATIONS)
-    //   .then((statusObj) => {
-    //     if (statusObj.status !== 'granted') {
-    //       return Permissions.askAsync(Permissions.NOTIFICATIONS);
-    //     }
-    //     return statusObj;
-    //   }).then(statusObj => {
-    //     if (statusObj.status !== 'granted') {
-    //       alert('Notifications will be unavailable now');
-    //       return;
-    //     }
-    //   });
+  //   useEffect(() => {
+  //   Permissions.getAsync(Permissions.NOTIFICATIONS)
+  //     .then((statusObj) => {
+  //       if (statusObj.status !== 'granted') {
+  //         return Permissions.askAsync(Permissions.NOTIFICATIONS);
+  //       }
+  //       return statusObj;
+  //     }).then(statusObj => {
+  //       if (statusObj.status !== 'granted') {
+  //         alert('Notifications will be unavailable now');
+  //         return;
+  //       }
+  //     });
   
 
-    //   socket.on('disTo', (msg) =>{ msg<75? triggerNotification() :"",console.log(counter)});*******
+  //     // socket.on('disTo', (msg) =>{ msg<75? triggerNotification() :"",console.log(counter)});*******
   // }, []);
   useEffect(()=> {
 
@@ -155,7 +145,7 @@ const ChildHomePage = () => {
           console.error(err);
         }
       });
- 
+
 return(
   <View>
   <Pressable
