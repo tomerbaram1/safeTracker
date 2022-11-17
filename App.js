@@ -28,29 +28,31 @@ const Tab = createBottomTabNavigator();
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
-//use navigate
-// import { useNavigation } from '@react-navigation/native';
-// const navigation = useNavigation();
-// need to uninstall this package
+
 
 import { Provider as PaperProvider } from 'react-native-paper';
 import SignIn from './src/pages/SignIn';
+import MainMap from './src/pages/MainMap';
+import ChildHomePage from './src/pages/ChildPage';
 
 export default function App() {
 
 
   const [isSignedIn, setIsSignedIn] = useState(false)
 
-  {if (isSignedIn == true) {
+  {if (isSignedIn == false) {
     return (
       <NavigationContainer styles={styles.container}>
+       
         <PaperProvider>
           <Tab.Navigator>
             <Tab.Screen name="ParentHomePage" component={ParentHomePage}/>
+            <Tab.Screen name="addLocation" component={AddLocation}/>
             <Tab.Screen name="Notification" component={Notification}/>
             <Tab.Screen name="AddLocation" component={AddLocation}/>
             <Tab.Screen name="Chat" component={Chat}/>
-            <Tab.Screen name="Settings" component={Settings}/>
+            <Tab.Screen name="mainMap" component={MainMap}/>
+            <Tab.Screen name="child" component={ChildHomePage}/>
           </Tab.Navigator>
         </PaperProvider>
 
