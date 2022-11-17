@@ -1,68 +1,67 @@
-import React from 'react';
-import {Text, View, StyleSheet, Pressable, Touchable} from 'react-native';
+import React, { useState } from 'react';
+import {Text, View, StyleSheet, Pressable} from 'react-native';
 
-const ChildHomePage = () => (
-  <View>
+const ChildPage = ({sos, setSos}) => {
+  const [sosMsg, setSosMsg] = useState(false)
+  const [sosactive, setSosactive] = useState(false)
+
+
+  const longhandle =  () => {
+    alert('SOS called!')
+    setSosMsg(false)
+    setSos(true)
+  }
+
+  const pressIn = () => {
+    setSosMsg(true)
+  }
+
+  const pressOut = () => {
+    setSosMsg(false)
+  }
+  
+  return(
+    <View style ={ styles.container}>
   <Pressable
   style={styles.trackBtn}
   >
     <Text
-    style={styles.trackText}>
+    style={styles.trackText}
+    >
       START
     </Text>
     </Pressable>
+
     <Pressable
-  style={styles.sosBtn}
+  style={sosMsg ? styles.sosBtnActive :  styles.sosBtn}
+  delayLongPress={3000}
+  onLongPress={longhandle}
+  onPressIn={pressIn}
+  onPressOut={pressOut}
   >
     <Text
     style={styles.sosText}>
-      SOS
+      S O S
     </Text>
     </Pressable>
-
-    {/* MESSAGES */}
-
-    <Text>
-
-      Send your parent a message
-
-    </Text>
-    <View
-    style={styles.msgs}
-    >
-      <Pressable style={styles.msgBtn} >
-        <Text>
-          Hi
-        </Text>
-      </Pressable>
-      <Pressable style={styles.msgBtn}>
-        <Text>
-          What's up?
-        </Text>
-      </Pressable>
-      <Pressable style={styles.msgBtn}>
-        <Text>
-          Call me
-        </Text>
-      </Pressable>
-      <Pressable style={styles.msgBtn}>
-        <Text>
-          Where are you?
-        </Text>
-      </Pressable>
-      <Pressable style={styles.msgBtn} >
-        <Text>
-          Add custom message
-        </Text>
-      </Pressable>
-    </View>
+    {sosMsg &&(
+      <Text
+      style={styles.sosMsg}
+      >
+        Hold for 3 seconds
+      </Text>
+    )}
   </View>
-);
+)
+};
 
 
 export default ChildPage;
 
 const styles = StyleSheet.create({
+  container:{
+    textAlign:'center'
+  },
   trackBtn:{
     height:200,
     width:200,
@@ -73,7 +72,6 @@ const styles = StyleSheet.create({
     alignItems:'center',
     alignContent:'center',
     marginTop:200,
-
   },
   trackText:{
     color:'white',
@@ -83,37 +81,36 @@ const styles = StyleSheet.create({
   },
   sosBtn:{
     backgroundColor:"#D51807",
-    width:80,
     display:'flex',
     justifyContent:'center',
     alignItems:'center',
     alignContent:'center',
     padding:15,
     borderRadius:10,
-    marginLeft:60,
+    marginLeft:0,
     marginTop:90,
-    shadowColor: '#D51807',
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.7,
-    shadowRadius: 5,
- 
-    
   },
+  
   sosText:{
     color:'white',
-    fontWeight:"800"
+    fontWeight:"800",
   },
-  msgs:{
+  sosMsg : {
+    marginTop: 100,
+    textAlign:'center'
+  },
+  sosBtnActive:{
+    backgroundColor:"#D51807",
     display:'flex',
     justifyContent:'center',
     alignItems:'center',
-    alignContent:'center'
-  },
-  msgBtn:{
-    backgroundColor:"lightgray",
-    padding:10,
-    borderRadius:5,
-    margin:10,
+    alignContent:'center',
+    borderRadius:10,
+    marginLeft:0,
+    marginTop:90,
+    padding:20,
+    borderColor:'#c91100',
+    borderWidth:4
   }
 });
 
