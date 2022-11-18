@@ -18,7 +18,7 @@ import IO, { Socket } from "socket.io-client";
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://10.195.25.104:4000";
+const SERVER_URL="http://10.0.0.11:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -33,7 +33,7 @@ Notification.setNotificationHandler({
   });
   
 
-  const socket = IO(SERVER_URL, {
+  const socket1 = IO(SERVER_URL, {
 });
 
 
@@ -84,13 +84,17 @@ export default function MainMap() {
   const [longitude, setLongitude] = useState(null);
   const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
 
-
+const id="63738fb9e33a0195e497e318"
   const[myLocatin,setMyLocation]=useState({
 		latitude: 32.07962,
 		longitude: 34.88911
 	})
 
-
+	socket1.on(`${id}`, (children) => {
+		
+		console.log(children+"ssss")
+		setKidsLocations([...children.children])
+	  })
 
 	const [ pin, setPin ] = React.useState({
 		latitude: 32.07962,
@@ -108,16 +112,16 @@ export default function MainMap() {
 
   useEffect(()=>{
 	const id="63738fb9e33a0195e497e318"
-
-	socket.on('connection', function(socket){
+console.log("useeffect")
+	socket1.on('connection', function(socket){
 		console.log(`${socket.id} is connected`)
 		
-		socket.on(`${id}`, (socketKidsLocations) => {
-		  socket.join(socket.id)
-		  console.log("socket**************************")
-		 setKidsLocations([...socketKidsLocations])
-		})
-	  
+
+		socket.on(`22`, (children) => {
+			console.log(children+"ssss")
+			console.log("location**************************")
+		   setKidsLocations([...children.children])
+		  })
 	  
 	//   console.log("***")
 	// 	socket.on('disOn', (location,id) => {

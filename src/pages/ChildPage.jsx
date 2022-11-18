@@ -25,18 +25,40 @@ import IO from "socket.io-client";
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://10.195.25.104:4000";
+const SERVER_URL="http://10.0.0.11:4000";
 const USERID="63738fb9e33a0195e497e318"
 
 
 
 
 
+// const socket1 = IO(SERVER_URL, {
+// });
 
 
 
+// socket1.on('connection', function(socket){
+//   console.log(`${socket.id} is connected`)
+  
+//   socket.on(`${id}`, (socketKidsLocations) => {
+//     socket.join(socket.id)
+//     console.log("socket**************************")
+//   })
+  
+  
+//   console.log("***")
+// 	socket.on('disOn', (location,id) => {
+// 	  console.log("on")
+// 	  socket.emit('disTo', getDis(location,String(id)))
+// 	  console.log(`user ${socket.id} joined room ${socket.id}`);
+// 	})
+   
+  
+  // socket.on('disconnect',()=>{
+  // console.log("user"+socket.id+" disconnected")
+  // })
 
-
+  // });
 
 
 
@@ -101,8 +123,8 @@ const ChildHomePage = () => {
         console.log("notification")
         Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
           accuracy: Location.Accuracy.Highest,
-          distanceInterval: 1, // minimum change (in meters) betweens updates
-          deferredUpdatesInterval: 1, // minimum interval (in milliseconds) between updates
+          distanceInterval: 3, // minimum change (in meters) betweens updates
+          deferredUpdatesInterval: 1000, // minimum interval (in milliseconds) between updates
          
           // foregroundService is how you get the task to be updated as often as would be if the app was open
           foregroundService: {
@@ -124,14 +146,14 @@ const ChildHomePage = () => {
       TaskManager.defineTask(TASK_FETCH_LOCATION, async ({ data: { locations }, error }) => {
         const id="63738fb9e33a0195e497e318"
         const token= await AsyncStorage.getItem("NotificationToken")
-        console.log(token,"**********************")
+       
         if (error) {
           console.error(error);
           return;
         }
        
         const [location] = locations;
-        console.log(location,"location")
+        // console.log(location,"location")
 
         try {
     
@@ -139,7 +161,7 @@ const ChildHomePage = () => {
         // axios.patch(SERVER_URL+"/api-map/users/parent/pushNotification",{id:id,token:token,location:location})
         axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8b682c1-cb6b",
         currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]"})
-          console.log(location.coords.latitude)
+          // console.log(location.coords.latitude)
          
         } catch (err) {
           console.error(err);

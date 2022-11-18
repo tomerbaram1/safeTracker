@@ -29,6 +29,7 @@ const Tab = createBottomTabNavigator();
 //stack
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
+import Content from './src/pages/Content';
 const Stack = createNativeStackNavigator();
 
 // // redux persist
@@ -61,7 +62,7 @@ export default function App() {
         // theme={DarkTheme}
       >
 
-        <EntryScreen/>
+        <Content/>
 
       </NavigationContainer>
      </Provider>
