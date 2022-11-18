@@ -24,7 +24,7 @@ import * as Application from 'expo-application';
 import IO from "socket.io-client";
 
 
-const TASK_FETCH_LOCATION = 'background-location-task';
+const LOCATION_TASK_NAME = 'background-location-task';
 const SERVER_URL="http://10.0.0.11:4000";
 const USERID="63738fb9e33a0195e497e318"
 
@@ -73,65 +73,34 @@ const ChildHomePage = () => {
 
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestBackgroundPermissionsAsync();
-      registerForPushNotificationsAsync()
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-       
-        return;
+      const { status } = await Location.requestPermissionsAsync();
+      if (status === 'granted') {
+        startLocation()
+
       }
   
     })();
   }, []);
 
 
-  //   useEffect(() => {
-  //   Permissions.getAsync(Permissions.NOTIFICATIONS)
-  //     .then((statusObj) => {
-  //       if (statusObj.status !== 'granted') {
-  //         return Permissions.askAsync(Permissions.NOTIFICATIONS);
-  //       }
-  //       return statusObj;
-  //     }).then(statusObj => {
-  //       if (statusObj.status !== 'granted') {
-  //         alert('Notifications will be unavailable now');
-  //         return;
-  //       }
-  //     });
-  
+  async function startLocation() 
+  {
+   await Location.startLocationUpdatesAsync( LOCATION_TASK_NAME, {
+      accuracy: Location.Accuracy.Highest,
+      distanceInterval: 5, // minimum change (in meters) betweens updates
+      deferredUpdatesInterval: 100, // minimum interval (in milliseconds) between updates
+     
+      // foregroundService is how you get the task to be updated as often as would be if the app was open
+      foregroundService: {
+        notificationTitle: 'Using your location',
+        notificationBody: 'To turn off, go back to the app and switch something off.',
+      },
+    })
+  }
 
-  //     // socket.on('disTo', (msg) =>{ msg<75? triggerNotification() :"",console.log(counter)});*******
-  // }, []);
-  useEffect(()=> {
-
-    // responseListener.current = Notification.addNotificationResponseReceivedListener(response => {
-    //     console.log('--- notification tapped ---');
-    //     console.log(response);
-    //     console.log('------');
-    // });
-
- 
-  // socket.emit('join')
-
-  },[])
-
-
-
-    
-      ""
       useEffect(() => {
         console.log("notification")
-        Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
-          accuracy: Location.Accuracy.Highest,
-          distanceInterval: 3, // minimum change (in meters) betweens updates
-          deferredUpdatesInterval: 1000, // minimum interval (in milliseconds) between updates
-         
-          // foregroundService is how you get the task to be updated as often as would be if the app was open
-          foregroundService: {
-            notificationTitle: 'Using your location',
-            notificationBody: 'To turn off, go back to the app and switch something off.',
-          },
-        })
+      
       }, []);
 
 
@@ -143,23 +112,16 @@ const ChildHomePage = () => {
  
 
 
-      TaskManager.defineTask(TASK_FETCH_LOCATION, async ({ data: { locations }, error }) => {
+      TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data: { locations }, error }) => {
         const id="63738fb9e33a0195e497e318"
-        const token= await AsyncStorage.getItem("NotificationToken")
-       
-        if (error) {
-          console.error(error);
-          return;
-        }
-       
         const [location] = locations;
         // console.log(location,"location")
-
+        console.log("task")
         try {
     
         //   socket.emit('disOn', location,USERID)// you should use post instead of get to persist data on the backend
         // axios.patch(SERVER_URL+"/api-map/users/parent/pushNotification",{id:id,token:token,location:location})
-        axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8b682c1-cb6b",
+      await axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8b682c1-cb6b",
         currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]"})
           // console.log(location.coords.latitude)
          

@@ -89,12 +89,8 @@ const id="63738fb9e33a0195e497e318"
 		latitude: 32.07962,
 		longitude: 34.88911
 	})
-
-	socket1.on(`${id}`, (children) => {
-		
-		console.log(children+"ssss")
-		setKidsLocations([...children.children])
-	  })
+	const [cnt, setCnt] = useState(0);
+	
 
 	const [ pin, setPin ] = React.useState({
 		latitude: 32.07962,
@@ -113,29 +109,41 @@ const id="63738fb9e33a0195e497e318"
   useEffect(()=>{
 	const id="63738fb9e33a0195e497e318"
 console.log("useeffect")
-	socket1.on('connection', function(socket){
-		console.log(`${socket.id} is connected`)
+
+socket1.on(`${id}`,  (children) => {
+		
+	setCnt(cnt+1)
+	setKidsLocations([...children.children])
+
+
+	 socket1.emit('disconnect',()=>{
+		console.log("user"+socket1.id+" disconnected")
+	  })
+  })
+	// socket1.on('connection', function(socket){
+	// 	console.log(`${socket.id} is connected`)
 		
 
-		socket.on(`22`, (children) => {
-			console.log(children+"ssss")
-			console.log("location**************************")
-		   setKidsLocations([...children.children])
-		  })
+	// 	socket.on(`${id}`, (children) => {
+	// 		console.log(children+"ssss")
+	// 		alert("ttt2")
+	// 		console.log("location**************************")
+	// 	   setKidsLocations([...children.children])
+	// 	  })
 	  
-	//   console.log("***")
-	// 	socket.on('disOn', (location,id) => {
-	// 	  console.log("on")
-	// 	  socket.emit('disTo', getDis(location,String(id)))
-	// 	  console.log(`user ${socket.id} joined room ${socket.id}`);
-	// 	})
+	// //   console.log("***")
+	// // 	socket.on('disOn', (location,id) => {
+	// // 	  console.log("on")
+	// // 	  socket.emit('disTo', getDis(location,String(id)))
+	// // 	  console.log(`user ${socket.id} joined room ${socket.id}`);
+	// // 	})
 	   
 	  
-	  socket.on('disconnect',()=>{
-		console.log("user"+socket.id+" disconnected")
-	  })
+	//   socket.on('disconnect',()=>{
+	// 	console.log("user"+socket.id+" disconnected")
+	//   })
 
-	  });
+	//   });
  })
  useEffect(()=> {
 
@@ -273,7 +281,7 @@ console.log("useeffect")
       key={index}
       coordinate={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
 		, longitude: parseFloat(marker.location[marker.location.length-1].longitude) }}
-        title={marker.connectionToken}
+        title={`${marker.location[marker.location.length-1].time}`}
     />
     <Circle key ={index+199} center={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
 		, longitude: parseFloat(marker.location[marker.location.length-1].latitude) }}
@@ -304,7 +312,7 @@ console.log("useeffect")
 			</MapView>
       <View style={{ marginTop: 50, flex: 1 ,flexDirection:"column"}}>
       
-      <Text> {"mainMap"}</Text>
+      <Text> {"mainMap"+cnt}</Text>
    
       
       </View>
