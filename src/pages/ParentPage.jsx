@@ -1,20 +1,26 @@
 
 
-import React, { useEffect } from 'react';
-import {Text, View, StyleSheet, Linking} from 'react-native';
-import { Button } from "@rneui/base";
-import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import {Text, View, StyleSheet, Linking, ScrollView, Pressable, ScrollViewComponent} from 'react-native';
+import { Button, FAB } from "@rneui/base";
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Settings from './settings/Settings';
 import Chat from './Chat';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, reset } from '../redux/AuthSlice';
+import MainMap from './MainMap';
+import ChildList from './ChildList';
+import AddChild from './AddChild';
 
 const Tab = createBottomTabNavigator();
 
-const ParentPage = ({ navigate, sos, setSos } ) => {
+const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => {
+  const [infoDown, setInfoDown] = useState(false)
+  const [addChildForm, setAddChildForm] = useState(false)
   const { user } = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
   const onLogout = () => {
     dispatch(logout());
@@ -25,9 +31,6 @@ const ParentPage = ({ navigate, sos, setSos } ) => {
 
   return(
   <View>
-    <Text>
-      Parent
-    </Text>
     <Text>
       {user?.fullName}
     </Text>
@@ -41,16 +44,42 @@ const ParentPage = ({ navigate, sos, setSos } ) => {
             onPress={onLogout}
 
             /> 
-        </View>
+    </View>
     {sos && (
       <View style={styles.SosCall}>
        <Text style={styles.SosCall}>
         SOS call from your child!
       </Text>
+      <Button color={'black'} onPress={() => Linking.openURL(`tel: ${childNumber}`)} title='Call Your Child'/>
       <Button color={'black'} onPress={() => Linking.openURL('tel: 0525848456')} title='Call The Police'/>
       <Button color={'black'} onPress={() => setSos(false)} title='Close'/>
       </View>
     )}
+    <View style={styles.mapView}>
+      <MainMap/>
+      <View style={{ flex: 1 }}>
+      </View>
+    </View>
+    <View style={!infoDown ? styles.infoView : styles.infoViewDown}>
+      <Pressable style={styles.downBtn} onPress={() => setInfoDown(!infoDown)}>
+        <Text style={{color:'white', fontSize:20, fontWeight:'200', marginTop:10}}>
+        =
+        </Text>
+      </Pressable>
+      <View>
+        <FAB
+        icon={{ name: !addChildForm? 'add' : 'close', color: 'white' }}
+        color='#495867'
+        style={{marginTop:-30, marginBottom:10}}
+        onPress={() => setAddChildForm(!addChildForm)}
+      />
+        {addChildForm && (
+          <AddChild/>
+        )}
+      </View>
+    <ChildList childNumber={childNumber} setChildNumber = {setChildNumber}/>
+    </View>
+    
   </View>
 
   )}
@@ -95,5 +124,44 @@ const styles = StyleSheet.create({
     marginTop: 40,
     backgroundColor: "#FF1493",
   },
+  mapView: {
+    height:'100%',
+    marginTop:200
+  },
+  infoView:{
+    backgroundColor:'white',
+    position:'absolute',
+    bottom:'-130%',
+    width:'100%',
+    height:'200%',
+    borderRadius:50,
+    overflow:'scroll',
+    display:'flex',
+    alignItems:'center',
+  },
+  infoViewDown:{
+    backgroundColor:'white',
+    position:'absolute',
+    bottom:'-140%',
+    width:'100%',
+    height:'170%',
+    borderRadius:50,
+    overflow:'scroll',
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 0},
+    shadowOpacity: 1,
+    shadowRadius: 1,
+    display:'flex',
+    alignItems:'center',
+  },
+  downBtn:{
+    margin:10,
+    backgroundColor:'lightgray',
+    padding:10,
+    borderRadius:100,
+    top:-35,
+    paddingHorizontal:30,
+    color:'white'
+  }
 });
 

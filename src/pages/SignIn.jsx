@@ -1,48 +1,52 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { StatusBar, StyleSheet, Text, TextInput, View, TouchableOpacity, Alert, AsyncStorage } from 'react-native';
-import { Form, Formik } from 'formik'
-import  axios  from 'axios'
-import * as Yup from 'yup' 
-import Spinner from 'react-native-loading-spinner-overlay'
+import React, { useContext, useEffect, useState } from "react";
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  Alert,
+  AsyncStorage,
+} from "react-native";
+import { Form, Formik } from "formik";
+import axios from "axios";
+import * as Yup from "yup";
+import Spinner from "react-native-loading-spinner-overlay";
 
-
-
-import SignUp from './SignUp';
-import WelcomePage from './WelcomePage';
-import ParentPage from './ParentPage';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { Input } from '@rneui/base';
-import { login, reset } from '../redux/AuthSlice';
-import { Button } from '@rneui/base';
-
+import SignUp from "./SignUp";
+import WelcomePage from "./WelcomePage";
+import ParentPage from "./ParentPage";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { Input } from "@rneui/base";
+import { login, reset } from "../redux/AuthSlice";
+import { Button } from "@rneui/base";
 
 const SigninSchema = Yup.object().shape({
-  
   email: Yup.string()
-  .email('Invalid email')
-  .required('Please enter your email address'),
-  
-  password: Yup.string()
-  .min(8)
-  .required('Please enter your password')
-  .matches(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/, 
-  'Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character'
-  )
-  
-})
+    .email("Invalid email")
+    .required("Please enter your email address"),
 
-export default function SignIn({ navigation: { navigate, goBack }  }) {
-  
+  password: Yup.string()
+    .min(8)
+    .required("Please enter your password")
+    .matches(
+      /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/,
+      "Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character"
+    ),
+});
+
+export default function SignIn({ navigation: { navigate, goBack } }) {
   // const [formData, setFormData] = useState({
   //   email: "",
   //   password: "",
   // });
-  const [email,setEmail] = useState("")
-  const [password,setPassword] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   // const { email, password } = formData;
   const dispatch = useDispatch();
-  
+
   const { user, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
@@ -52,17 +56,12 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
       console.log(message);
     }
 
-    if ( isSuccess || user) {
-      null
-        
-      
-      
-      
+    if (isSuccess || user) {
+      null;
     }
 
     dispatch(reset);
   }, [user, isError, isSuccess, message, dispatch]);
-
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -73,80 +72,45 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(email);
-    console.log(password);
-  
-     
-    
-    console.log("data",email,password);
-    dispatch(login({email,password}));
-    navigate('Content')
-
-    
+    dispatch(login({ email, password }));
+    navigate("Content");
   };
 
   return (
-    
-    
-      <Formik
-      initialValue={{    email: "",
-      password: "",}}
-
-      >
- {({ handleChange, handleBlur, handleSubmit, values }) => (
-    <View style={styles.container}>
-        <StatusBar style="auto" />
-        <View style={styles.inputView}>
-        <Input
-        value={email}
-        style={styles.Input}
-        placeholder="Email."
-        placeholderTextColor="#003f5c"
-        onChangeText={(text)=>{setEmail(text)}}
-        />
-        </View>
-          
-        <View style={styles.inputView}>
-        <Input
-        value={password}
-        style={styles.Input}
-        placeholder="Password."
-        placeholderTextColor="#003f5c"
-        secureTextEntry={true}
-        onChangeText={(text)=>{setPassword(text)}}
-        />
-        </View>
-        
-
-          
-        <View>
-            <Button
-              title="Go Back"
-              onPress={() => goBack()}
-              icon={{
-                name: "home",
-                type: "font-awesome",
-                size: 15,
-                color: "white",
-              }}
-              iconContainerStyle={{ marginRight: 10 }}
-              titleStyle={{ fontWeight: "700" }}
-              buttonStyle={{
-                backgroundColor: "#495867",
-                borderColor: "transparent",
-                borderWidth: 0,
-                borderRadius: 30,
-              }}
-              containerStyle={{
-                width: 200,
-                marginHorizontal: 50,
-                marginVertical: 10,
+    <Formik initialValue={{ email: "", password: "" }}>
+      {({ handleChange, handleBlur, handleSubmit, values }) => (
+        <View style={styles.container}>
+          <StatusBar style="auto" />
+          <View style={styles.inputView}>
+            <Input
+              value={email}
+              style={styles.Input}
+              autoComplete='email'
+              clearButtonMode='while-editing'
+              keyboardType='email-address'
+              placeholder="Email"
+              placeholderTextColor="#003f5c"
+              onChangeText={(text) => {
+                setEmail(text);
               }}
             />
-        </View>
+          </View>
 
-        <Button
-            title="Log In"
+          <View style={styles.inputView}>
+            <Input
+              value={password}
+              style={styles.Input}
+              placeholder="Password"
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+            />
+          </View>
+
+          <Button
+            title="Sign In"
             onPress={onSubmit}
             icon={{
               name: "arrow-right",
@@ -168,16 +132,33 @@ export default function SignIn({ navigation: { navigate, goBack }  }) {
               marginVertical: 10,
             }}
           />
-
-</View>
- )}
-      </Formik>
-
-
-
-
-);
-
+          <Button
+            title="Go Back"
+            onPress={() => goBack()}
+            icon={{
+              name: "home",
+              type: "font-awesome",
+              size: 15,
+              color: "white",
+            }}
+            iconContainerStyle={{ marginRight: 10 }}
+            titleStyle={{ fontWeight: "700" }}
+            buttonStyle={{
+              backgroundColor: "#495867",
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              width: 200,
+              marginHorizontal: 50,
+              marginVertical: 10,
+            }}
+          />
+        </View>
+      )}
+    </Formik>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -187,11 +168,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  
+
   image: {
     marginBottom: 40,
   },
-  
+
   inputView: {
     borderRadius: 30,
     width: "70%",
@@ -199,19 +180,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: "center",
   },
-  
+
   Input: {
     height: 50,
     flex: 1,
     padding: 10,
     marginLeft: 20,
   },
-  
+
   forgot_button: {
     height: 30,
     marginBottom: 30,
   },
-  
+
   loginBtn: {
     width: "80%",
     borderRadius: 25,
@@ -237,8 +218,8 @@ const styles = StyleSheet.create({
 // //       confirmPassword: values.confirmPassword
 // //     })
 // //     .then(res => {Alert.alert('succes'),
-// //       console.log('=======================================>>>>>>'), 
-// //       console.log(res.data), 
+// //       console.log('=======================================>>>>>>'),
+// //       console.log(res.data),
 // //       AsyncStorage.setItem('signInToken', `${res.data.token}`)})
 // //   }
 
@@ -247,15 +228,15 @@ const styles = StyleSheet.create({
 // }
 
 // const styles = StyleSheet.create({
-  //   wrapper: {
-    //     flex: 1,
-    //     justifyContent: 'center',
-    //     paddingHorizontal: 15,
-    //   },
-    
-    //   formContainer: {
-      //     backgroundColor: '#F5EDDC',
-      //     padding: 20, 
+//   wrapper: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     paddingHorizontal: 15,
+//   },
+
+//   formContainer: {
+//     backgroundColor: '#F5EDDC',
+//     padding: 20,
 //     borderRadius: 20,
 //     width: '100%'
 //   },

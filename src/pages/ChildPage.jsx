@@ -32,8 +32,7 @@ const SERVER_URL = "http://10.195.25.104:4000";
 const USERID = "63738fb9e33a0195e497e318";
 
 const ChildPage = ({ sos, setSos }) => {
-  const [sosMsg, setSosMsg] = useState(false);
-  const [sosactive, setSosactive] = useState(false);
+  const [sosMsg, setSosMsg] = useState(false); //Hold for 3 seconds message
   const responseListener = useRef();
 
   useEffect(() => {
@@ -48,30 +47,6 @@ const ChildPage = ({ sos, setSos }) => {
     })();
   }, []);
 
-  //   useEffect(() => {
-  //   Permissions.getAsync(Permissions.NOTIFICATIONS)
-  //     .then((statusObj) => {
-  //       if (statusObj.status !== 'granted') {
-  //         return Permissions.askAsync(Permissions.NOTIFICATIONS);
-  //       }
-  //       return statusObj;
-  //     }).then(statusObj => {
-  //       if (statusObj.status !== 'granted') {
-  //         alert('Notifications will be unavailable now');
-  //         return;
-  //       }
-  //     });
-
-  //     // socket.on('disTo', (msg) =>{ msg<75? triggerNotification() :"",console.log(counter)});*******
-  // }, []);
-  useEffect(() => {
-    // responseListener.current = Notification.addNotificationResponseReceivedListener(response => {
-    //     console.log('--- notification tapped ---');
-    //     console.log(response);
-    //     console.log('------');
-    // });
-    // socket.emit('join')
-  }, []);
 
   useEffect(() => {
     console.log("notification");
@@ -104,8 +79,6 @@ const ChildPage = ({ sos, setSos }) => {
       console.log(location, "location");
 
       try {
-        //   socket.emit('disOn', location,USERID)// you should use post instead of get to persist data on the backend
-        // axios.patch(SERVER_URL+"/api-map/users/parent/pushNotification",{id:id,token:token,location:location})
         axios.patch(SERVER_URL + "/api-map/users/parent/addChildrenLocation", {
           id: id,
           connectionToken: "c8b682c1-cb6b",

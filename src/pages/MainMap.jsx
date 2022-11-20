@@ -136,7 +136,8 @@ export default function MainMap() {
       .post(SERVER_URL + "/api-map/users/parent/getChildrenLocation", {
         id: id,
       })
-      .then((data) => setKidsLocations(data.data));
+      .then((data) => setKidsLocations(data.data))
+      .catch((error) => console.log(error))
   }, []);
 
   useEffect(() => {
@@ -288,9 +289,6 @@ export default function MainMap() {
           </>
         ))}
       </MapView>
-      <View style={{ marginTop: 50, flex: 1, flexDirection: "column" }}>
-        <Text> {"mainMap"}</Text>
-      </View>
     </View>
   );
 }
@@ -304,7 +302,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height / 2,
+    height: Dimensions.get("window").height ,
   },
   inputStyle: {
     borderColor: "#16213E",
