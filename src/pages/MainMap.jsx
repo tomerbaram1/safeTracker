@@ -1,29 +1,14 @@
 import axios from "axios";
 import * as React from "react";
 import { useEffect } from "react";
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  ScrollView,
-  PermissionsAndroid,
-  Alert,
-  Platform,
-} from "react-native";
+import { Dimensions, StyleSheet, Text, View, Platform } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapView, { Callout, Circle, Marker } from "react-native-maps";
-// import Geolocation from 'react-native-geolocation-service'r
 import { useState } from "react";
-import * as Location from "expo-location";
-import * as TaskManager from "expo-task-manager";
 import { AsyncStorage } from "react-native";
 import * as Notification from "expo-notifications";
-import * as Permissions from "expo-permissions";
 import { useRef } from "react";
-import { TextInput } from "react-native-paper";
-import IO, { Socket } from "socket.io-client";
+import IO from "socket.io-client";
 
 const TASK_FETCH_LOCATION = "background-location-task";
 const SERVER_URL = "http://10.195.25.104:4000";
@@ -109,13 +94,6 @@ export default function MainMap() {
         setKidsLocations([...socketKidsLocations]);
       });
 
-      //   console.log("***")
-      // 	socket.on('disOn', (location,id) => {
-      // 	  console.log("on")
-      // 	  socket.emit('disTo', getDis(location,String(id)))
-      // 	  console.log(`user ${socket.id} joined room ${socket.id}`);
-      // 	})
-
       socket.on("disconnect", () => {
         console.log("user" + socket.id + " disconnected");
       });
@@ -136,7 +114,8 @@ export default function MainMap() {
       .post(SERVER_URL + "/api-map/users/parent/getChildrenLocation", {
         id: id,
       })
-      .then((data) => setKidsLocations(data.data));
+      .then((data) => setKidsLocations(data.data))
+      .catch((error) => console.log(error));
   }, []);
 
   useEffect(() => {
@@ -169,7 +148,6 @@ export default function MainMap() {
           });
         }}
         query={{
-          // key: "AIzaSyDJheGFKSCMaY62ohf_eld0gq171hcY0F4",
           key: "none",
           language: "iw",
           components: "country:il",
@@ -177,11 +155,6 @@ export default function MainMap() {
           radius: 100,
           location: `${region.latitude}, ${region.longitude}`,
         }}
-        // styles={{
-        // 	container: { flex: 0, position: "relative", width: "100%", zIndex: 1 },
-        // 	listView: { backgroundColor: "white" }
-        // }}
-
         minLength={2}
         autoFocus={false}
         returnKeyType={"default"}
