@@ -1,11 +1,9 @@
-import React from 'react';
-import {Text, View} from 'react-native';
+import React from "react";
+import { Text, View } from "react-native";
 
 const Chat = () => (
   <View>
-    <Text>
-      Chat
-    </Text>
+    <Text>Chat</Text>
   </View>
 );
 

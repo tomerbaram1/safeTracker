@@ -4,39 +4,38 @@ import {
   View,
   TextInput,
   StyleSheet,
-  SafeAreaView,
-  Pressable,
   Button,
-  TouchableWithoutFeedback,
-  Overlay,
   Modal,
+  Dimensions
 } from "react-native";
 import axios from "axios";
+import { Input } from "@rneui/base";
+import { useSelector } from "react-redux";
 
-const api = axios.create({ baseURL: "http://10.0.0.11:4000" });
+
+const api = axios.create({ baseURL: "http://10.195.25.143:4000" });
 
 const AddChild = () => {
-  // // const [child, setChild] = useState({
-  // //   childName: "",
-  // //   childPhone: "",
-  // //   connectionToken:""
-  // // })
-  // // const [children, setChildren] = useState([])
+
   const [childName, setChildName] = useState("");
   const [childPhone, setChildPhone] = useState("");
   const [token, setToken] = useState("");
   const [showToken, setShowToken] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+
+  const id = user?._id;
 
   const addChild = () => {
     api
       .patch(`/api/addchild`, {
-        id: "63738fb9e33a0195e497e318",
+        id:id,
         childName: childName,
         childPhone: childPhone,
       })
       .then((res) => {
         const gettoken = res.data;
         setToken(gettoken[gettoken.length - 1].connectionToken);
+        console.log(childName, "added");
       })
       .catch((error) => console.log(error));
   };
@@ -49,7 +48,7 @@ const AddChild = () => {
 
   return (
     <View>
-      <Text style={styles.addchild}>Add Your Kid</Text>
+      <Text style={styles.addchild}>Add Your Child</Text>
 
       <TextInput
         style={styles.input}
@@ -64,15 +63,17 @@ const AddChild = () => {
         onChangeText={(e) => setChildPhone(e)}
         value={childPhone}
       />
-      <Button onPress={submit} title="Add" but />
+      <Button
+       onPress={submit}
+       title="Add" 
+       color='#495867'/>
       {showToken && (
         <View style={styles.overlay}>
           <Modal
             animationType="slide"
             transparent={false}
             visible={true}
-            style={styles.modal}
-          >
+            style={styles.modal}>
             <Text style={styles.overlayText}>Your Child's Token</Text>
             <Text selectable={true} style={styles.overlayToken}>
               {token}
@@ -95,9 +96,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     textAlign: "center",
+    width: Dimensions.get("window").width- 15,
   },
   addchild: {
     textAlign: "center",
+    marginTop:15
   },
   genBtn: {
     textAlign: "center",

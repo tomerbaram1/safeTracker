@@ -1,10 +1,15 @@
-
-import axios from "axios"
-import * as React from "react"
-import { useEffect } from "react"
-import { Dimensions, StyleSheet, Text, View,Button, ScrollView, PermissionsAndroid, Alert } from "react-native"
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
-import MapView, { Callout, Circle, Marker } from "react-native-maps"
+import axios from "axios";
+import * as React from "react";
+import { useEffect } from "react";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+} from "react-native";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import MapView, { Callout, Circle, Marker } from "react-native-maps";
 // import Geolocation from 'react-native-geolocation-service'r
 import { useState } from "react";
 import * as Location from 'expo-location';
@@ -28,9 +33,12 @@ const USERID="63738fb9e33a0195e497e318"
   
 
 
+const TASK_FETCH_LOCATION = "background-location-task";
+const SERVER_URL = "http://10.195.25.104:4000";
+
+const USERID = "63738fb9e33a0195e497e318";
 
 export default function AddLocation() {
-     
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [Latitude, setLatitude] = useState(null);
@@ -94,16 +102,13 @@ export default function AddLocation() {
 
 
   let text = 'Waiting..';
+
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
     text = JSON.stringify(location);
   }
 //////////////////////register
- 
-
-
-
 TaskManager.defineTask(TASK_FETCH_LOCATION, async ({ data: { locations }, error }) => {
   
   if (error) {
@@ -136,10 +141,6 @@ useEffect(() => {
 
    
 }, []); 
-
-
-
-
 
   useEffect(() => {
     const id="63738fb9e33a0195e497e318"
@@ -191,62 +192,96 @@ useEffect(() => {
    axios.patch(SERVER_URL+"/api-map/users/parent/addBaseLocations",{id:id,newLocationsBaseArray:newLocationsBaseArray})
   .then(data=>console.log(data+"sss")) .catch(error => console.log(error));
 
- }
 
+  useEffect(() => {
+    const id = "63738fb9e33a0195e497e318";
+    axios
+      .post(SERVER_URL + "/api-map/users/parent/getBaseLocations", { id: id })
 
+      .then((data) => {
+        setBaseLocations(data.data);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
+  const handleAddPlace = () => {
+    const id = "63738fb9e33a0195e497e318";
+    const obj = {
+      latitude: pin.latitude,
+      longitude: pin.longitude,
+      name: locationName,
+    };
 
+    let newLocationsBaseArray = [...baseLocations];
+    newLocationsBaseArray.push(obj);
+    console.log(locationName);
+    newLocationsBaseArray[newLocationsBaseArray.length - 1].locationName =
+      locationName;
+    console.log("sa" + newLocationsBaseArray[0].locationName);
 
-	return (
-		<View 	style={styles.container}>
-  
-			<GooglePlacesAutocomplete
-				placeholder="Search"
-				fetchDetails={true}
-				GooglePlacesSearchQuery={{
-					rankby: "distance"
-				}}
-				onPress={(data, details = null) => {
-					// 'details' is provided when fetchDetails = true
-					console.log(data, details)
-					setRegion({
-						latitude: details.geometry.location.lat,
-						longitude: details.geometry.location.lng,
-						latitudeDelta: 0.0922,
-						longitudeDelta: 0.0421
-					})
-				}}
-				query={{
-					// key: "AIzaSyDJheGFKSCMaY62ohf_eld0gq171hcY0F4",
+    setBaseLocations(newLocationsBaseArray);
+    axios
+      .patch(SERVER_URL + "/api-map/users/parent/addBaseLocations", {
+        id: id,
+        newLocationsBaseArray: newLocationsBaseArray,
+      })
+      .then((data) => console.log(data + "sss"))
+      .catch((error) => console.log(error));
+  };
+
+  return (
+    <View style={styles.container}>
+      <GooglePlacesAutocomplete
+        placeholder="Search"
+        fetchDetails={true}
+        GooglePlacesSearchQuery={{
+          rankby: "distance",
+        }}
+        onPress={(data, details = null) => {
+          // 'details' is provided when fetchDetails = true
+          console.log(data, details);
+          setRegion({
+            latitude: details.geometry.location.lat,
+            longitude: details.geometry.location.lng,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          });
+        }}
+        query={{
+          // key: "AIzaSyDJheGFKSCMaY62ohf_eld0gq171hcY0F4",
           key: "none",
-					language: "iw",
-					components: "country:il",
-					types: "address",
-					radius: 100,
-					location: `${region.latitude}, ${region.longitude}`
-				}}
-				// styles={{
-				// 	container: { flex: 0, position: "relative", width: "100%", zIndex: 1 },
-				// 	listView: { backgroundColor: "white" }
-				// }}
-       
+          language: "iw",
+          components: "country:il",
+          types: "address",
+          radius: 100,
+          location: `${region.latitude}, ${region.longitude}`,
+        }}
+        // styles={{
+        // 	container: { flex: 0, position: "relative", width: "100%", zIndex: 1 },
+        // 	listView: { backgroundColor: "white" }
+        // }}
+
         minLength={2}
         autoFocus={false}
-        returnKeyType={'default'}
-       
+        returnKeyType={"default"}
         styles={{
-           	container: { flex: 0, position: "relative", width: "100%", zIndex: 1},
+          container: {
+            flex: 0,
+            position: "relative",
+            width: "100%",
+            zIndex: 1,
+          },
           textInputContainer: {
-            backgroundColor: '#d3d3d3',
+            backgroundColor: "#d3d3d3",
           },
           textInput: {
             height: 38,
-            color: '#5d5d5d',
+            color: "#5d5d5d",
             fontSize: 16,
           },
           predefinedPlacesDescription: {
-            color: '#1faadb',
-          }
+            color: "#1faadb",
+          },
         }}
 			/>
      
@@ -312,30 +347,29 @@ useEffect(() => {
       <Text> {"lat:" + initailLocation?.coords.longitude+ " long :"+" text-"}</Text>
    
       
+
       </View>
-     
-		</View>
-	)
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center"
-	},
-	map: {
-		width: Dimensions.get("window").width,
-		height: Dimensions.get("window").height/2
-	},
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  map: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height / 2,
+  },
   inputStyle: {
-    borderColor: '#16213E',
+    borderColor: "#16213E",
     borderWidth: 1,
     borderRadius: 10,
     padding: 10,
-    height:50,
-    width:200
-
-  }
-})
+    height: 50,
+    width: 200,
+  },
+});
