@@ -261,9 +261,6 @@ export default function MainMap() {
           </>
         ))}
       </MapView>
-      <View style={{ marginTop: 50, flex: 1, flexDirection: "column" }}>
-        <Text> {"mainMap"}</Text>
-      </View>
     </View>
   );
 }
@@ -277,7 +274,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height / 2,
+    height: Dimensions.get("window").height ,
   },
   inputStyle: {
     borderColor: "#16213E",

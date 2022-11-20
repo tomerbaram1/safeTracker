@@ -6,10 +6,12 @@ import {
   StyleSheet,
   Button,
   Modal,
+  Dimensions
 } from "react-native";
 import axios from "axios";
+import { Input } from "@rneui/base";
 
-const api = axios.create({ baseURL: "http://10.195.25.177:4000" });
+const api = axios.create({ baseURL: "http://172.20.10.3:4000" });
 
 const AddChild = () => {
 
@@ -21,7 +23,7 @@ const AddChild = () => {
   const addChild = () => {
     api
       .patch(`/api/addchild`, {
-        id: "63738fb9e33a0195e497e318",
+        id: "63762454c7a485ff6f51f811",
         childName: childName,
         childPhone: childPhone,
       })
@@ -40,7 +42,7 @@ const AddChild = () => {
 
   return (
     <View>
-      <Text style={styles.addchild}>Add Your Kid</Text>
+      <Text style={styles.addchild}>Add Your Child</Text>
 
       <TextInput
         style={styles.input}
@@ -55,7 +57,10 @@ const AddChild = () => {
         onChangeText={(e) => setChildPhone(e)}
         value={childPhone}
       />
-      <Button onPress={submit} title="Add" but />
+      <Button
+       onPress={submit}
+       title="Add" 
+       color='#495867'/>
       {showToken && (
         <View style={styles.overlay}>
           <Modal
@@ -85,9 +90,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     textAlign: "center",
+    width: Dimensions.get("window").width- 15,
   },
   addchild: {
     textAlign: "center",
+    marginTop:15
   },
   genBtn: {
     textAlign: "center",

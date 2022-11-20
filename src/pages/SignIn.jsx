@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
 import { Formik } from "formik";
@@ -23,11 +24,13 @@ const SigninSchema = Yup.object().shape({
     ),
 });
 
+
 export default function SignIn({ navigation: { goBack } }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  
 
   const { user, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -38,8 +41,10 @@ export default function SignIn({ navigation: { goBack } }) {
       alert(message);
     }
 
+
     if (user) {
       navigation.navigate("Content");
+
     }
 
     dispatch(reset);
@@ -55,6 +60,7 @@ export default function SignIn({ navigation: { goBack } }) {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(login({ email, password }));
+
   };
 
   return (
@@ -96,19 +102,20 @@ export default function SignIn({ navigation: { goBack } }) {
                 type: "font-awesome",
                 size: 15,
                 color: "white",
+
               }}
-              iconContainerStyle={{ marginRight: 10 }}
-              titleStyle={{ fontWeight: "700" }}
-              buttonStyle={{
-                backgroundColor: "#495867",
-                borderColor: "transparent",
-                borderWidth: 0,
-                borderRadius: 30,
-              }}
-              containerStyle={{
-                width: 200,
-                marginHorizontal: 50,
-                marginVertical: 10,
+            />
+          </View>
+
+          <View style={styles.inputView}>
+            <Input
+              value={password}
+              style={styles.Input}
+              placeholder="Password"
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+              onChangeText={(text) => {
+                setPassword(text);
               }}
             />
           </View>
@@ -184,3 +191,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF1493",
   },
 });
+

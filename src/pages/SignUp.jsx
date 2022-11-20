@@ -120,6 +120,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
             <Input
               value={email}
               style={styles.Input}
+              autoComplete='email'
+              clearButtonMode='while-editing'
+              keyboardType='email-address'
               placeholder="Email"
               placeholderTextColor="#003f5c"
               onChangeText={(text) => {
@@ -165,32 +168,6 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
             />
           </View>
 
-          <View>
-            <Button
-              title="Go Back"
-              onPress={() => goBack()}
-              icon={{
-                name: "home",
-                type: "font-awesome",
-                size: 15,
-                color: "white",
-              }}
-              iconContainerStyle={{ marginRight: 10 }}
-              titleStyle={{ fontWeight: "700" }}
-              buttonStyle={{
-                backgroundColor: "rgba(90, 154, 230, 1)",
-                borderColor: "transparent",
-                borderWidth: 0,
-                borderRadius: 30,
-              }}
-              containerStyle={{
-                width: 200,
-                marginHorizontal: 50,
-                marginVertical: 10,
-              }}
-            />
-          </View>
-
           <Button
             title="Register"
             onPress={onSubmit}
@@ -203,7 +180,30 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
             iconContainerStyle={{ marginRight: 10 }}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{
-              backgroundColor: "rgba(90, 154, 230, 1)",
+              backgroundColor: "#577399",
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              width: 200,
+              marginHorizontal: 50,
+              marginVertical: 10,
+            }}
+          />
+          <Button
+            title="Go Back"
+            onPress={() => goBack()}
+            icon={{
+              name: "home",
+              type: "font-awesome",
+              size: 15,
+              color: "white",
+            }}
+            iconContainerStyle={{ marginRight: 10 }}
+            titleStyle={{ fontWeight: "700" }}
+            buttonStyle={{
+              backgroundColor: "#495867",
               borderColor: "transparent",
               borderWidth: 0,
               borderRadius: 30,

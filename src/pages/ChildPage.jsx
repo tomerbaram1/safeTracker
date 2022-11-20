@@ -19,9 +19,11 @@ const SERVER_URL = "http://10.195.25.104:4000";
 const USERID = "63738fb9e33a0195e497e318";
 
 const ChildPage = ({ sos, setSos }) => {
+
   const [sosMsg, setSosMsg] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
+
 
   useEffect(() => {
     (async () => {
@@ -34,6 +36,7 @@ const ChildPage = ({ sos, setSos }) => {
       }
     })();
   }, []);
+
   useEffect(() => {
     console.log("notification");
     Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
