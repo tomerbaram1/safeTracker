@@ -8,6 +8,9 @@ import Settings from "./settings/Settings";
 import ChildPage from './ChildPage';
 import MainMap from './MainMap';
 import AddLocation from './AddLocation';
+
+
+import AddChild from './AddChild';
 import { useState } from 'react';
 import ChildList from './ChildList';
 
@@ -28,6 +31,7 @@ const Content = () => {
         <Tab.Screen  name="ChildPage" component={ChildpageComp} options={{headerShown:false}} />
 
         <Tab.Screen name="MainMap" component={MainMap} options={{headerShown:false}}/>
+
         <Tab.Screen name="AddLocation" component={AddLocation} options={{headerShown:false}} />
       </Tab.Navigator>
   

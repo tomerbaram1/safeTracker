@@ -12,9 +12,26 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import MapView, { Callout, Circle, Marker } from "react-native-maps";
 // import Geolocation from 'react-native-geolocation-service'r
 import { useState } from "react";
-import * as Location from "expo-location";
-import * as TaskManager from "expo-task-manager";
-import { TextInput } from "react-native-paper";
+import * as Location from 'expo-location';
+import * as TaskManager from 'expo-task-manager';
+import { AsyncStorage } from 'react-native';
+import * as Notification from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import { useRef } from "react";
+import { TextInput } from "react-native-paper"
+
+
+
+const TASK_FETCH_LOCATION = 'background-location-task';
+const SERVER_URL="http://10.195.25.157:4000";
+
+const USERID="63738fb9e33a0195e497e318"
+
+
+
+
+  
+
 
 const TASK_FETCH_LOCATION = "background-location-task";
 const SERVER_URL = "http://10.195.25.104:4000";
@@ -24,71 +41,157 @@ const USERID = "63738fb9e33a0195e497e318";
 export default function AddLocation() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+  const [Latitude, setLatitude] = useState(null);
+  const [Longitude, setLongitude] = useState(null);
 
-  const [myLocatin, setMyLocation] = useState({
-    latitude: 32.07962,
-    longitude: 34.88911,
-  });
 
-  const [pin, setPin] = React.useState({
-    latitude: 32.07962,
-    longitude: 34.88911,
-  });
 
-  const [region, setRegion] = React.useState({
-    latitude: 32.07962,
-    longitude: 34.88911,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
-  const [baseLocations, setBaseLocations] = React.useState([]);
-  const [locationName, setLocationName] = useState("");
+  const[myLocatin,setMyLocation]=useState({
+		latitude: 32.07962,
+		longitude: 34.88911
+	})
 
-  let text = "Waiting..";
+
+
+	const [ pin, setPin ] = React.useState({
+		latitude: 32.07962,
+		longitude: 34.88911
+	})
+  
+	const [ region, setRegion ] = React.useState({
+		latitude: 32.07962,
+		longitude: 34.88911,
+		latitudeDelta: 0.0922,
+		longitudeDelta: 0.0421
+	})
+  const [ baseLocations, setBaseLocations ] = React.useState([])
+  const [locationName,setLocationName]=useState("");
+  const [initailLocation,setIntialLocation]=useState();
+ 
+
+
+
+
+
+  
+
+
+ 
+
+
+  
+
+
+//   useEffect(() => {
+//     //When app is closed
+//     const backgroundSubscription = Notification.addNotificationResponseReceivedListener(response => {
+//       console.log(response);
+//     });
+//     //When the app is open
+//     const foregroundSubscription = Notification.addNotificationReceivedListener(notification => {
+//       console.log(notification);
+//     });
+
+//     return () => {
+//       backgroundSubscription.remove();
+//       foregroundSubscription.remove();
+//     }
+//   }, []);
+
+
+
+
+  let text = 'Waiting..';
+
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
     text = JSON.stringify(location);
   }
-  //////////////////////register
+//////////////////////register
+TaskManager.defineTask(TASK_FETCH_LOCATION, async ({ data: { locations }, error }) => {
+  
+  if (error) {
+    console.error(error);
+    return;
+  }
+ 
+  const [location] = locations;
+  try {
+  
+    setPin({latitude:location.coords.latitude,longitude:location.coords.longitude})
+    Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
+  } catch (err) {
+    console.error(err);
+  }
+});
 
-  TaskManager.defineTask(
-    TASK_FETCH_LOCATION,
-    async ({ data: { locations }, error }) => {
-      if (error) {
-        console.error(error);
-        return;
-      }
+useEffect(() => {
+  Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
+    accuracy: Location.Accuracy.Highest,
+    distanceInterval: 1, // minimum change (in meters) betweens updates
+    deferredUpdatesInterval: 1, // minimum interval (in milliseconds) between updates
+   
+    // foregroundService is how you get the task to be updated as often as would be if the app was open
+    foregroundService: {
+      notificationTitle: 'Using your location',
+      notificationBody: 'To turn off, go back to the app and switch something off.'
+ } })
 
-      const [location] = locations;
-      try {
-        setPin({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        });
-        Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  );
+
+   
+}, []); 
 
   useEffect(() => {
-    Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
-      accuracy: Location.Accuracy.Highest,
-      distanceInterval: 1, // minimum change (in meters) betweens updates
-      deferredUpdatesInterval: 1, // minimum interval (in milliseconds) between updates
+    const id="63738fb9e33a0195e497e318"
+      axios.post(SERVER_URL+"/api-map/users/parent/getBaseLocations",{id:id})
+       
+       .then((data) => 
+       
+        { setBaseLocations(data.data)
+         
+        }
+       ).catch(error => console.log(error));
 
-      // foregroundService is how you get the task to be updated as often as would be if the app was open
-      foregroundService: {
-        notificationTitle: "Using your location",
-        notificationBody:
-          "To turn off, go back to the app and switch something off.",
-      },
-    });
-  }, []);
+       
+       (async () => {
+      
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+  
+        let location = await Location.getCurrentPositionAsync({});
+        setLatitude(location.coords.latitude)
+        setLongitude(location.coords.longitude);
+        setLocation(location.coords);
+      })();
+   
+
+
+
+
+ }, []); 
+
+
+
+
+  const handleAddPlace=()=>{
+    const id="63738fb9e33a0195e497e318"
+    const obj={latitude:pin.latitude,longitude:pin.longitude,name:locationName}
+
+  let newLocationsBaseArray=[...baseLocations];
+  newLocationsBaseArray.push(obj)
+  console.log(locationName)
+  newLocationsBaseArray[newLocationsBaseArray.length-1].locationName=locationName;
+  console.log("sa"+newLocationsBaseArray[0].locationName)
+  
+ 
+  setBaseLocations(newLocationsBaseArray)
+   axios.patch(SERVER_URL+"/api-map/users/parent/addBaseLocations",{id:id,newLocationsBaseArray:newLocationsBaseArray})
+  .then(data=>console.log(data+"sss")) .catch(error => console.log(error));
+
 
   useEffect(() => {
     const id = "63738fb9e33a0195e497e318";
@@ -180,65 +283,71 @@ export default function AddLocation() {
             color: "#1faadb",
           },
         }}
-      />
+			/>
+     
+       {
+       Longitude?
+     	<MapView
+				style={styles.map}
+				initialRegion={{
+          latitude: Latitude,
+          longitude: Longitude,
+					latitudeDelta: 0.0922,
+					longitudeDelta: 0.0421
+				}}
+				provider="google"
+			>
 
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 32.07962,
-          longitude: 34.88911,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        provider="google">
-        <Marker
-          coordinate={pin}
-          pinColor="black"
-          draggable={true}
-          onDragStart={(e) => {
-            console.log("Drag start", e.nativeEvent.coordinate);
-          }}
-          onDragEnd={(e) => {
-            setPin({
-              latitude: e.nativeEvent.coordinate.latitude,
-              longitude: e.nativeEvent.coordinate.longitude,
-            });
-          }}>
-          <Callout>
-            <Text>I'm here</Text>
-          </Callout>
-        </Marker>
-        <Circle center={pin} radius={35} />
+				<Marker
+					coordinate={pin}
+					pinColor="black"
+					draggable={true}
+					onDragStart={(e) => {
+						console.log("Drag start", e.nativeEvent.coordinate)
+					}}
+					onDragEnd={(e) => {
+						setPin({
+							latitude: e.nativeEvent.coordinate.latitude,
+							longitude: e.nativeEvent.coordinate.longitude
+						})
+					}}
+				>
+
+
+
+					<Callout>
+						<Text>Drag to new location</Text>
+					</Callout>
+				</Marker>
+				{/* <Circle center={pin} radius={35} /> */}
+
+       
+
 
         {baseLocations.map((marker, index) => (
           <>
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: parseFloat(marker.latitude),
-                longitude: parseFloat(marker.longitude),
-              }}
-              title={marker.name && marker.name}
-            />
-            <Circle
-              key={index + 199}
-              center={{
-                latitude: parseFloat(marker.latitude),
-                longitude: parseFloat(marker.longitude),
-              }}
-              radius={75}
-            />
-          </>
-        ))}
-      </MapView>
-      <View style={{ marginTop: 50, flex: 1, flexDirection: "column" }}>
-        <TextInput
-          value={locationName}
-          onChangeText={(input) => setLocationName(`${input}`)}
-          style={styles.inputStyle}
-        />
-        <Button title="add place" onPress={() => handleAddPlace()} />
-        <Text> {"lat:" + latitude + " long :" + longitude + " text-"}</Text>
+    <Marker
+      key={index}
+      coordinate={{ latitude: parseFloat(marker.latitude), longitude: parseFloat(marker.longitude) }}
+        title={marker.name&&marker.name}
+    />
+    <Circle key ={index+199} center={{ latitude: parseFloat(marker.latitude), longitude: parseFloat(marker.longitude) }} radius={75} />
+
+   
+
+
+    </>
+  ))}
+        
+			</MapView>
+     :"" }
+      <View style={{ marginTop: 50, flex: 1 ,flexDirection:"column"}}>
+      <TextInput value={locationName}onChangeText={(input) =>  setLocationName(`${input}`)} style={styles.inputStyle}/>
+        <Button title="add place" onPress={()=>handleAddPlace()}/>
+      <Text> {"lat:" + initailLocation?.coords.longitude+ " long :"+" text-"}</Text>
+   
+      
+
       </View>
     </View>
   );

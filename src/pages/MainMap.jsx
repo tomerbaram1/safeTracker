@@ -10,18 +10,26 @@ import * as Notification from "expo-notifications";
 import { useRef } from "react";
 import IO from "socket.io-client";
 
-const TASK_FETCH_LOCATION = "background-location-task";
-const SERVER_URL = "http://10.195.25.104:4000";
+const TASK_FETCH_LOCATION = 'background-location-task';
+const SERVER_URL="http://10.195.25.157:4000";
+
+const USERID="63738fb9e33a0195e497e318"
+
 
 const USERID = "63738fb9e33a0195e497e318";
 
 Notification.setNotificationHandler({
-  handleNotification: async () => {
-    return {
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-    };
-  },
+	handleNotification: async () => {
+	  return {
+		shouldShowAlert: true,
+		shouldPlaySound: true
+	  };
+	}
+  });
+  
+
+  const socket1 = IO(SERVER_URL, {
+
 });
 
 const socket = IO(SERVER_URL, {});
@@ -61,17 +69,13 @@ export default function MainMap() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const [kidsLocations, setKidsLocations] = useState([]); //To do add socket.on that changes kids array and show on map
+  const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
 
-  const [myLocatin, setMyLocation] = useState({
-    latitude: 32.07962,
-    longitude: 34.88911,
-  });
+const id="63738fb9e33a0195e497e318"
 
-  const [pin, setPin] = React.useState({
-    latitude: 32.07962,
-    longitude: 34.88911,
-  });
+	const [cnt, setCnt] = useState(0);
+	
+
 
   const [region, setRegion] = React.useState({
     latitude: 32.07962,
@@ -82,17 +86,47 @@ export default function MainMap() {
   const [baseLocations, setBaseLocations] = React.useState([]);
   const responseListener = useRef();
 
-  useEffect(() => {
-    const id = "63738fb9e33a0195e497e318";
+  useEffect(()=>{
+	const id="63738fb9e33a0195e497e318"
+console.log("useeffect")
 
-    socket.on("connection", function (socket) {
-      console.log(`${socket.id} is connected`);
+socket1.on(`${id}`,  (children) => {
+		
+	setCnt(cnt+1)
+	setKidsLocations([...children.children])
 
-      socket.on(`${id}`, (socketKidsLocations) => {
-        socket.join(socket.id);
-        console.log("socket**************************");
-        setKidsLocations([...socketKidsLocations]);
-      });
+
+	 socket1.emit('disconnect',()=>{
+		console.log("user"+socket1.id+" disconnected")
+	  })
+  })
+	// socket1.on('connection', function(socket){
+	// 	console.log(`${socket.id} is connected`)
+		
+
+	// 	socket.on(`${id}`, (children) => {
+	// 		console.log(children+"ssss")
+	// 		alert("ttt2")
+	// 		console.log("location**************************")
+	// 	   setKidsLocations([...children.children])
+	// 	  })
+	  
+	// //   console.log("***")
+	// // 	socket.on('disOn', (location,id) => {
+	// // 	  console.log("on")
+	// // 	  socket.emit('disTo', getDis(location,String(id)))
+	// // 	  console.log(`user ${socket.id} joined room ${socket.id}`);
+	// // 	})
+	   
+	  
+	//   socket.on('disconnect',()=>{
+	// 	console.log("user"+socket.id+" disconnected")
+	//   })
+
+	//   });
+ })
+ useEffect(()=> {
+
 
       socket.on("disconnect", () => {
         console.log("user" + socket.id + " disconnected");
@@ -104,9 +138,23 @@ export default function MainMap() {
       Notification.addNotificationResponseReceivedListener((response) => {
         console.log("--- notification tapped ---");
         console.log(response);
-        console.log("------");
-      });
-  }, []);
+        console.log('------');
+    })
+},[])
+
+
+ useEffect(()=>{
+	const id="63738fb9e33a0195e497e318"
+		 axios.post(SERVER_URL+"/api-map/users/parent/getChildrenLocation",{id:id})
+	.then(data=>{setKidsLocations(data.data)
+	setPin({latitude:data.data[0].location[data.data[0].location.length-1].latitude,
+		longitude:data.data[0].location[data.data[0].location.length-1].longitude})
+	})
+ },[])
+
+ 	
+
+
 
   useEffect(() => {
     const id = "63738fb9e33a0195e497e318";
@@ -177,92 +225,95 @@ export default function MainMap() {
             color: "#1faadb",
           },
         }}
-      />
+			/>
+       
+			<MapView
+				style={styles.map}
+				initialRegion={{
+          latitude: pin.latitude,
+          longitude: pin.longitude,
+					latitudeDelta: 0.0922,
+					longitudeDelta: 0.0421
+				}}
+				provider="google"
+			>
+	
+					
 
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 32.07962,
-          longitude: 34.88911,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        provider="google">
-        <Marker
-          coordinate={pin}
-          pinColor="black"
-          draggable={true}
-          onDragStart={(e) => {
-            console.log("Drag start", e.nativeEvent.coordinate);
-          }}
-          onDragEnd={(e) => {
-            setPin({
-              latitude: e.nativeEvent.coordinate.latitude,
-              longitude: e.nativeEvent.coordinate.longitude,
-            });
-          }}>
-          <Callout>
-            <Text>I'm here</Text>
-          </Callout>
-        </Marker>
-        <Circle center={pin} radius={35} />
 
-        {kidsLocations.map((marker, index) =>
-          marker.location[marker.location.length - 1] ? (
-            <>
-              <Marker
-                key={index}
-                coordinate={{
-                  latitude: parseFloat(
-                    marker.location[marker.location.length - 1].latitude
-                  ),
-                  longitude: parseFloat(
-                    marker.location[marker.location.length - 1].longitude
-                  ),
-                }}
-                title={marker.connectionToken}
-              />
-              <Circle
-                key={index + 199}
-                center={{
-                  latitude: parseFloat(
-                    marker.location[marker.location.length - 1].latitude
-                  ),
-                  longitude: parseFloat(
-                    marker.location[marker.location.length - 1].latitude
-                  ),
-                }}
-                radius={75}
-              />
-            </>
-          ) : (
-            ""
-          )
-        )}
+				<Marker
+					coordinate={pin}
+					pinColor="black"
+					draggable={true}
+					onDragStart={(e) => {
+						console.log("Drag start", e.nativeEvent.coordinate)
+					}}
+					onDragEnd={(e) => {
+						setPin({
+							latitude: e.nativeEvent.coordinate.latitude,
+							longitude: e.nativeEvent.coordinate.longitude
+						})
+					}}
+				>
+
+
+
+					<Callout>
+						<Text>I'm here</Text>
+					</Callout>
+				</Marker>
+				<Circle center={pin} radius={35} />
+
+       
+
+
+				{kidsLocations.map((marker, index) => (
+					
+				marker.location[marker.location.length-1]?	
+          <>
+    <Marker
+      key={index}
+      coordinate={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
+		, longitude: parseFloat(marker.location[marker.location.length-1].longitude) }}
+        title={`${marker.location[marker.location.length-1].time+"--"+marker.batteryLevel}`}
+    />
+    <Circle key ={index+199} center={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
+		, longitude: parseFloat(marker.location[marker.location.length-1].latitude) }}
+         radius={75} />
+		
+    </>
+	:""
+  ))}
+
+
+
 
         {baseLocations.map((marker, index) => (
           <>
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: parseFloat(marker.latitude),
-                longitude: parseFloat(marker.longitude),
-              }}
-              title={marker.name && marker.name}
-            />
-            <Circle
-              key={index + 199}
-              center={{
-                latitude: parseFloat(marker.latitude),
-                longitude: parseFloat(marker.longitude),
-              }}
-              radius={75}
-            />
-          </>
-        ))}
-      </MapView>
-    </View>
-  );
+    <Marker
+      key={index}
+      coordinate={{ latitude: parseFloat(marker.latitude), longitude: parseFloat(marker.longitude) }}
+        title={marker.name&&marker.name}
+    />
+    <Circle key ={index+199} center={{ latitude: parseFloat(marker.latitude), longitude: parseFloat(marker.longitude) }} radius={75} />
+
+   
+
+
+    </>
+  ))}
+        
+			</MapView>
+      <View style={{ marginTop: 50, flex: 1 ,flexDirection:"column"}}>
+      
+      <Text> {"mainMap"+cnt}</Text>
+   
+      
+      </View>
+     
+		</View>
+	)
+
 }
 
 const styles = StyleSheet.create({
