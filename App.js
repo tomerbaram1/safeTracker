@@ -1,92 +1,37 @@
+import { useContext, useState } from "react";
 
-import { useContext, useState } from 'react';
-
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StyleSheet, Text, View } from "react-native";
 
 // redux
-import { Provider } from 'react-redux';
-import { store } from './src/redux/store';
-// redux-persist wrappers
-
-// import { persistStore, persistReducer } from 'redux-persist'// the local storage we'll be using to persist data
-// import AsyncStorage from '@react-native-community/async-storage'// redux-persist merge level
-// import autoMergeLevel2 from 'redux persist/lib/stateReconciler/autoMergeLevel2'// root reducer - reducers/index.js
-// import { PersistGate } from 'redux-persist/lib/integration/react';
-
+import { Provider } from "react-redux";
+import { store } from "./src/redux/store";
 
 //components
-import EntryScreen from './src/pages/EntryScreen';
+import EntryScreen from "./src/pages/EntryScreen";
 
-//navigations: 
+//navigations:
 
-import { NavigationContainer, DarkTheme } from '@react-navigation/native';
-
+import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 
 //bottom navigator
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 
 //stack
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useSelector } from 'react-redux';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Toast from 'react-native-toast-message';
 const Stack = createNativeStackNavigator();
 
-// // redux persist
-// // persist config
-// const persistConfig = {
-//   key: 'root',
-//   storage: AsyncStorage,
-//   stateReconciler: autoMergeLevel2
-// };// wrap persist API around root reducer and store
-// const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-// export const store = createStore(persistedReducer);
-// export const persistor = persistStore(store);
-
-
-
-
-
-// import { Provider as PaperProvider } from 'react-native-paper';
-
-
 export default function App() {
-
-  return(
-
-
-     <Provider store={store}>
+  return (
+    <Provider store={store}>
       <NavigationContainer
-        // theme={DarkTheme}
+      // theme={DarkTheme}
       >
-
-        <EntryScreen/>
-
+        <EntryScreen />
+        <Toast/>
       </NavigationContainer>
-     </Provider>
-
-
-  )
+    </Provider>
+  );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-
-//   title: {
-//     marginTop: 50,
-//     color: '#16213E',
-//     fontSize: 20,
-//     fontWeight: 'bold',
-//     marginBottom: 15
-//   },
-
-// });
-
-
 

@@ -33,7 +33,7 @@ const ChildList = ({ childNumber, setChildNumber }) => {
   };
   useEffect(() => {
     getKidsData();
-  }, [user]);
+  }, []);
 
   return (
     <View style={styles.listView}>

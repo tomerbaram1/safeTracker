@@ -24,7 +24,7 @@ const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => 
   const dispatch = useDispatch();
  
   useEffect(() => {
-    if (!user) {
+    if (user=== undefined) {
       navigation.navigate("WelcomePage");
     }
   }, []);

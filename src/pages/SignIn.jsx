@@ -9,6 +9,7 @@ import { Input } from "@rneui/base";
 import { login, reset } from "../redux/AuthSlice";
 import { Button } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
+import Toast from 'react-native-toast-message';
 
 const SigninSchema = Yup.object().shape({
   email: Yup.string()
@@ -26,6 +27,7 @@ const SigninSchema = Yup.object().shape({
 
 
 export default function SignIn({ navigation: { goBack } }) {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
@@ -36,24 +38,13 @@ export default function SignIn({ navigation: { goBack } }) {
     (state) => state.auth
   );
 
-  useEffect(() => {
-    if (isError) {
-      alert(message);
-      
-    }
 
-
-    
-
-    dispatch(reset);
-  }, [user, isError, isSuccess, message, dispatch]);
-
-  const onChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const showErrorToast = () => {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Please try again later 🚀' 
+    })};
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -61,7 +52,16 @@ export default function SignIn({ navigation: { goBack } }) {
     if (user) {
       navigation.navigate("Content");
 
-    }else{null}
+    }else{
+  
+      navigation.navigate("SignIn");
+      
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Please try again later 🚀' 
+      })
+    }
 
   };
 

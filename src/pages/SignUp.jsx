@@ -52,25 +52,20 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
     (state) => state.auth
   );
 
-  useEffect(() => {
-    if (isError) {
-      console.log(message);
-    }
+  // useEffect(() => {
+  //   if (isError) {
+  //     console.log(message);
+  //   }
 
-    // if ( isSuccess || user) {
-    //   alert("User Registered")
+  //   // if ( isSuccess || user) {
+  //   //   alert("User Registered")
 
-    // }
+  //   // }
 
-    dispatch(reset);
-  }, [user, isError, isSuccess, message, dispatch]);
+  //   dispatch(reset);
+  // }, [user, isError, isSuccess, message, dispatch]);
 
-  const onChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
+
 
   const onSubmit = (e) => {
     e.preventDefault();
