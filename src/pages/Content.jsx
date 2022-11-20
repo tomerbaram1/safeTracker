@@ -30,8 +30,7 @@ const Content = () => {
 
         <Tab.Screen  name="ChildPage" component={ChildpageComp} options={{headerShown:false}} />
 
-        <Tab.Screen name="MainMap" component={MainMap} options={{headerShown:false}}/>
-
+      
         <Tab.Screen name="AddLocation" component={AddLocation} options={{headerShown:false}} />
       </Tab.Navigator>
   

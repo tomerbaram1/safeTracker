@@ -17,7 +17,7 @@ import IO, { Socket } from "socket.io-client";
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://10.195.25.157:4000";
+const SERVER_URL="http://10.0.0.11:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -107,10 +107,12 @@ const id="63738fb9e33a0195e497e318"
 console.log("useeffect")
 
 socket1.on(`${id}`,  (children) => {
-		
+		console.log("ttiti")
 	setCnt(cnt+1)
+	
 	setKidsLocations([...children.children])
-
+	
+	 
 
 	 socket1.emit('disconnect',()=>{
 		console.log("user"+socket1.id+" disconnected")

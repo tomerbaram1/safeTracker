@@ -11,7 +11,7 @@ import * as TaskManager from "expo-task-manager";
 import { TextInput } from "react-native-paper";
 
 const TASK_FETCH_LOCATION = "background-location-task";
-const SERVER_URL = "http://10.195.25.104:4000";
+const SERVER_URL = "http://10.0.0.11:4000";
 
 const USERID = "63738fb9e33a0195e497e318";
 
