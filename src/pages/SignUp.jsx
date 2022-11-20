@@ -8,6 +8,7 @@ import { register, reset } from "../redux/AuthSlice";
 import { Input } from "@rneui/base";
 import { Button } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
+import Toast from 'react-native-toast-message';
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string()
@@ -70,8 +71,12 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
+    if (password !== confirmPassword ) {
+      Toast.show({
+        type: 'error',
+        text1: 'Passwords do not match',
+        text2: 'Please try again 🚀' 
+      })
     } else {
       const userData = {
         fullName,
