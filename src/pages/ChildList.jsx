@@ -11,30 +11,34 @@ import { FAB, Icon, Tooltip } from "@rneui/base";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const api = axios.create({ baseURL: "http://172.20.10.3:4000" });
+const api = axios.create({ baseURL: "http://10.195.25.143:4000" });
 
 const ChildList = ({ childNumber, setChildNumber }) => {
   const [kids, setKids] = useState([]);
   const [openHistory, setOpenHistory] = useState(false);
   const { user } = useSelector((state) => state.auth);
-  console.log(user)
+  const id = user?._id;
   const getKidsData = () => {
+    console.log(id+" user's id")
     api
-      .get(`/api/addchild/${id}`)
+      .post('/api/addchild/',{id:id})
+      
       .then((res) => {
+        console.log(id,"id after get")
         const data = res.data;
         setKids(data.children);
+        console.log(data.children,"kids");
       })
       .catch((error) => console.log(error));
   };
   useEffect(() => {
     getKidsData();
-  }, []);
+  }, [user]);
 
   return (
     <View style={styles.listView}>
       <ScrollView>
-        {kids.map((data, index) => {
+        {kids?kids.map((data, index) => {
           if (kids.length == 0) {
             return <Text>no kids registerd</Text>;
           }
@@ -55,7 +59,7 @@ const ChildList = ({ childNumber, setChildNumber }) => {
                   type="font-awesome"
                   name="phone"
                 />
-                {data.phone}
+                {data.phone || data.childPhone}
                 {setChildNumber(data.phone)}
               </Text>
               <Text style={{ fontWeight: "700" }}>
@@ -78,10 +82,10 @@ const ChildList = ({ childNumber, setChildNumber }) => {
                 </Text>
               </View>
               <FAB
-                icon={{ name: 'message', color: 'white' }}
-                color='#495867'
-                style={!openHistory ? styles.msg: styles.msgTwo}
-            />
+                icon={{ name: "message", color: "white" }}
+                color="#495867"
+                style={!openHistory ? styles.msg : styles.msgTwo}
+              />
               <FAB
                 title="Location History"
                 icon={{ name: "place", color: "white" }}
@@ -108,13 +112,12 @@ const ChildList = ({ childNumber, setChildNumber }) => {
                         );
                       })}
                     </Text>
-                    
                   </View>
                 </ScrollView>
               )}
             </View>
           );
-        })}
+        }):""}
       </ScrollView>
     </View>
   );
@@ -149,14 +152,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 10,
   },
-  msg:{
-    position:'absolute',
-    bottom:28,
-    right:20
+  msg: {
+    position: "absolute",
+    bottom: 28,
+    right: 20,
   },
-  msgTwo:{
-    position:'absolute',
-    bottom:83,
-    right:20
-  }
+  msgTwo: {
+    position: "absolute",
+    bottom: 83,
+    right: 20,
+  },
 });

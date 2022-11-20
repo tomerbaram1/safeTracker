@@ -39,13 +39,11 @@ export default function SignIn({ navigation: { goBack } }) {
   useEffect(() => {
     if (isError) {
       alert(message);
+      
     }
 
 
-    if (user) {
-      navigation.navigate("Content");
-
-    }
+    
 
     dispatch(reset);
   }, [user, isError, isSuccess, message, dispatch]);
@@ -60,6 +58,10 @@ export default function SignIn({ navigation: { goBack } }) {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(login({ email, password }));
+    if (user) {
+      navigation.navigate("Content");
+
+    }else{null}
 
   };
 
@@ -98,27 +100,27 @@ export default function SignIn({ navigation: { goBack } }) {
               title="Go Back"
               onPress={() => goBack()}
               icon={{
-                name: "home",
+                name: "arrow-right",
                 type: "font-awesome",
                 size: 15,
                 color: "white",
-
+              }}
+              iconContainerStyle={{ marginRight: 10 }}
+              titleStyle={{ fontWeight: "700" }}
+              buttonStyle={{
+                backgroundColor: "#577399",
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 30,
+              }}
+              containerStyle={{
+                width: 200,
+                marginHorizontal: 50,
+                marginVertical: 10,
               }}
             />
           </View>
 
-          <View style={styles.inputView}>
-            <Input
-              value={password}
-              style={styles.Input}
-              placeholder="Password"
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-              onChangeText={(text) => {
-                setPassword(text);
-              }}
-            />
-          </View>
 
           <Button
             title="Log In"

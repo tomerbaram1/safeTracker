@@ -3,11 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import {Text, View, StyleSheet, Linking, ScrollView, Pressable, ScrollViewComponent} from 'react-native';
 import { Button, FAB } from "@rneui/base";
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-import Settings from './settings/Settings';
-import Chat from './Chat';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout, reset } from '../redux/AuthSlice';
 import MainMap from './MainMap';
@@ -19,17 +15,14 @@ const Tab = createBottomTabNavigator();
 const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => {
   const [infoDown, setInfoDown] = useState(false)
   const [addChildForm, setAddChildForm] = useState(false)
-
   const { user } = useSelector((state) => state.auth);
+  
+
+
   const navigation = useNavigation();
 
   const dispatch = useDispatch();
-  const onLogout = () => {
-    dispatch(logout())
-      .then(navigation.navigate("WelcomePage"))
-      .catch((error) => console.log(error));
-    dispatch(reset());
-  };
+ 
   useEffect(() => {
     if (!user) {
       navigation.navigate("WelcomePage");
@@ -45,14 +38,7 @@ const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => 
     <Text>
     {user?.fullName}
     </Text>
-    <View>
-          <Button 
-            styles={styles.logoutBtn}
-            title="Log Out"
-            onPress={onLogout}
-
-            /> 
-    </View>
+   
     {sos && (
       <View style={styles.SosCall}>
        <Text style={styles.SosCall}>
@@ -85,7 +71,7 @@ const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => 
           <AddChild/>
         )}
       </View>
-    <ChildList childNumber={childNumber} setChildNumber = {setChildNumber}/>
+    <ChildList childNumber={childNumber} setChildNumber = {setChildNumber} />
     </View>
     
   </View>

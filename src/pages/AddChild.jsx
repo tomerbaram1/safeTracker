@@ -10,8 +10,10 @@ import {
 } from "react-native";
 import axios from "axios";
 import { Input } from "@rneui/base";
+import { useSelector } from "react-redux";
 
-const api = axios.create({ baseURL: "http://172.20.10.3:4000" });
+
+const api = axios.create({ baseURL: "http://10.195.25.143:4000" });
 
 const AddChild = () => {
 
@@ -19,17 +21,21 @@ const AddChild = () => {
   const [childPhone, setChildPhone] = useState("");
   const [token, setToken] = useState("");
   const [showToken, setShowToken] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+
+  const id = user?._id;
 
   const addChild = () => {
     api
       .patch(`/api/addchild`, {
-        id: "63762454c7a485ff6f51f811",
+        id:id,
         childName: childName,
         childPhone: childPhone,
       })
       .then((res) => {
         const gettoken = res.data;
         setToken(gettoken[gettoken.length - 1].connectionToken);
+        console.log(childName, "added");
       })
       .catch((error) => console.log(error));
   };

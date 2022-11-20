@@ -15,7 +15,7 @@ import { AsyncStorage } from "react-native";
 import { useSelector } from "react-redux";
 
 const TASK_FETCH_LOCATION = "background-location-task";
-const SERVER_URL = "http://10.195.25.104:4000";
+const SERVER_URL = "http://10.195.25.143:4000";
 const USERID = "63738fb9e33a0195e497e318";
 
 const ChildPage = ({ sos, setSos }) => {

@@ -10,6 +10,7 @@ const Settings = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const onLogout = () => {
+    console.log(user?.fullName, "logging out");
     dispatch(logout())
       .then(navigation.navigate("WelcomePage"))
       .catch((error) => console.log(error));
@@ -17,12 +18,12 @@ const Settings = () => {
   };
   return(
   <List.AccordionGroup>
+    <List.Accordion title="Add Kid" id="2">
+      <List.Item title="Item 2" />
+    </List.Accordion>
     <List.Accordion title="Log Out" id="1">
     <List.Item title="Log Out" />
         <Button styles={styles.logoutBtn} title="Log Out" onPress={onLogout} />
-    </List.Accordion>
-    <List.Accordion title="Add Kid" id="2">
-      <List.Item title="Item 2" />
     </List.Accordion>
     <View>
       {/* <Text>
