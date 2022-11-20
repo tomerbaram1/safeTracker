@@ -18,7 +18,7 @@ import { TextInput } from "react-native-paper"
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://10.195.25.104:4000";
+const SERVER_URL="http://10.195.25.157:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -33,8 +33,8 @@ export default function AddLocation() {
      
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+  const [Latitude, setLatitude] = useState(null);
+  const [Longitude, setLongitude] = useState(null);
 
 
 
@@ -58,7 +58,7 @@ export default function AddLocation() {
 	})
   const [ baseLocations, setBaseLocations ] = React.useState([])
   const [locationName,setLocationName]=useState("");
-
+  const [initailLocation,setIntialLocation]=useState();
  
 
 
@@ -132,8 +132,10 @@ useEffect(() => {
       notificationTitle: 'Using your location',
       notificationBody: 'To turn off, go back to the app and switch something off.'
  } })
-}, []); 
 
+
+   
+}, []); 
 
 
 
@@ -149,6 +151,26 @@ useEffect(() => {
          
         }
        ).catch(error => console.log(error));
+
+       
+       (async () => {
+      
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          setErrorMsg('Permission to access location was denied');
+          return;
+        }
+  
+        let location = await Location.getCurrentPositionAsync({});
+        setLatitude(location.coords.latitude)
+        setLongitude(location.coords.longitude);
+        setLocation(location.coords);
+      })();
+   
+
+
+
+
  }, []); 
 
 
@@ -227,20 +249,19 @@ useEffect(() => {
           }
         }}
 			/>
-       
-			<MapView
+     
+       {
+       Longitude?
+     	<MapView
 				style={styles.map}
 				initialRegion={{
-          latitude: 32.07962,
-          longitude: 34.88911,
+          latitude: Latitude,
+          longitude: Longitude,
 					latitudeDelta: 0.0922,
 					longitudeDelta: 0.0421
 				}}
 				provider="google"
 			>
-	
-
-
 
 				<Marker
 					coordinate={pin}
@@ -260,10 +281,10 @@ useEffect(() => {
 
 
 					<Callout>
-						<Text>I'm here</Text>
+						<Text>Drag to new location</Text>
 					</Callout>
 				</Marker>
-				<Circle center={pin} radius={35} />
+				{/* <Circle center={pin} radius={35} /> */}
 
        
 
@@ -284,10 +305,11 @@ useEffect(() => {
   ))}
         
 			</MapView>
+     :"" }
       <View style={{ marginTop: 50, flex: 1 ,flexDirection:"column"}}>
       <TextInput value={locationName}onChangeText={(input) =>  setLocationName(`${input}`)} style={styles.inputStyle}/>
         <Button title="add place" onPress={()=>handleAddPlace()}/>
-      <Text> {"lat:" + latitude+ " long :"+ longitude+" text-"}</Text>
+      <Text> {"lat:" + initailLocation?.coords.longitude+ " long :"+" text-"}</Text>
    
       
       </View>

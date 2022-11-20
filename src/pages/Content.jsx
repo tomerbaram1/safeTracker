@@ -9,6 +9,7 @@ import Chat from "./Chat";
 import ChildHomePage from './ChildPage';
 import MainMap from './MainMap';
 import AddLocation from './AddLocation';
+import AddChild from './AddChild';
 
 const Content = () => {
 
@@ -20,6 +21,7 @@ const Content = () => {
         <Tab.Screen name="ChildHomePage" component={ChildHomePage} options={{headerShown:false}}/>
         <Tab.Screen name="MainMap" component={MainMap} options={{headerShown:false}}/>
         <Tab.Screen name="AddLocation" component={AddLocation} options={{headerShown:false}}/>
+        <Tab.Screen name="AddChild" component={AddChild} options={{headerShown:false}}/>
       </Tab.Navigator>
   
     )

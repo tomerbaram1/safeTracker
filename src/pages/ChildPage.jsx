@@ -22,10 +22,10 @@ import * as Notification from 'expo-notifications';
 import { useRef } from "react";
 import * as Application from 'expo-application';
 import IO from "socket.io-client";
-
+import * as Battery from 'expo-battery';
 
 const LOCATION_TASK_NAME = 'background-location-task';
-const SERVER_URL="http://10.0.0.11:4000";
+const SERVER_URL="http://10.195.25.157:4000";
 const USERID="63738fb9e33a0195e497e318"
 
 
@@ -62,7 +62,13 @@ const USERID="63738fb9e33a0195e497e318"
 
 
 
+async function sendBatteryUpdate()
+{
 
+  const batteryLevel = Math.ceil(await Battery.getBatteryLevelAsync()*100);
+  return batteryLevel
+
+}
 
 
 
@@ -115,6 +121,8 @@ const ChildHomePage = () => {
       TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data: { locations }, error }) => {
         const id="63738fb9e33a0195e497e318"
         const [location] = locations;
+       const batteryLevel = await sendBatteryUpdate()
+      
         // console.log(location,"location")
         console.log("task")
         try {
@@ -122,7 +130,7 @@ const ChildHomePage = () => {
         //   socket.emit('disOn', location,USERID)// you should use post instead of get to persist data on the backend
         // axios.patch(SERVER_URL+"/api-map/users/parent/pushNotification",{id:id,token:token,location:location})
       await axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8b682c1-cb6b",
-        currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]"})
+        currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]",batteryLevel})
           // console.log(location.coords.latitude)
          
         } catch (err) {

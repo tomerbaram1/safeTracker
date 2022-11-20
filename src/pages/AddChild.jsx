@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import axios from "axios";
 
-const api = axios.create({ baseURL: "http://10.195.25.177:4000" });
+const api = axios.create({ baseURL: "http://10.0.0.11:4000" });
 
 const AddChild = () => {
   // // const [child, setChild] = useState({

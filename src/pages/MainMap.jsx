@@ -18,7 +18,7 @@ import IO, { Socket } from "socket.io-client";
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://10.0.0.11:4000";
+const SERVER_URL="http://10.195.25.157:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -85,10 +85,7 @@ export default function MainMap() {
   const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
 
 const id="63738fb9e33a0195e497e318"
-  const[myLocatin,setMyLocation]=useState({
-		latitude: 32.07962,
-		longitude: 34.88911
-	})
+
 	const [cnt, setCnt] = useState(0);
 	
 
@@ -158,10 +155,13 @@ socket1.on(`${id}`,  (children) => {
  useEffect(()=>{
 	const id="63738fb9e33a0195e497e318"
 		 axios.post(SERVER_URL+"/api-map/users/parent/getChildrenLocation",{id:id})
-	.then(data=>setKidsLocations(data.data))
+	.then(data=>{setKidsLocations(data.data)
+	setPin({latitude:data.data[0].location[data.data[0].location.length-1].latitude,
+		longitude:data.data[0].location[data.data[0].location.length-1].longitude})
+	})
  },[])
 
- 
+ 	
 
 
   useEffect(() => {
@@ -236,15 +236,15 @@ socket1.on(`${id}`,  (children) => {
 			<MapView
 				style={styles.map}
 				initialRegion={{
-          latitude: 32.07962,
-          longitude: 34.88911,
+          latitude: pin.latitude,
+          longitude: pin.longitude,
 					latitudeDelta: 0.0922,
 					longitudeDelta: 0.0421
 				}}
 				provider="google"
 			>
 	
-
+					
 
 
 				<Marker
@@ -281,7 +281,7 @@ socket1.on(`${id}`,  (children) => {
       key={index}
       coordinate={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
 		, longitude: parseFloat(marker.location[marker.location.length-1].longitude) }}
-        title={`${marker.location[marker.location.length-1].time}`}
+        title={`${marker.location[marker.location.length-1].time+"--"+marker.batteryLevel}`}
     />
     <Circle key ={index+199} center={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
 		, longitude: parseFloat(marker.location[marker.location.length-1].latitude) }}

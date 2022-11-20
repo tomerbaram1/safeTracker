@@ -30,7 +30,17 @@ const Tab = createBottomTabNavigator();
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import Content from './src/pages/Content';
+import { useEffect } from 'react';
+import * as Battery from 'expo-battery';
+import axios from 'axios';
+
+
 const Stack = createNativeStackNavigator();
+const SERVER_URL="http://10.0.0.11:4000";
+const USERID="63738fb9e33a0195e497e318"
+const CONNECTION_TOKEN="c8b682c1-cb6b"/// To do- tomer change dynamicaly
+const PARENT_ID="63738fb9e33a0195e497e318"/// To do- tomer change dynamicaly
+
 
 // // redux persist
 // // persist config
@@ -48,11 +58,27 @@ const Stack = createNativeStackNavigator();
 
 
 
+
+
 // import { Provider as PaperProvider } from 'react-native-paper';
 
 
 export default function App() {
-  
+
+
+
+
+
+// useEffect(() => {
+//   return () => {
+//     console.log("ss1")
+//     axios.post(
+//       SERVER_URL+"/api-map/childClosedApp",{id:PARENT_ID,
+//       connectionToken:CONNECTION_TOKEN,
+//       batteryLevel:Math.ceil(Battery.getBatteryLevelAsync()*100)
+//   })
+//   };
+// })
 
   return(
 
