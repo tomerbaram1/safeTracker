@@ -4,11 +4,7 @@ import {
   View,
   TextInput,
   StyleSheet,
-  SafeAreaView,
-  Pressable,
   Button,
-  TouchableWithoutFeedback,
-  Overlay,
   Modal,
   Dimensions
 } from "react-native";
@@ -18,6 +14,7 @@ import { Input } from "@rneui/base";
 const api = axios.create({ baseURL: "http://172.20.10.3:4000" });
 
 const AddChild = () => {
+
   const [childName, setChildName] = useState("");
   const [childPhone, setChildPhone] = useState("");
   const [token, setToken] = useState("");
@@ -70,8 +67,7 @@ const AddChild = () => {
             animationType="slide"
             transparent={false}
             visible={true}
-            style={styles.modal}
-          >
+            style={styles.modal}>
             <Text style={styles.overlayText}>Your Child's Token</Text>
             <Text selectable={true} style={styles.overlayToken}>
               {token}

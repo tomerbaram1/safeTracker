@@ -7,9 +7,6 @@ import {
   Text,
   View,
   Button,
-  ScrollView,
-  PermissionsAndroid,
-  Alert,
 } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import MapView, { Callout, Circle, Marker } from "react-native-maps";
@@ -17,10 +14,6 @@ import MapView, { Callout, Circle, Marker } from "react-native-maps";
 import { useState } from "react";
 import * as Location from "expo-location";
 import * as TaskManager from "expo-task-manager";
-import { AsyncStorage } from "react-native";
-import * as Notification from "expo-notifications";
-import * as Permissions from "expo-permissions";
-import { useRef } from "react";
 import { TextInput } from "react-native-paper";
 
 const TASK_FETCH_LOCATION = "background-location-task";
@@ -52,22 +45,6 @@ export default function AddLocation() {
   });
   const [baseLocations, setBaseLocations] = React.useState([]);
   const [locationName, setLocationName] = useState("");
-
-  //   useEffect(() => {
-  //     //When app is closed
-  //     const backgroundSubscription = Notification.addNotificationResponseReceivedListener(response => {
-  //       console.log(response);
-  //     });
-  //     //When the app is open
-  //     const foregroundSubscription = Notification.addNotificationReceivedListener(notification => {
-  //       console.log(notification);
-  //     });
-
-  //     return () => {
-  //       backgroundSubscription.remove();
-  //       foregroundSubscription.remove();
-  //     }
-  //   }, []);
 
   let text = "Waiting..";
   if (errorMsg) {

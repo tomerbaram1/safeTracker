@@ -1,27 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity,
-  Alert,
-  AsyncStorage,
-} from "react-native";
-import { Form, Formik } from "formik";
-import axios from "axios";
-import * as Yup from "yup";
-import Spinner from "react-native-loading-spinner-overlay";
 
-import SignUp from "./SignUp";
-import WelcomePage from "./WelcomePage";
-import ParentPage from "./ParentPage";
+import React, { useEffect, useState } from "react";
+import { StatusBar, StyleSheet, View } from "react-native";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Input } from "@rneui/base";
 import { login, reset } from "../redux/AuthSlice";
 import { Button } from "@rneui/base";
+import { useNavigation } from "@react-navigation/native";
 
 const SigninSchema = Yup.object().shape({
   email: Yup.string()
@@ -37,15 +24,13 @@ const SigninSchema = Yup.object().shape({
     ),
 });
 
-export default function SignIn({ navigation: { navigate, goBack } }) {
-  // const [formData, setFormData] = useState({
-  //   email: "",
-  //   password: "",
-  // });
+
+export default function SignIn({ navigation: { goBack } }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const { email, password } = formData;
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  
 
   const { user, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -53,11 +38,13 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
 
   useEffect(() => {
     if (isError) {
-      console.log(message);
+      alert(message);
     }
 
-    if (isSuccess || user) {
-      null;
+
+    if (user) {
+      navigation.navigate("Content");
+
     }
 
     dispatch(reset);
@@ -73,7 +60,7 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(login({ email, password }));
-    navigate("Content");
+
   };
 
   return (
@@ -85,13 +72,37 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
             <Input
               value={email}
               style={styles.Input}
-              autoComplete='email'
-              clearButtonMode='while-editing'
-              keyboardType='email-address'
-              placeholder="Email"
+              placeholder="Email."
               placeholderTextColor="#003f5c"
               onChangeText={(text) => {
                 setEmail(text);
+              }}
+            />
+          </View>
+
+          <View style={styles.inputView}>
+            <Input
+              value={password}
+              style={styles.Input}
+              placeholder="Password."
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+              onChangeText={(text) => {
+                setPassword(text);
+              }}
+            />
+          </View>
+
+          <View>
+            <Button
+              title="Go Back"
+              onPress={() => goBack()}
+              icon={{
+                name: "home",
+                type: "font-awesome",
+                size: 15,
+                color: "white",
+
               }}
             />
           </View>
@@ -110,7 +121,7 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
           </View>
 
           <Button
-            title="Sign In"
+            title="Log In"
             onPress={onSubmit}
             icon={{
               name: "arrow-right",
@@ -122,29 +133,6 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{
               backgroundColor: "#577399",
-              borderColor: "transparent",
-              borderWidth: 0,
-              borderRadius: 30,
-            }}
-            containerStyle={{
-              width: 200,
-              marginHorizontal: 50,
-              marginVertical: 10,
-            }}
-          />
-          <Button
-            title="Go Back"
-            onPress={() => goBack()}
-            icon={{
-              name: "home",
-              type: "font-awesome",
-              size: 15,
-              color: "white",
-            }}
-            iconContainerStyle={{ marginRight: 10 }}
-            titleStyle={{ fontWeight: "700" }}
-            buttonStyle={{
-              backgroundColor: "#495867",
               borderColor: "transparent",
               borderWidth: 0,
               borderRadius: 30,
@@ -203,78 +191,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF1493",
   },
 });
-// // const onSubmit = async (values) => {
 
-// //   console.log('=======================================>>>>>>')
-// //   const token = await AsyncStorage.getItem('signInToken')
-// //   console.log('token:' + token);
-
-// //     axios.post('http://10.195.25.149:4000/users/signin', {
-// //       email: values.email,
-// //       phoneNumber: values.phoneNumber,
-// //       firstName: values.firstName,
-// //       lastName: values.lastName,
-// //       password: values.password,
-// //       confirmPassword: values.confirmPassword
-// //     })
-// //     .then(res => {Alert.alert('succes'),
-// //       console.log('=======================================>>>>>>'),
-// //       console.log(res.data),
-// //       AsyncStorage.setItem('signInToken', `${res.data.token}`)})
-// //   }
-
-// const onSubmit = async () => {
-//   login()
-// }
-
-// const styles = StyleSheet.create({
-//   wrapper: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     paddingHorizontal: 15,
-//   },
-
-//   formContainer: {
-//     backgroundColor: '#F5EDDC',
-//     padding: 20,
-//     borderRadius: 20,
-//     width: '100%'
-//   },
-
-//   title: {
-//     color: '#16213E',
-//     fontSize: 20,
-//     fontWeight: 'bold',
-//     marginBottom: 15
-//   },
-
-//   inputWrapper: {
-//     marginBottom: 15
-//   },
-
-//   inputStyle: {
-//     borderColor: '#16213E',
-//     borderWidth: 1,
-//     borderRadius: 10,
-//     padding: 10
-//   },
-
-//   errorTxt: {
-//     fontSize: 12,
-//     color: '#FF0D10'
-//   },
-
-//   submitBtn: {
-//     // backgroundColor: '#395B64',
-//     padding: 10,
-//     borderRadius: 15,
-//     justifyContent: 'center'
-//   },
-
-//   submitBtnTxt: {
-//     color: '#fff',
-//     textAlign: 'center',
-//     fontSize: 18,
-//     fontWeight: 700
-//   }
-// });

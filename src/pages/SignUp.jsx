@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
-import { Form, Formik } from "formik";
-import axios from "axios";
+import { Formik } from "formik";
 import * as Yup from "yup";
-import Spinner from "react-native-loading-spinner-overlay";
-
-import SignUp from "./SignUp";
-import WelcomePage from "./WelcomePage";
-import ParentPage from "./ParentPage";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { register, reset } from "../redux/AuthSlice";
 import { Input } from "@rneui/base";
 import { Button } from "@rneui/base";
+import { useNavigation } from "@react-navigation/native";
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string()
@@ -50,8 +45,8 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  // const { email, password } = formData;
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const { user, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -89,10 +84,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
         password,
         phoneNumber,
       };
-      dispatch(register(userData));
+      dispatch(register(userData))
       navigate("Content");
 
-      // navigate('Content')
     }
   };
 
@@ -105,7 +99,7 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
         phoneNumber: "",
         confirmPassword: "",
       }}
-      // validationSchema={SignupSchema}
+      validationSchema={SignupSchema}
     >
       {({ handleChange, handleBlur, handleSubmit, values }) => (
         <View style={styles.container}>

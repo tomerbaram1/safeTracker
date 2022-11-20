@@ -13,21 +13,29 @@ import { logout, reset } from '../redux/AuthSlice';
 import MainMap from './MainMap';
 import ChildList from './ChildList';
 import AddChild from './AddChild';
-
+import { useNavigation } from "@react-navigation/native";
 const Tab = createBottomTabNavigator();
 
 const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => {
   const [infoDown, setInfoDown] = useState(false)
   const [addChildForm, setAddChildForm] = useState(false)
+
   const { user } = useSelector((state) => state.auth);
+  const navigation = useNavigation();
 
   const dispatch = useDispatch();
   const onLogout = () => {
-    dispatch(logout());
+    dispatch(logout())
+      .then(navigation.navigate("WelcomePage"))
+      .catch((error) => console.log(error));
     dispatch(reset());
-    navigate("WelcomePage")
-  
   };
+  useEffect(() => {
+    if (!user) {
+      navigation.navigate("WelcomePage");
+    }
+  }, []);
+
 
   return(
   <View>
@@ -87,33 +95,32 @@ const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => 
 export default ParentPage;
 
 const styles = StyleSheet.create({
-
-  text:{
-    marginTop:100,
-    textAlign:'center'
+  text: {
+    marginTop: 100,
+    textAlign: "center",
   },
-  SosCall:{
-    backgroundColor:'#D51807',
-    textAlign:'center',
-    padding:5,
-    color:'white',
-    fontWeight:'700',
-    borderRadius:10
+  SosCall: {
+    backgroundColor: "#D51807",
+    textAlign: "center",
+    padding: 5,
+    color: "white",
+    fontWeight: "700",
+    borderRadius: 10,
   },
 
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   title: {
     marginTop: 50,
-    color: '#16213E',
+    color: "#16213E",
     fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 15
+    fontWeight: "bold",
+    marginBottom: 15,
   },
   logoutBtn: {
     width: "80%",
@@ -164,4 +171,3 @@ const styles = StyleSheet.create({
     color:'white'
   }
 });
-
