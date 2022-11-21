@@ -203,7 +203,7 @@ console.log(longitude+""+longitude)
 		 index==0?<Button title={child.childname?child.childname:""} onPress={()=>changeRegion(child)}/>:""
 
 
-		 ))} */}
+		 ))} 
 			<GooglePlacesAutocomplete
 				placeholder="Search"
 				fetchDetails={true}
