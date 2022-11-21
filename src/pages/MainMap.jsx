@@ -17,7 +17,7 @@ import IO, { Socket } from "socket.io-client";
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://10.0.0.11:4000";
+const SERVER_URL="http://192.168.137.43:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -178,12 +178,22 @@ socket1.on(`${id}`,  (children) => {
  }, []); 
 
 
-
+function regionChange(child)
+{
+	setLatitude(child.location[child.location.length-1].latitude)
+	setLongitude(child.location[child.location.length-1].longitude)
+	console.log(child.location[child.location.length-1].longitude)
+	region.latitude=child.location[child.location.length-1].latitude;
+	region.longitude=child.location[child.location.length-1].longitude;
+}
 
 
 	return (
 		<View 	style={styles.container}>
-  
+ 	{kidsLocations.map((child,index)=>(
+		 <Button title={child.childname} onPress={()=>regionChange(child)}/>
+
+		 ))}
 			<GooglePlacesAutocomplete
 				placeholder="Search"
 				fetchDetails={true}
@@ -242,6 +252,14 @@ socket1.on(`${id}`,  (children) => {
 					latitudeDelta: 0.0922,
 					longitudeDelta: 0.0421
 				}}
+				region={{
+					latitude: latitude,
+					longitude: longitude,
+					latitudeDelta: 0.0922,
+					longitudeDelta: 0.0421
+				}}
+				
+				
 				provider="google"
 			>
 	
@@ -314,7 +332,7 @@ socket1.on(`${id}`,  (children) => {
       <View style={{ marginTop: 50, flex: 1 ,flexDirection:"column"}}>
       
       <Text> {"mainMap"+cnt}</Text>
-   
+	  
       
       </View>
      
