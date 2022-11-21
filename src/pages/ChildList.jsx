@@ -18,16 +18,18 @@ const ChildList = ({ childNumber, setChildNumber }) => {
   const [openHistory, setOpenHistory] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const id = user?._id;
+  const children= user?.children
   const getKidsData = () => {
     console.log(id+" user's id")
     api
       .post('/api/addchild/',{id:id})
       
       .then((res) => {
+        console.log(children,user.fulName, "children");
         console.log(id,"id after get")
         const data = res.data;
         setKids(data.children);
-        console.log(data.children,"kids");
+        console.log("user's", user.fulName, "kids", data.children);
       })
       .catch((error) => console.log(error));
   };

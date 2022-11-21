@@ -161,10 +161,10 @@ function regionChange(child)
 
 	return (
 		<View 	style={styles.container}>
- 	{kidsLocations.map((child,index)=>(
+ 	{/* {kidsLocations.map((child,index)=>(
 		 <Button title={child.childname?child.childname:""} onPress={()=>regionChange(child)}/>
 
-		 ))}
+		 ))} */}
 			<GooglePlacesAutocomplete
 				placeholder="Search"
 				fetchDetails={true}

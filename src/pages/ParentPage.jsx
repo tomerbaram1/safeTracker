@@ -24,10 +24,10 @@ const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => 
   const dispatch = useDispatch();
  
   useEffect(() => {
-    if (user=== undefined) {
+    if (!user) {
       navigation.navigate("WelcomePage");
     }
-  }, []);
+  }, [user]);
 
 
   return(

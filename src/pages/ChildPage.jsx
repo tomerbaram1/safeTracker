@@ -24,7 +24,7 @@ import IO from "socket.io-client";
 import * as Battery from 'expo-battery';
 
 const LOCATION_TASK_NAME = 'background-location-task';
-const SERVER_URL="http://10.195.25.155.43:4000";
+const SERVER_URL="http://10.195.25.155:4000";
 const USERID="63738fb9e33a0195e497e318"
 
 

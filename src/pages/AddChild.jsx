@@ -17,8 +17,8 @@ const api = axios.create({ baseURL: "http://10.195.25.155:4000" });
 
 const AddChild = () => {
 
-  const [childName, setChildName] = useState("");
-  const [childPhone, setChildPhone] = useState("");
+  const [childname, setChildName] = useState("");
+  const [phone, setChildPhone] = useState("");
   const [token, setToken] = useState("");
   const [showToken, setShowToken] = useState(false);
   const { user } = useSelector((state) => state.auth);
@@ -27,15 +27,13 @@ const AddChild = () => {
 
   const addChild = () => {
     api
-      .patch(`/api/addchild`, {
-        id:id,
-        childName: childName,
-        childPhone: childPhone,
+      .patch(`/api/addchild/${id}`, {
+        childname: childname,
+        phone: phone,
       })
       .then((res) => {
         const gettoken = res.data;
         setToken(gettoken[gettoken.length - 1].connectionToken);
-        console.log(childName, "added");
       })
       .catch((error) => console.log(error));
   };
@@ -54,14 +52,14 @@ const AddChild = () => {
         style={styles.input}
         placeholder="Child's Name"
         onChangeText={(e) => setChildName(e)}
-        value={childName}
+        value={childname}
       />
       <TextInput
         style={styles.input}
         placeholder="Child's Phone Number"
         keyboardType="phone-pad"
         onChangeText={(e) => setChildPhone(e)}
-        value={childPhone}
+        value={phone}
       />
       <Button
        onPress={submit}

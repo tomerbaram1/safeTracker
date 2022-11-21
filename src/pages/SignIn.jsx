@@ -38,36 +38,61 @@ export default function SignIn({ navigation: { goBack } }) {
     (state) => state.auth
   );
 
+  useEffect(() => {
+    if (isError===true) {
+      Toast.show({
+             type: 'error',
+             text1: 'Error',
+             text2: 'Please try again later 🚀' 
+           })
+           console.log(message,"message error");
+           navigation.navigate("SignIn");
 
-  const showErrorToast = () => {
-    Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: 'Please try again later 🚀' 
-    })};
+    }
 
+    if (isSuccess===true) {
+      console.log(isSuccess,"success");
+      console.log(user.fullName,"user");
+    navigation.navigate("Content");
+    }
+
+    dispatch(reset);
+  }, [user, isError, isSuccess, message, navigation, dispatch]);
+
+
+  // if (user.id===null||undefined) {
+      
+  //   Toast.show({
+  //     type: 'error',
+  //     text1: 'Error',
+  //     text2: 'Please try again later 🚀' 
+  //   })
+  //   console.log(" no user");
+
+  //   navigation.navigate("SignIn");
+
+  // }else{
+  //   console.log(user.fullName,"user");
+  //   navigation.navigate("Content");
+    
+  // }
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
-    if (user) {
-      navigation.navigate("Content");
-
-    }else{
-  
-      navigation.navigate("SignIn");
-      
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please try again later 🚀' 
-      })
-    }
+    const userData = {
+      email,
+      password,
+    };
+    dispatch(login(userData));
+    
 
   };
 
   return (
-    <Formik initialValue={{ email: "", password: "" }}>
-      {({ handleChange, handleBlur, handleSubmit, values }) => (
+    <Formik initialValue={{ email: "", password: "" }}
+    validationSchema={SigninSchema}
+
+    >
+      {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
         <View style={styles.container}>
           <StatusBar style="auto" />
           <View style={styles.inputView}>
@@ -79,8 +104,13 @@ export default function SignIn({ navigation: { goBack } }) {
               onChangeText={(text) => {
                 setEmail(text);
               }}
+            
             />
           </View>
+
+          {touched.email && errors.email && (
+            <Text style={styles.errorTxt}>{errors.email}</Text>
+          )}
 
           <View style={styles.inputView}>
             <Input
@@ -94,7 +124,9 @@ export default function SignIn({ navigation: { goBack } }) {
               }}
             />
           </View>
-
+          {touched.password && errors.password && (
+            <Text style={styles.errorTxt}>{errors.password}</Text>
+          )}
           <View>
             <Button
               title="Go Back"

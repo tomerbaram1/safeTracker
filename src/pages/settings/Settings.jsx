@@ -29,7 +29,7 @@ const Settings = () => {
       {/* <Text>
         List.Accordion can be wrapped because implementation uses React.Context.
       </Text> */}
-      <List.Accordion title="Terms Of Use" id="3">
+      <List.Accordion title={user.fullName} id="3">
         <List.Item title="Item 3" />
       </List.Accordion>
       <View>

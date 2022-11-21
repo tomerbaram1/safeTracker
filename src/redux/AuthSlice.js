@@ -45,7 +45,7 @@ export const login = createAsyncThunk("http://10.195.25.155:4000/api/login", asy
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||
       error.toString();
-      console.log(error);
+      console.log("error ",error);
     return thunkAPI.rejectWithValue(message);
   }
 });
