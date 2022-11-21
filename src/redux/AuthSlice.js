@@ -15,7 +15,9 @@ const initialState = {
 
 // Register user
 export const register = createAsyncThunk(
-  "http://172.20.10.3/api/register",
+
+  "http://10.195.25.155:4000/api/register",
+ 
   async (user, thunkAPI) => {
     try {
 
@@ -34,7 +36,8 @@ export const register = createAsyncThunk(
 );
 
 // login user
-export const login = createAsyncThunk("http://172.20.10.3:4000/api/login", async (user, thunkAPI) => {
+
+export const login = createAsyncThunk("http://10.195.25.155:4000/api/login", async (user, thunkAPI) => {
   
   try {
   
@@ -45,7 +48,7 @@ export const login = createAsyncThunk("http://172.20.10.3:4000/api/login", async
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||
       error.toString();
-      console.log(error);
+      console.log("error ",error);
     return thunkAPI.rejectWithValue(message);
   }
 });

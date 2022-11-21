@@ -11,7 +11,8 @@ import { FAB, Icon, Tooltip } from "@rneui/base";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-const api = axios.create({ baseURL: "http://172.20.10.3:4000" });
+
+const api = axios.create({ baseURL: "http://10.195.25.155:4000" });
 
 const ChildList = ({ childNumber, setChildNumber }) => {
   const [kids, setKids] = useState([]);
@@ -28,6 +29,7 @@ const ChildList = ({ childNumber, setChildNumber }) => {
         const data = res.data;
         setKids(data.children);
         console.log(data.children,"kids");
+
       })
       .catch((error) => console.log(error));
   };

@@ -1,8 +1,20 @@
-import React from 'react';
-import {Text, View} from 'react-native';
+
+import React, { useState } from "react";
+import {
+  Text,
+  View,
+  TextInput,
+  StyleSheet,
+  Button,
+  Modal,
+  Dimensions
+} from "react-native";
+import axios from "axios";
+import { Input } from "@rneui/base";
+import { useSelector } from "react-redux";
 
 
-const api = axios.create({ baseURL: "http://172.20.10.3:4000" });
+const api = axios.create({ baseURL: "http://10.195.25.155:4000" });
 
 const AddChild = () => {
 
@@ -73,4 +85,42 @@ const AddChild = () => {
   );
 };
 
+
 export default AddChild;
+
+const styles = StyleSheet.create({
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+    textAlign: "center",
+    width: Dimensions.get("window").width- 15,
+  },
+  addchild: {
+    textAlign: "center",
+    marginTop:15
+  },
+  genBtn: {
+    textAlign: "center",
+    backgroundColor: "lightgray",
+  },
+  addBtn: {
+    fontWeight: "900",
+  },
+  overlayText: {
+    textAlign: "center",
+    fontWeight: "700",
+    fontSize: 30,
+    marginTop: 100,
+  },
+  overlayToken: {
+    textAlign: "center",
+    fontSize: 20,
+    marginTop: 10,
+  },
+  modal: {
+    height: 20,
+  },
+});

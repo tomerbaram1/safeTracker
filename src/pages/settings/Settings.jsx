@@ -10,6 +10,7 @@ import { logout, reset } from "../../redux/AuthSlice";
 const Settings = () => {
   const navigation = useNavigation();
   const [selectedValue, setSelectedValue] = useState("java");
+
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const onLogout = () => {
@@ -95,6 +96,7 @@ const Settings = () => {
   );
 };
 
+
 export default Settings;
 const styles = StyleSheet.create({
   text: {
@@ -145,4 +147,5 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     textAlign: "center",
   },
+
 });
