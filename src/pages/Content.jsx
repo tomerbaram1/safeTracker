@@ -13,7 +13,8 @@ import AddLocation from './AddLocation';
 import AddChild from './AddChild';
 import { useState } from 'react';
 import ChildList from './ChildList';
-import Cloudinary from './Cloudinary';
+// import Cloudinary from './Cloudinary';
+import Chat from './Chat';
 
 const Content = () => {
   const [sos, setSos] = useState(false)
@@ -28,8 +29,8 @@ const Content = () => {
       <Tab.Navigator>
         <Tab.Screen  name="ParentPage" component={ParentpageComp} options={{headerShown:false}}/>
         <Tab.Screen name="Settings" component={Settings} options={{headerShown:false}}/>
+        <Tab.Screen name="Chat" component={Chat} options={{headerShown:false}}/>
 
-        <Tab.Screen  name="Cloudinary" component={Cloudinary} options={{headerShown:false}} />
         <Tab.Screen  name="ChildPage" component={ChildpageComp} options={{headerShown:false}} />
 
       
