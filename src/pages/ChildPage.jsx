@@ -24,41 +24,8 @@ import IO from "socket.io-client";
 import * as Battery from 'expo-battery';
 
 const LOCATION_TASK_NAME = 'background-location-task';
-const SERVER_URL="http://192.168.137.43:4000";
+const SERVER_URL="http://10.195.25.155.43:4000";
 const USERID="63738fb9e33a0195e497e318"
-
-
-
-
-
-// const socket1 = IO(SERVER_URL, {
-// });
-
-
-
-// socket1.on('connection', function(socket){
-//   console.log(`${socket.id} is connected`)
-  
-//   socket.on(`${id}`, (socketKidsLocations) => {
-//     socket.join(socket.id)
-//     console.log("socket**********")
-//   })
-  
-  
-//   console.log("*")
-// 	socket.on('disOn', (location,id) => {
-// 	  console.log("on")
-// 	  socket.emit('disTo', getDis(location,String(id)))
-// 	  console.log(`user ${socket.id} joined room ${socket.id}`);
-// 	})
-   
-  
-  // socket.on('disconnect',()=>{
-  // console.log("user"+socket.id+" disconnected")
-  // })
-
-  // });
-
 
 
 async function sendBatteryUpdate()
@@ -103,10 +70,6 @@ const ChildPage = () => {
     })
   }
 
-      useEffect(() => {
-        console.log("notification")
-      
-      }, []);
 
 
       const [ region, setRegion ] = React.useState({
@@ -128,14 +91,10 @@ const ChildPage = () => {
        const batteryLevel = await sendBatteryUpdate()
       
         console.log(batteryLevel,"battery")
-        console.log("task")
         try {
     
-        //   socket.emit('disOn', location,USERID)// you should use post instead of get to persist data on the backend
-        // axios.patch(SERVER_URL+"/api-map/users/parent/pushNotification",{id:id,token:token,location:location})
       await axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8d682c1-cd6b",
         currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]",batteryLevel:batteryLevel})
-          // console.log(location.coords.latitude)
          
         } catch (err) {
           console.error(err);

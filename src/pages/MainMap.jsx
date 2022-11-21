@@ -17,7 +17,7 @@ import IO, { Socket } from "socket.io-client";
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://192.168.137.43:4000";
+const SERVER_URL="http://10.195.25.155:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -60,7 +60,6 @@ async function registerForPushNotificationsAsync() {
 		}
 	}
 	token = (await Notification.getExpoPushTokenAsync()).data;
-	console.log(token+"%%%%%%%%%%%%%%%%%%%%%%%%");
   
 	await AsyncStorage.setItem("NotificationToken",`${token}`)
   
@@ -104,10 +103,8 @@ const id="63738fb9e33a0195e497e318"
 
   useEffect(()=>{
 	const id="63738fb9e33a0195e497e318"
-console.log("useeffect")
 
 socket1.on(`${id}`,  (children) => {
-		console.log("ttiti")
 	setCnt(cnt+1)
 	
 	setKidsLocations([...children.children])
@@ -118,37 +115,11 @@ socket1.on(`${id}`,  (children) => {
 		console.log("user"+socket1.id+" disconnected")
 	  })
   })
-	// socket1.on('connection', function(socket){
-	// 	console.log(`${socket.id} is connected`)
-		
-
-	// 	socket.on(`${id}`, (children) => {
-	// 		console.log(children+"ssss")
-	// 		alert("ttt2")
-	// 		console.log("location**********")
-	// 	   setKidsLocations([...children.children])
-	// 	  })
-	  
-	// //   console.log("*")
-	// // 	socket.on('disOn', (location,id) => {
-	// // 	  console.log("on")
-	// // 	  socket.emit('disTo', getDis(location,String(id)))
-	// // 	  console.log(`user ${socket.id} joined room ${socket.id}`);
-	// // 	})
-	   
-	  
-	//   socket.on('disconnect',()=>{
-	// 	console.log("user"+socket.id+" disconnected")
-	//   })
-
-	//   });
+	
  })
  useEffect(()=> {
 
     responseListener.current = Notification.addNotificationResponseReceivedListener(response => {
-        console.log('--- notification tapped ---');
-        console.log(response);
-        console.log('------');
     })
 },[])
 
@@ -191,7 +162,7 @@ function regionChange(child)
 	return (
 		<View 	style={styles.container}>
  	{kidsLocations.map((child,index)=>(
-		 <Button title={child.childname} onPress={()=>regionChange(child)}/>
+		 <Button title={child.childname?child.childname:""} onPress={()=>regionChange(child)}/>
 
 		 ))}
 			<GooglePlacesAutocomplete
@@ -202,7 +173,6 @@ function regionChange(child)
 				}}
 				onPress={(data, details = null) => {
 					// 'details' is provided when fetchDetails = true
-					console.log(data, details)
 					setRegion({
 						latitude: details.geometry.location.lat,
 						longitude: details.geometry.location.lng,
@@ -252,12 +222,12 @@ function regionChange(child)
 					latitudeDelta: 0.0922,
 					longitudeDelta: 0.0421
 				}}
-				region={{
-					latitude: latitude,
-					longitude: longitude,
-					latitudeDelta: 0.0922,
-					longitudeDelta: 0.0421
-				}}
+				// region={{
+				// 	latitude: latitude,
+				// 	longitude: longitude,
+				// 	latitudeDelta: 0.0922,
+				// 	longitudeDelta: 0.0421
+				// }}
 				
 				
 				provider="google"
@@ -271,7 +241,6 @@ function regionChange(child)
 					pinColor="black"
 					draggable={true}
 					onDragStart={(e) => {
-						console.log("Drag start", e.nativeEvent.coordinate)
 					}}
 					onDragEnd={(e) => {
 						setPin({

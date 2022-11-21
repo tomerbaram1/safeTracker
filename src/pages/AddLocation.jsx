@@ -18,7 +18,7 @@ import { TextInput } from "react-native-paper"
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://10.0.0.11:4000";
+const SERVER_URL="http://10.195.25.155:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -60,39 +60,6 @@ export default function AddLocation() {
   const [ baseLocations, setBaseLocations ] = React.useState([])
   const [locationName,setLocationName]=useState("");
   const [initailLocation,setIntialLocation]=useState();
- 
-
-
-
-
-
-  
-
-
- 
-
-
-  
-
-
-//   useEffect(() => {
-//     //When app is closed
-//     const backgroundSubscription = Notification.addNotificationResponseReceivedListener(response => {
-//       console.log(response);
-//     });
-//     //When the app is open
-//     const foregroundSubscription = Notification.addNotificationReceivedListener(notification => {
-//       console.log(notification);
-//     });
-
-//     return () => {
-//       backgroundSubscription.remove();
-//       foregroundSubscription.remove();
-//     }
-//   }, []);
-
-
-
 
   let text = 'Waiting..';
   if (errorMsg) {
@@ -185,7 +152,6 @@ useEffect(() => {
   newLocationsBaseArray.push(obj)
   console.log(locationName)
   newLocationsBaseArray[newLocationsBaseArray.length-1].locationName=locationName;
-  console.log("sa"+newLocationsBaseArray[0].locationName)
   
  
   setBaseLocations(newLocationsBaseArray)
@@ -209,7 +175,6 @@ useEffect(() => {
 				}}
 				onPress={(data, details = null) => {
 					// 'details' is provided when fetchDetails = true
-					console.log(data, details)
 					setRegion({
 						latitude: details.geometry.location.lat,
 						longitude: details.geometry.location.lng,
@@ -269,7 +234,6 @@ useEffect(() => {
 					pinColor="black"
 					draggable={true}
 					onDragStart={(e) => {
-						console.log("Drag start", e.nativeEvent.coordinate)
 					}}
 					onDragEnd={(e) => {
 						setPin({
