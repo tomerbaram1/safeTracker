@@ -24,6 +24,7 @@ import axios from 'axios';
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Toast from 'react-native-toast-message';
+import Content from "./src/pages/Content";
 
 const Stack = createNativeStackNavigator();
 const SERVER_URL="http://10.0.0.11:4000";
@@ -56,8 +57,9 @@ export default function App() {
 
       <NavigationContainer>
 
-        <EntryScreen />
+        {/* <EntryScreen /> */}
         <Toast/>
+        <Content></Content>
 
       </NavigationContainer>
     </Provider>

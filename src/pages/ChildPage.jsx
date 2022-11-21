@@ -24,7 +24,7 @@ import IO from "socket.io-client";
 import * as Battery from 'expo-battery';
 
 const LOCATION_TASK_NAME = 'background-location-task';
-const SERVER_URL="http://10.195.25.157:4000";
+const SERVER_URL="http://192.168.137.43:4000";
 const USERID="63738fb9e33a0195e497e318"
 
 
@@ -109,7 +109,12 @@ const ChildPage = () => {
       }, []);
 
 
-
+      const [ region, setRegion ] = React.useState({
+        latitude: 32.07962,
+        longitude: 34.88911,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      })
 
   
   
