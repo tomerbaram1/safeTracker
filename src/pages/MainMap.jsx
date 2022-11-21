@@ -1,8 +1,7 @@
-
 import axios from "axios"
 import * as React from "react"
 import { useEffect } from "react"
-import { Dimensions, StyleSheet, Text, View,Button, ScrollView, PermissionsAndroid, Alert } from "react-native"
+import { Dimensions, StyleSheet, Text, View,Button, ScrollView, PermissionsAndroid, Alert, Platform } from "react-native"
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import MapView, { Callout, Circle, Marker } from "react-native-maps"
 // import Geolocation from 'react-native-geolocation-service'r
@@ -14,7 +13,7 @@ import * as Notification from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { useRef } from "react";
 import { TextInput } from "react-native-paper"
-
+import IO, { Socket } from "socket.io-client";
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
@@ -23,27 +22,70 @@ const SERVER_URL="http://172.20.10.3:4000";
 const USERID="63738fb9e33a0195e497e318"
 
 
-
-
+Notification.setNotificationHandler({
+	handleNotification: async () => {
+	  return {
+		shouldShowAlert: true,
+		shouldPlaySound: true
+	  };
+	}
+  });
   
 
+  const socket1 = IO(SERVER_URL, {
+});
 
 
-export default function AddLocation() {
+async function registerForPushNotificationsAsync() {
+	let token;
+  
+	const { status: existingStatus } = await Notification.getPermissionsAsync();
+	let finalStatus = existingStatus;
+  
+	if (existingStatus !== 'granted') {
+		const { status } = await Notification.requestPermissionsAsync();
+		finalStatus = status;
+	}
+	if (finalStatus !== 'granted') {
+		alert('Failed to get push token for push notification!');
+		return;
+	}
+	if (finalStatus == 'granted') {
+		if(Platform.OS==="android")
+		{
+			Notification.setNotificationChannelAsync("default",{
+				name:"default",
+				importance:Notification.AndroidImportance.MAX
+			})
+		}
+	}
+	token = (await Notification.getExpoPushTokenAsync()).data;
+  
+	await AsyncStorage.setItem("NotificationToken",`${token}`)
+  
+  
+	alert(await AsyncStorage.getItem("NotificationToken"))
+  }
+
+
+
+
+
+
+
+
+export default function MainMap() {
      
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [Latitude, setLatitude] = useState(null);
-  const [Longitude, setLongitude] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
 
+const id="63738fb9e33a0195e497e318"
 
-
-  const[myLocatin,setMyLocation]=useState({
-		latitude: 32.07962,
-		longitude: 34.88911
-	})
-
-
+	const [cnt, setCnt] = useState(0);
+	
 
 	const [ pin, setPin ] = React.useState({
 		latitude: 32.07962,
@@ -56,57 +98,42 @@ export default function AddLocation() {
 		latitudeDelta: 0.0922,
 		longitudeDelta: 0.0421
 	})
-  
   const [ baseLocations, setBaseLocations ] = React.useState([])
-  const [locationName,setLocationName]=useState("");
-  const [initailLocation,setIntialLocation]=useState();
+  const responseListener = useRef();
 
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
-//////////////////////register
- 
+  useEffect(()=>{
+	const id="63738fb9e33a0195e497e318"
 
+socket1.on(`${id}`,  (children) => {
+	setCnt(cnt+1)
+	
+	setKidsLocations([...children.children])
+	
+	 
 
+	 socket1.emit('disconnect',()=>{
+		console.log("user"+socket1.id+" disconnected")
+	  })
+  })
+	
+ })
+ useEffect(()=> {
 
-TaskManager.defineTask(TASK_FETCH_LOCATION, async ({ data: { locations }, error }) => {
-  
-  if (error) {
-    console.error(error);
-    return;
-  }
- 
-  const [location] = locations;
-  try {
-  
-    setPin({latitude:location.coords.latitude,longitude:location.coords.longitude})
-    Location.stopLocationUpdatesAsync(TASK_FETCH_LOCATION);
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-useEffect(() => {
-  Location.startLocationUpdatesAsync(TASK_FETCH_LOCATION, {
-    accuracy: Location.Accuracy.Highest,
-    distanceInterval: 1, // minimum change (in meters) betweens updates
-    deferredUpdatesInterval: 1, // minimum interval (in milliseconds) between updates
-   
-    // foregroundService is how you get the task to be updated as often as would be if the app was open
-    foregroundService: {
-      notificationTitle: 'Using your location',
-      notificationBody: 'To turn off, go back to the app and switch something off.'
- } })
+    responseListener.current = Notification.addNotificationResponseReceivedListener(response => {
+    })
+},[])
 
 
-   
-}, []); 
+ useEffect(()=>{
+	const id="63738fb9e33a0195e497e318"
+		 axios.post(SERVER_URL+"/api-map/users/parent/getChildrenLocation",{id:id})
+	.then(data=>{setKidsLocations(data.data)
+	setPin({latitude:data.data[0].location[data.data[0].location.length-1].latitude,
+		longitude:data.data[0].location[data.data[0].location.length-1].longitude})
+	})
+ },[])
 
-
-
+ 	
 
 
   useEffect(() => {
@@ -119,54 +146,25 @@ useEffect(() => {
          
         }
        ).catch(error => console.log(error));
-
-       
-       (async () => {
-      
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          setErrorMsg('Permission to access location was denied');
-          return;
-        }
-  
-        let location = await Location.getCurrentPositionAsync({});
-        setLatitude(location.coords.latitude)
-        setLongitude(location.coords.longitude);
-        setLocation(location.coords);
-      })();
-   
-
-
-
-
  }, []); 
 
 
-
-
-  const handleAddPlace=()=>{
-    const id="63738fb9e33a0195e497e318"
-    const obj={latitude:pin.latitude,longitude:pin.longitude,name:locationName}
-
-  let newLocationsBaseArray=[...baseLocations];
-  newLocationsBaseArray.push(obj)
-  console.log(locationName)
-  newLocationsBaseArray[newLocationsBaseArray.length-1].locationName=locationName;
-  
- 
-  setBaseLocations(newLocationsBaseArray)
-   axios.patch(SERVER_URL+"/api-map/users/parent/addBaseLocations",{id:id,newLocationsBaseArray:newLocationsBaseArray})
-  .then(data=>console.log(data+"sss")) .catch(error => console.log(error));
-
- }
-
-
-
+function regionChange(child)
+{
+	setLatitude(child.location[child.location.length-1].latitude)
+	setLongitude(child.location[child.location.length-1].longitude)
+	console.log(child.location[child.location.length-1].longitude)
+	region.latitude=child.location[child.location.length-1].latitude;
+	region.longitude=child.location[child.location.length-1].longitude;
+}
 
 
 	return (
 		<View 	style={styles.container}>
-  
+ 	{/* {kidsLocations.map((child,index)=>(
+		 <Button title={child.childname?child.childname:""} onPress={()=>regionChange(child)}/>
+
+		 ))} */}
 			<GooglePlacesAutocomplete
 				placeholder="Search"
 				fetchDetails={true}
@@ -215,19 +213,28 @@ useEffect(() => {
           }
         }}
 			/>
-     
-       {
-       Longitude?
-     	<MapView
+       
+			<MapView
 				style={styles.map}
 				initialRegion={{
-          latitude: Latitude,
-          longitude: Longitude,
+          latitude: pin.latitude,
+          longitude: pin.longitude,
 					latitudeDelta: 0.0922,
 					longitudeDelta: 0.0421
 				}}
+				// region={{
+				// 	latitude: latitude,
+				// 	longitude: longitude,
+				// 	latitudeDelta: 0.0922,
+				// 	longitudeDelta: 0.0421
+				// }}
+				
+				
 				provider="google"
 			>
+	
+					
+
 
 				<Marker
 					coordinate={pin}
@@ -246,12 +253,33 @@ useEffect(() => {
 
 
 					<Callout>
-						<Text>Drag to new location</Text>
+						<Text>I'm here</Text>
 					</Callout>
 				</Marker>
-				{/* <Circle center={pin} radius={35} /> */}
+				<Circle center={pin} radius={35} />
 
        
+
+
+				{kidsLocations.map((marker, index) => (
+					
+				marker.location[marker.location.length-1]?	
+          <>
+    <Marker
+      key={index}
+      coordinate={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
+		, longitude: parseFloat(marker.location[marker.location.length-1].longitude) }}
+        title={`${marker.location[marker.location.length-1].time+"--"+marker.batteryLevel}`}
+    />
+    <Circle key ={index+199} center={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
+		, longitude: parseFloat(marker.location[marker.location.length-1].latitude) }}
+         radius={75} />
+		
+    </>
+	:""
+  ))}
+
+
 
 
         {baseLocations.map((marker, index) => (
@@ -270,12 +298,10 @@ useEffect(() => {
   ))}
         
 			</MapView>
-     :"" }
       <View style={{ marginTop: 50, flex: 1 ,flexDirection:"column"}}>
-      <TextInput value={locationName}onChangeText={(input) =>  setLocationName(`${input}`)} style={styles.inputStyle}/>
-        <Button title="add place" onPress={()=>handleAddPlace()}/>
-      <Text> {"lat:" + initailLocation?.coords.longitude+ " long :"+" text-"}</Text>
-   
+      
+      <Text> {"mainMap"+cnt}</Text>
+	  
       
       </View>
      
