@@ -83,6 +83,10 @@ export default function MainMap() {
   const [longitude, setLongitude] = useState(null);
   const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
 
+
+  const mapRef = useRef();
+
+
 const id="63738fb9e33a0195e497e318"
 
 	const [cnt, setCnt] = useState(0);
@@ -178,20 +182,53 @@ socket1.on(`${id}`,  (children) => {
  }, []); 
 
 
-function regionChange(child)
-{
-	setLatitude(child.location[child.location.length-1].latitude)
-	setLongitude(child.location[child.location.length-1].longitude)
-	console.log(child.location[child.location.length-1].longitude)
-	region.latitude=child.location[child.location.length-1].latitude;
-	region.longitude=child.location[child.location.length-1].longitude;
+ useEffect(() => {
+  
+	mapRef.current.animateToRegion({
+		latitude: latitude,
+		longitude: longitude,
+		latitudeDelta: 0.1,
+		longitudeDelta: 0.1
+	  })
+	  console.log("sss")
+
+ }, [longitude]); 
+
+
+
+// function regionChange(child)
+// {
+// 	setLatitude([child.location[child.location.length-1].latitude])
+// 	setLongitude([child.location[child.location.length-1].longitude])
+// 	console.log(child.location[child.location.length-1].longitude)
+// 	setRegion
+
+
+
+
+// }
+
+function changeRegion(child){
+  const latitude = parseFloat(child.location[child.location.length-1].latitude);
+  const longitude = parseFloat(child.location[child.location.length-1].longitude);
+console.log(longitude+""+longitude)
+  mapRef.current.animateToRegion({
+    latitude,
+    longitude,
+    latitudeDelta: 0.1,
+    longitudeDelta: 0.1
+  })
 }
+
+
+
+
 
 
 	return (
 		<View 	style={styles.container}>
  	{kidsLocations.map((child,index)=>(
-		 <Button title={child.childname} onPress={()=>regionChange(child)}/>
+		 index==0?<Button title={child.childname?child.childname:""} onPress={()=>changeRegion(child)}/>:""
 
 		 ))}
 			<GooglePlacesAutocomplete
@@ -252,13 +289,13 @@ function regionChange(child)
 					latitudeDelta: 0.0922,
 					longitudeDelta: 0.0421
 				}}
-				region={{
-					latitude: latitude,
-					longitude: longitude,
-					latitudeDelta: 0.0922,
-					longitudeDelta: 0.0421
-				}}
-				
+				// region={{
+				// 	latitude: latitude,
+				// 	longitude: longitude,
+				// 	latitudeDelta: 0.0922,
+				// 	longitudeDelta: 0.0421
+				// }}
+				ref={mapRef}
 				
 				provider="google"
 			>
