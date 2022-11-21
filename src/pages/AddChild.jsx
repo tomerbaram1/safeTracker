@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Text,
@@ -83,6 +84,7 @@ const AddChild = () => {
     </View>
   );
 };
+
 
 export default AddChild;
 

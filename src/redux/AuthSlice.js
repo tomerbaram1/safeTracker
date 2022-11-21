@@ -15,7 +15,9 @@ const initialState = {
 
 // Register user
 export const register = createAsyncThunk(
+
   "http://10.195.25.155:4000/api/register",
+ 
   async (user, thunkAPI) => {
     try {
 
@@ -34,6 +36,7 @@ export const register = createAsyncThunk(
 );
 
 // login user
+
 export const login = createAsyncThunk("http://10.195.25.155:4000/api/login", async (user, thunkAPI) => {
   
   try {
