@@ -1,21 +1,23 @@
+import React, { useEffect, useState } from "react";
 
-import React, { useState } from "react";
 import {
   Text,
   View,
   TextInput,
   StyleSheet,
   Button,
+  Image,
   Modal,
   Dimensions
 } from "react-native";
 import axios from "axios";
 import { Input } from "@rneui/base";
 import { useSelector } from "react-redux";
+import * as ImagePicker from 'expo-image-picker'
+// let url;
 
-
-const api = axios.create({ baseURL: "http://10.195.25.155:4000" });
-
+const api = axios.create({ baseURL: "http://10.195.25.107:4000" });
+let imageURL;
 const AddChild = () => {
 
   const [childname, setChildName] = useState("");
@@ -23,14 +25,45 @@ const AddChild = () => {
   const [token, setToken] = useState("");
   const [showToken, setShowToken] = useState(false);
   const { user } = useSelector((state) => state.auth);
+  const [image, setImage] = useState("");
+
+  const pickImage = async () => {
+    let data = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!data.canceled) {
+        let newFile = { 
+            uri:data.uri, 
+            type:`trackerApp/${data.uri.split('.')[1]}`, 
+            name: `trackerApp/${data.uri.split('.')[1]}` }
+        handleUpload(newFile)
+    }
+  };
+
+  const handleUpload = async (image) => {
+    const data = new FormData()
+    data.append('file', image)
+    data.append('upload_preset', 'trackerApp')
+    console.log(data);
+
+   await axios.post('https://api.cloudinary.com/v1_1/dsk7a1p4y/image/upload', data)
+    .then(res => setImage(res.data.secure_url))
+    
+  }
 
   const id = user?._id;
 
-  const addChild = () => {
+  const addChild = (image) => {
     api
       .patch(`/api/addchild/${id}`, {
         childname: childname,
         phone: phone,
+        image: image
+
       })
       .then((res) => {
         const gettoken = res.data;
@@ -41,14 +74,26 @@ const AddChild = () => {
 
   const submit = (e) => {
     e.preventDefault();
-    addChild();
+    addChild(image);
     setShowToken(!showToken);
   };
 
+
+  useEffect(() => {
+console.log(image + '----------------------------useEFFECT-------------------->>>>>>>>>')
+
+  }, [])
+
   return (
     <View>
+
       <Text style={styles.addchild}>Add Your Child</Text>
 
+      {image ? <Button
+       onPress={submit}
+       title="Add" 
+       color='#495867'/> : "" }
+      
       <TextInput
         style={styles.input}
         placeholder="Child's Name"
@@ -62,6 +107,10 @@ const AddChild = () => {
         onChangeText={(e) => setChildPhone(e)}
         value={phone}
       />
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Button title="Pick an image from camera roll" onPress={pickImage} />
+        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+      </View>
       <Button
        onPress={submit}
        title="Add" 
