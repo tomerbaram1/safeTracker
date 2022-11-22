@@ -18,7 +18,7 @@ import { TextInput } from "react-native-paper"
 
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://192.168.137.43:4000";
+const SERVER_URL="http://10.0.0.11:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -56,7 +56,7 @@ export default function AddLocation() {
 		latitudeDelta: 0.0922,
 		longitudeDelta: 0.0421
 	})
-
+  
   const [ baseLocations, setBaseLocations ] = React.useState([])
   const [locationName,setLocationName]=useState("");
   const [initailLocation,setIntialLocation]=useState();

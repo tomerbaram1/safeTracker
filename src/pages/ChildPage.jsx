@@ -24,7 +24,7 @@ import IO from "socket.io-client";
 import * as Battery from 'expo-battery';
 
 const LOCATION_TASK_NAME = 'background-location-task';
-const SERVER_URL="http://192.168.137.43.43:4000";
+const SERVER_URL="http://10.0.0.11:4000";
 const USERID="63738fb9e33a0195e497e318"
 
 
@@ -127,14 +127,28 @@ const ChildPage = () => {
         const [location] = locations;
        const batteryLevel = await sendBatteryUpdate()
       
+
+
+
         console.log(batteryLevel,"battery")
+        if(batteryLevel<50)
+        await axios.patch(SERVER_URL+"/api-map/childBatteryLevelChange",{id:id,connectionToken:"c8d682c1-cd6b",
+        token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]",batteryLevel:batteryLevel})
+
         console.log("task")
         try {
     
         //   socket.emit('disOn', location,USERID)// you should use post instead of get to persist data on the backend
         // axios.patch(SERVER_URL+"/api-map/users/parent/pushNotification",{id:id,token:token,location:location})
-      await axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8d682c1-cd6b",
-        currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]",batteryLevel:batteryLevel})
+        batteryLevel>50?
+        await axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8d682c1-cd6b",
+        currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]"
+        ,batteryLevel:batteryLevel,batteryStatus:"normal"}):
+
+
+        await axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8d682c1-cd6b",
+        currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]"
+        ,batteryLevel:batteryLevel})
           // console.log(location.coords.latitude)
          
         } catch (err) {

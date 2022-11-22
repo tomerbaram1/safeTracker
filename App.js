@@ -57,9 +57,9 @@ export default function App() {
 
       <NavigationContainer>
 
-        {/* <EntryScreen /> */}
+        <EntryScreen />
         <Toast/>
-        <Content></Content>
+        {/* <Content></Content> */}
 
       </NavigationContainer>
     </Provider>
