@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, StyleSheet, View } from "react-native";
+import { StatusBar, StyleSheet, View, Text } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
@@ -101,7 +101,7 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
       }}
       validationSchema={SignupSchema}
     >
-      {({ handleChange, handleBlur, handleSubmit, values }) => (
+      {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
         <View style={styles.container}>
           <StatusBar style="auto" />
           <View style={styles.inputView}>
@@ -111,10 +111,15 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               placeholder="  Full name"
               placeholderTextColor="#003f5c"
               onChangeText={(text) => {
-                setFullName(text);
+                setFullName(text), handleChange('fullName')
               }}
+              onBlur={() => setFieldTouched('fullName')}
             />
           </View>
+
+          {touched.fullName && errors.fullName && (
+            <Text style={styles.errorTxt}>{errors.fullName}</Text>
+          )}
 
           <View style={styles.inputView}>
             <Input
