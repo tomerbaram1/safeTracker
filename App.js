@@ -59,10 +59,10 @@ export default function App() {
 
       <NavigationContainer>
 
-        {/* <EntryScreen /> */}
+        <EntryScreen />
         <Toast/>
 
-        <Content></Content>
+
 
       </NavigationContainer>
     </Provider>

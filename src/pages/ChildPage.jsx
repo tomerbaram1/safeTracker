@@ -107,13 +107,9 @@ const ChildPage = () => {
   }, []);
 
 
-  async function startLocation() 
-  {
-   await Location.startLocationUpdatesAsync( LOCATION_TASK_NAME, {
-=======
-  useEffect(() => {
-    console.log(child, "child");
-  }, []);
+  async function startLocation() {
+   
+  
   async function startLocation() {
     await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: Location.Accuracy.Highest,
@@ -126,7 +122,7 @@ const ChildPage = () => {
         notificationBody: 'To turn off, go back to the app and switch something off.',
       },
     })
-  }
+   } }
 
       useEffect(() => {
         console.log("notification")
