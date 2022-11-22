@@ -18,7 +18,7 @@ import IO, { Socket } from "socket.io-client";
 
 const TASK_FETCH_LOCATION = 'background-location-task';
 
-const SERVER_URL="http://10.195.25.155:4000";
+const SERVER_URL="http://10.195.25.133:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -84,7 +84,7 @@ export default function MainMap() {
   const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
 
 
-  const mapRef = useRef();
+//   const mapRef = useRef();
 
 
 const id="63738fb9e33a0195e497e318"
@@ -156,12 +156,12 @@ socket1.on(`${id}`,  (children) => {
 
  useEffect(() => {
   
-	mapRef.current.animateToRegion({
-		latitude: latitude,
-		longitude: longitude,
-		latitudeDelta: 0.1,
-		longitudeDelta: 0.1
-	  })
+	// mapRef.current.animateToRegion({
+	// 	latitude: latitude,
+	// 	longitude: longitude,
+	// 	latitudeDelta: 0.1,
+	// 	longitudeDelta: 0.1
+	//   })
 	  console.log("sss")
 
  }, [longitude]); 
@@ -184,12 +184,12 @@ function changeRegion(child){
   const latitude = parseFloat(child.location[child.location.length-1].latitude);
   const longitude = parseFloat(child.location[child.location.length-1].longitude);
 console.log(longitude+""+longitude)
-  mapRef.current.animateToRegion({
-    latitude,
-    longitude,
-    latitudeDelta: 0.1,
-    longitudeDelta: 0.1
-  })
+//   mapRef.current.animateToRegion({
+//     latitude,
+//     longitude,
+//     latitudeDelta: 0.1,
+//     longitudeDelta: 0.1
+//   })
 }
 
 
@@ -267,7 +267,7 @@ console.log(longitude+""+longitude)
 				// 	latitudeDelta: 0.0922,
 				// 	longitudeDelta: 0.0421
 				// }}
-				ref={mapRef}
+				// ref={mapRef}
 
 				
 				provider="google"

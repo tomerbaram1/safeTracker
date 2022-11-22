@@ -6,6 +6,7 @@ const Stack = createNativeStackNavigator();
 
 import WelcomePage from "./WelcomePage";
 import SignIn from "./SignIn";
+import SignInChild from "../child/SignInChild";
 import SignUp from "./SignUp";
 import Content from "./Content";
 import { useSelector } from "react-redux";
@@ -26,6 +27,11 @@ const EntryScreen = () => {
         <Stack.Screen
           name="SignIn"
           component={SignIn}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SignInChild"
+          component={SignInChild}
           options={{ headerShown: false }}
         />
         <Stack.Screen
