@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
   Text,
   View,
@@ -62,6 +63,7 @@ const AddChild = () => {
         childname: childname,
         phone: phone,
         image: image
+
       })
       .then((res) => {
         const gettoken = res.data;
@@ -131,6 +133,7 @@ console.log(image + '----------------------------useEFFECT-------------------->>
     </View>
   );
 };
+
 
 export default AddChild;
 

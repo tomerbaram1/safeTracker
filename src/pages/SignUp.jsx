@@ -101,7 +101,7 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
       }}
       validationSchema={SignupSchema}
     >
-      {({ handleChange, handleBlur, handleSubmit, values }) => (
+      {({ values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
         <View style={styles.container}>
           <StatusBar style="auto" />
           <View style={styles.inputView}>
@@ -115,7 +115,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
-
+          {touched.fullName && errors.fullName && (
+            <Text style={styles.errorTxt}>{errors.fullName}</Text>
+          )}
           <View style={styles.inputView}>
             <Input
               value={email}
@@ -130,7 +132,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
-
+          {touched.email && errors.email && (
+            <Text style={styles.errorTxt}>{errors.email}</Text>
+          )}
           <View style={styles.inputView}>
             <Input
               value={phoneNumber}
@@ -142,7 +146,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
-
+          {touched.phoneNumber && errors.phoneNumber && (
+            <Text style={styles.errorTxt}>{errors.phoneNumber}</Text>
+          )}
           <View style={styles.inputView}>
             <Input
               value={password}
@@ -155,6 +161,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
+          {touched.password && errors.password && (
+            <Text style={styles.errorTxt}>{errors.password}</Text>
+          )}
           <View style={styles.inputView}>
             <Input
               value={confirmPassword}
@@ -167,7 +176,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
-
+          {touched.confirmPassword && errors.confirmPassword && (
+            <Text style={styles.errorTxt}>{errors.confirmPassword}</Text>
+          )}
           <Button
             title="Register"
             onPress={onSubmit}
