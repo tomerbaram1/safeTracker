@@ -9,7 +9,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import MapView, { Callout, Circle, Marker } from "react-native-maps"
 
 
-import { useState } from "react"
+import { useState } from "react";
 // import Geolocation from 'react-native-geolocation-service';
 import * as Location from 'expo-location';
 import Modal from 'react-native-modal';
@@ -24,8 +24,9 @@ import IO from "socket.io-client";
 import * as Battery from 'expo-battery';
 
 const LOCATION_TASK_NAME = 'background-location-task';
-const SERVER_URL="http://192.168.137.43:4000";
+const SERVER_URL="http://172.20.10.4:4000";
 const USERID="63738fb9e33a0195e497e318"
+import { useSelector } from "react-redux";
 
 
 
@@ -67,12 +68,30 @@ async function sendBatteryUpdate()
   const batteryLevel = Math.ceil(await Battery.getBatteryLevelAsync()*100);
   return batteryLevel
 
+
 }
 
 
 
 const ChildPage = () => {
 
+  const { child } = useSelector((state) => state.auth);
+
+  const [sosMsg, setSosMsg] = useState(false);
+  const [sos, setSos] = useState(false);
+  const longhandle = () => {
+    alert(` SOS called!`);
+    setSosMsg(false);
+    setSos(true);
+  };
+
+  const pressIn = () => {
+    setSosMsg(true);
+  };
+
+  const pressOut = () => {
+    setSosMsg(false);
+  };
   const responseListener = useRef();
 
 
@@ -91,6 +110,12 @@ const ChildPage = () => {
   async function startLocation() 
   {
    await Location.startLocationUpdatesAsync( LOCATION_TASK_NAME, {
+=======
+  useEffect(() => {
+    console.log(child, "child");
+  }, []);
+  async function startLocation() {
+    await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: Location.Accuracy.Highest,
       distanceInterval: 5, // minimum change (in meters) betweens updates
       deferredUpdatesInterval: 100, // minimum interval (in milliseconds) between updates
@@ -158,59 +183,17 @@ const ChildPage = () => {
 
 return(
   <View>
-  <Pressable
-  style={styles.trackBtn}
-  >
-    <Text
-    style={styles.trackText}>
-      START
-    </Text>
-    </Pressable>
-    <Pressable
-  style={styles.sosBtn}
-  >
-    <Text
-    style={styles.sosText}>
-      SOS
-    </Text>
-    </Pressable>
-
-    {/* MESSAGES */}
-
-    <Text>
-
-      Send your parent a message
-
-    </Text>
-    <View
-    style={styles.msgs}
-    >
-      <Pressable style={styles.msgBtn} >
-        <Text>
-          Hi
-        </Text>
+      <Text style={styles.sosMsg}>Hello</Text>
+      <Text style={styles.sosMsg}>Your Token: {child?.connectionToken}</Text>
+      <Pressable
+        style={sosMsg ? styles.sosBtnActive : styles.sosBtn}
+        delayLongPress={3000}
+        onLongPress={longhandle}
+        onPressIn={pressIn}
+        onPressOut={pressOut}>
+        <Text style={styles.sosText}>S O S</Text>
       </Pressable>
-      <Pressable style={styles.msgBtn}>
-        <Text>
-          What's up?
-        </Text>
-      </Pressable>
-      <Pressable style={styles.msgBtn}>
-        <Text>
-          Call me
-        </Text>
-      </Pressable>
-      <Pressable style={styles.msgBtn}>
-        <Text>
-          Where are you?
-        </Text>
-      </Pressable>
-      <Pressable style={styles.msgBtn} >
-        <Text>
-          Add custom message
-        </Text>
-      </Pressable>
-    </View>
+      {sosMsg && <Text style={styles.sosMsg}>Hold for 3 seconds</Text>}
   </View>
 )};
 

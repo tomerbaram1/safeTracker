@@ -17,7 +17,9 @@ import IO, { Socket } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-const SERVER_URL="http://192.168.137.43:4000";
+
+
+const SERVER_URL="http://172.20.10.4:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
