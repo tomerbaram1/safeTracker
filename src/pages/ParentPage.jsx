@@ -15,6 +15,7 @@ const Tab = createBottomTabNavigator();
 const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => {
   const [infoDown, setInfoDown] = useState(false)
   const [addChildForm, setAddChildForm] = useState(false)
+  
   const { user } = useSelector((state) => state.auth);
   
 
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     position:'absolute',
     bottom:'-130%',
     width:'100%',
-    height:'200%',
+    height:'195%',
     borderRadius:50,
     overflow:'scroll',
     display:'flex',

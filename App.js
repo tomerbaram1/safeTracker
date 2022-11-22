@@ -28,7 +28,7 @@ import Content from "./src/pages/Content";
 
 const Stack = createNativeStackNavigator();
 
-const SERVER_URL="http://10.195.25.155:4000";
+const SERVER_URL="http://172.20.10.3:4000";
 const USERID="63738fb9e33a0195e497e318"
 const CONNECTION_TOKEN="c8b682c1-cb6b"/// To do- tomer change dynamicaly
 const PARENT_ID="63738fb9e33a0195e497e318"/// To do- tomer change dynamicaly

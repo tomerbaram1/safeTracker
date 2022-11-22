@@ -14,7 +14,7 @@ import { Input } from "@rneui/base";
 import { useSelector } from "react-redux";
 
 
-const api = axios.create({ baseURL: "http://10.195.25.155:4000" });
+const api = axios.create({ baseURL: "http://172.20.10.3:4000" });
 
 const AddChild = () => {
 
@@ -39,8 +39,7 @@ const AddChild = () => {
       .catch((error) => console.log(error));
   };
 
-  const submit = (e) => {
-    e.preventDefault();
+  const submit = () => {
     addChild();
     setShowToken(!showToken);
   };
