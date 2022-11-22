@@ -16,7 +16,7 @@ const initialState = {
 // Register user
 export const register = createAsyncThunk(
 
-  "http://10.195.25.133:4000/api/register",
+  "http://192.168.137.43:4000/api/register",
  
   async (user, thunkAPI) => {
     try {
@@ -37,7 +37,7 @@ export const register = createAsyncThunk(
 
 // login user
 
-export const login = createAsyncThunk("http://10.195.25.133:4000/api/login", async (user, thunkAPI) => {
+export const login = createAsyncThunk("http://192.168.137.43:4000/api/login", async (user, thunkAPI) => {
   
   try {
   
@@ -52,7 +52,7 @@ export const login = createAsyncThunk("http://10.195.25.133:4000/api/login", asy
     return thunkAPI.rejectWithValue(message);
   }
 });
-export const loginChild = createAsyncThunk("http://10.195.25.133:4000/api/addchild", async (user, thunkAPI) => {
+export const loginChild = createAsyncThunk("http://192.168.137.43:4000/api/addchild", async (user, thunkAPI) => {
   
   try {
     return (AuthService.loginChild(user)) 

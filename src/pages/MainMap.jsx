@@ -17,9 +17,7 @@ import IO, { Socket } from "socket.io-client";
 import { useDispatch, useSelector } from 'react-redux';
 
 const TASK_FETCH_LOCATION = 'background-location-task';
-
-
-const SERVER_URL="http://10.195.25.133:4000";
+const SERVER_URL="http://192.168.137.43:4000";
 
 const USERID="63738fb9e33a0195e497e318"
 
@@ -62,6 +60,7 @@ async function registerForPushNotificationsAsync() {
 		}
 	}
 	token = (await Notification.getExpoPushTokenAsync()).data;
+	console.log(token+"%%%%%%%%%%%%%%%%%%%%%%%%");
   
 	await AsyncStorage.setItem("NotificationToken",`${token}`)
   
@@ -90,10 +89,11 @@ export default function MainMap() {
 
 
 
-  const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
+  const[kidsLocations,setKidsLocations]=useState([])
+  //To do add socket.on that changes kids array and show on map
 
 
-//   const mapRef = useRef();
+  const mapRef = useRef();
 
 
 const id="63738fb9e33a0195e497e318"
@@ -122,8 +122,8 @@ const id="63738fb9e33a0195e497e318"
 	const id="63738fb9e33a0195e497e318"
 console.log("useeffect"+ user)
 
-
 socket1.on(`${id}`,  (children) => {
+		console.log("ttiti"+children.children[0].phone)
 	setCnt(cnt+1)
 	
 	setKidsLocations([...children.children])
@@ -134,11 +134,37 @@ socket1.on(`${id}`,  (children) => {
 		console.log("user"+socket1.id+" disconnected")
 	  })
   })
-	
+	// socket1.on('connection', function(socket){
+	// 	console.log(`${socket.id} is connected`)
+		
+
+	// 	socket.on(`${id}`, (children) => {
+	// 		console.log(children+"ssss")
+	// 		alert("ttt2")
+	// 		console.log("location**********")
+	// 	   setKidsLocations([...children.children])
+	// 	  })
+	  
+	// //   console.log("*")
+	// // 	socket.on('disOn', (location,id) => {
+	// // 	  console.log("on")
+	// // 	  socket.emit('disTo', getDis(location,String(id)))
+	// // 	  console.log(`user ${socket.id} joined room ${socket.id}`);
+	// // 	})
+	   
+	  
+	//   socket.on('disconnect',()=>{
+	// 	console.log("user"+socket.id+" disconnected")
+	//   })
+
+	//   });
  })
  useEffect(()=> {
 
     responseListener.current = Notification.addNotificationResponseReceivedListener(response => {
+        console.log('--- notification tapped ---');
+        console.log(response);
+        console.log('------');
     })
 },[])
 
@@ -176,6 +202,7 @@ socket1.on(`${id}`,  (children) => {
 	// 	latitudeDelta: 0.1,
 	// 	longitudeDelta: 0.1
 	//   })
+	//   console.log("sss")
 
 
 	  async function initaliaParentLocation(){
@@ -187,6 +214,16 @@ socket1.on(`${id}`,  (children) => {
 
 
  }, []); 
+  useEffect(() => {
+  
+
+ }, [ kidsLocations
+ ]);
+
+
+
+
+
 
 
 
@@ -206,12 +243,12 @@ function changeRegion(child){
   const latitude = parseFloat(child.location[child.location.length-1].latitude);
   const longitude = parseFloat(child.location[child.location.length-1].longitude);
 console.log(longitude+""+longitude)
-//   mapRef.current.animateToRegion({
-//     latitude,
-//     longitude,
-//     latitudeDelta: 0.1,
-//     longitudeDelta: 0.1
-//   })
+  mapRef.current.animateToRegion({
+    latitude,
+    longitude,
+    latitudeDelta: 0.1,
+    longitudeDelta: 0.1
+  })
 }
 
 
@@ -246,8 +283,7 @@ async function changeRegionFocusParent(){
  	{kidsLocations.map((child,index)=>(
 		 index==0?<Button title={child.childname?child.childname:""} onPress={()=>changeRegion(child)}/>:""
 
-
-		 ))} 
+		 ))}
 			<GooglePlacesAutocomplete
 				placeholder="Search"
 				fetchDetails={true}
@@ -256,6 +292,7 @@ async function changeRegionFocusParent(){
 				}}
 				onPress={(data, details = null) => {
 					// 'details' is provided when fetchDetails = true
+					console.log(data, details)
 					setRegion({
 						latitude: details.geometry.location.lat,
 						longitude: details.geometry.location.lng,
@@ -311,8 +348,7 @@ async function changeRegionFocusParent(){
 				// 	latitudeDelta: 0.0922,
 				// 	longitudeDelta: 0.0421
 				// }}
-				// ref={mapRef}
-
+				ref={mapRef}
 				
 				provider="google"
 			>
@@ -325,6 +361,7 @@ async function changeRegionFocusParent(){
 					pinColor="black"
 					draggable={true}
 					onDragStart={(e) => {
+						console.log("Drag start", e.nativeEvent.coordinate)
 					}}
 					onDragEnd={(e) => {
 						setPin({
@@ -352,7 +389,7 @@ async function changeRegionFocusParent(){
     <Marker
       key={index}
 	  tracksViewChanges={false}
-	  icon={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7IryfiWGNIP3ryynOR-msKo7zWUtZUUn6JfHs8RELaw&s"}
+	//   icon={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7IryfiWGNIP3ryynOR-msKo7zWUtZUUn6JfHs8RELaw&s"}
       coordinate={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
 		, longitude: parseFloat(marker.location[marker.location.length-1].longitude) }}
         title={`${marker.location[marker.location.length-1].time+"--"+marker.batteryLevel}`}
