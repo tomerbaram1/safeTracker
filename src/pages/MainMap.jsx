@@ -14,9 +14,10 @@ import * as Permissions from 'expo-permissions';
 import { useRef } from "react";
 import { TextInput } from "react-native-paper"
 import IO, { Socket } from "socket.io-client";
-
+import { useDispatch, useSelector } from 'react-redux';
 
 const TASK_FETCH_LOCATION = 'background-location-task';
+
 
 const SERVER_URL="http://10.195.25.133:4000";
 
@@ -81,6 +82,14 @@ export default function MainMap() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
+
+  const [parentLatitude, setParentLatitude] = useState(null);
+  const [parentLongitude, setParentLongitude] = useState(null);
+  const { user } = useSelector((state) => state.auth);
+
+
+
+
   const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
 
 
@@ -107,7 +116,12 @@ const id="63738fb9e33a0195e497e318"
   const responseListener = useRef();
 
   useEffect(()=>{
+
+	
+
 	const id="63738fb9e33a0195e497e318"
+console.log("useeffect"+ user)
+
 
 socket1.on(`${id}`,  (children) => {
 	setCnt(cnt+1)
@@ -162,9 +176,17 @@ socket1.on(`${id}`,  (children) => {
 	// 	latitudeDelta: 0.1,
 	// 	longitudeDelta: 0.1
 	//   })
-	  console.log("sss")
 
- }, [longitude]); 
+
+	  async function initaliaParentLocation(){
+		let Parentocation = await Location.getCurrentPositionAsync({});
+		setParentLatitude(Parentocation.coords.latitude)
+		setParentLongitude(Parentocation.coords.longitude);}
+		
+		initaliaParentLocation()
+
+
+ }, []); 
 
 
 
@@ -193,12 +215,34 @@ console.log(longitude+""+longitude)
 }
 
 
+async function changeRegionFocusParent(){
+
+
+
+	const latitude = parseFloat(parentLatitude);
+	const longitude = parseFloat(parentLongitude);
+  console.log(longitude+""+longitude)
+	mapRef.current.animateToRegion({
+	  latitude,
+	  longitude,
+	  latitudeDelta: 0.1,
+	  longitudeDelta: 0.1
+	})
+
+
+	let Parentocation = await Location.getCurrentPositionAsync({});
+	setParentLatitude(Parentocation.coords.latitude)
+	setParentLongitude(Parentocation.coords.longitude);
+  }
+
+
 
 
 
 
 	return (
 		<View 	style={styles.container}>
+			<Button title={"my location"} onPress={()=>changeRegionFocusParent()}/>
  	{kidsLocations.map((child,index)=>(
 		 index==0?<Button title={child.childname?child.childname:""} onPress={()=>changeRegion(child)}/>:""
 
@@ -256,8 +300,8 @@ console.log(longitude+""+longitude)
 			<MapView
 				style={styles.map}
 				initialRegion={{
-          latitude: pin.latitude,
-          longitude: pin.longitude,
+					latitude: 32.07962,
+					longitude: 34.88911,
 					latitudeDelta: 0.0922,
 					longitudeDelta: 0.0421
 				}}
@@ -307,6 +351,8 @@ console.log(longitude+""+longitude)
           <>
     <Marker
       key={index}
+	  tracksViewChanges={false}
+	  icon={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7IryfiWGNIP3ryynOR-msKo7zWUtZUUn6JfHs8RELaw&s"}
       coordinate={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
 		, longitude: parseFloat(marker.location[marker.location.length-1].longitude) }}
         title={`${marker.location[marker.location.length-1].time+"--"+marker.batteryLevel}`}

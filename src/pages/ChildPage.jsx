@@ -20,13 +20,43 @@ import IO from "socket.io-client";
 import * as Battery from "expo-battery";
 import { useSelector } from "react-redux";
 
-
 const LOCATION_TASK_NAME = 'background-location-task';
+const SERVER_URL="http://10.0.0.11:4000";
+const USERID="63738fb9e33a0195e497e318"
+//const SERVER_URL = "http://10.195.25.133:4000";
 
 
 
-const SERVER_URL = "http://10.195.25.133:4000";
-const USERID = "63738fb9e33a0195e497e318";
+
+// const socket1 = IO(SERVER_URL, {
+// });
+
+
+
+// socket1.on('connection', function(socket){
+//   console.log(`${socket.id} is connected`)
+  
+//   socket.on(`${id}`, (socketKidsLocations) => {
+//     socket.join(socket.id)
+//     console.log("socket**********")
+//   })
+  
+  
+//   console.log("*")
+// 	socket.on('disOn', (location,id) => {
+// 	  console.log("on")
+// 	  socket.emit('disTo', getDis(location,String(id)))
+// 	  console.log(`user ${socket.id} joined room ${socket.id}`);
+// 	})
+   
+  
+  // socket.on('disconnect',()=>{
+  // console.log("user"+socket.id+" disconnected")
+  // })
+
+  // });
+
+
 
 async function sendBatteryUpdate() {
   const batteryLevel = Math.ceil((await Battery.getBatteryLevelAsync()) * 100);
@@ -77,48 +107,113 @@ const ChildPage = () => {
     });
   }
 
-  const [region, setRegion] = React.useState({
-    latitude: 32.07962,
-    longitude: 34.88911,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
+      useEffect(() => {
+        console.log("notification")
+      
+      }, []);
 
-  TaskManager.defineTask(
-    LOCATION_TASK_NAME,
-    async ({ data: { locations }, error }) => {
-      const id = "63738fb9e33a0195e497e318";
-      const [location] = locations;
-      const batteryLevel = await sendBatteryUpdate();
 
-      console.log(batteryLevel, "battery");
-      try {
-        await axios.patch(
-          SERVER_URL + "/api-map/users/parent/addChildrenLocation",
-          {
-            id: id,
-            connectionToken: "c8d682c1-cd6b",
-            currentLocation: location,
-            token: "ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]",
-            batteryLevel: batteryLevel,
-          }
-        );
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  );
+      const [ region, setRegion ] = React.useState({
+        latitude: 32.07962,
+        longitude: 34.88911,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+      })
 
-  return (
-    <View>
+  
+  
+    
+ 
 
-      <Pressable
-        style={sosMsg ? styles.sosBtnActive : styles.sosBtn}
-        delayLongPress={3000}
-        onLongPress={longhandle}
-        onPressIn={pressIn}
-        onPressOut={pressOut}>
-        <Text style={styles.sosText}>S O S</Text>
+
+      TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data: { locations }, error }) => {
+        const id="63738fb9e33a0195e497e318"
+        const [location] = locations;
+       const batteryLevel = await sendBatteryUpdate()
+      
+
+
+
+        console.log(batteryLevel,"battery")
+        if(batteryLevel<50)
+        await axios.patch(SERVER_URL+"/api-map/childBatteryLevelChange",{id:id,connectionToken:"c8d682c1-cd6b",
+        token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]",batteryLevel:batteryLevel})
+
+        console.log("task")
+        try {
+    
+        //   socket.emit('disOn', location,USERID)// you should use post instead of get to persist data on the backend
+        // axios.patch(SERVER_URL+"/api-map/users/parent/pushNotification",{id:id,token:token,location:location})
+        batteryLevel>50?
+        await axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8d682c1-cd6b",
+        currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]"
+        ,batteryLevel:batteryLevel,batteryStatus:"normal"}):
+
+
+        await axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8d682c1-cd6b",
+        currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]"
+        ,batteryLevel:batteryLevel})
+          // console.log(location.coords.latitude)
+         
+        } catch (err) {
+          console.error(err);
+        }
+      });
+
+return(
+  <View>
+  <Pressable
+  style={styles.trackBtn}
+  >
+    <Text
+    style={styles.trackText}>
+      START
+    </Text>
+    </Pressable>
+    <Pressable
+  style={styles.sosBtn}
+  >
+    <Text
+    style={styles.sosText}>
+      SOS
+    </Text>
+    </Pressable>
+
+    {/* MESSAGES */}
+
+    <Text>
+
+      Send your parent a message
+
+    </Text>
+    <View
+    style={styles.msgs}
+    >
+      <Pressable style={styles.msgBtn} >
+        <Text>
+          Hi
+        </Text>
+      </Pressable>
+      <Pressable style={styles.msgBtn}>
+        <Text>
+          What's up?
+        </Text>
+      </Pressable>
+      <Pressable style={styles.msgBtn}>
+        <Text>
+          Call me
+        </Text>
+      </Pressable>
+      <Pressable style={styles.msgBtn}>
+        <Text>
+          Where are you?
+        </Text>
+      </Pressable>
+      <Pressable style={styles.msgBtn} >
+        <Text>
+          Add custom message
+        </Text>
+
       </Pressable>
       {sosMsg && <Text style={styles.sosMsg}>Hold for 3 seconds</Text>}
       {/* MESSAGES */}
