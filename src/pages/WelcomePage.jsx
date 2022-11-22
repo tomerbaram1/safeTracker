@@ -38,6 +38,13 @@ const WelcomePage = ({ navigation: { navigate } }) => {
         }}>
         <Text style={styles.signinText}>Sign In</Text>
       </Pressable>
+      <Pressable
+        style={styles.signinBtn}
+        onPress={() => {
+          navigate("SignInChild");
+        }}>
+        <Text style={styles.signinText}>Sign In As A Child</Text>
+      </Pressable>
     </View>
   );
 };

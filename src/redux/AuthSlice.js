@@ -15,7 +15,9 @@ const initialState = {
 
 // Register user
 export const register = createAsyncThunk(
-  "http://10.195.25.143:4000/api/register",
+
+  "http://10.195.25.133:4000/api/register",
+ 
   async (user, thunkAPI) => {
     try {
 
@@ -34,7 +36,8 @@ export const register = createAsyncThunk(
 );
 
 // login user
-export const login = createAsyncThunk("http://10.195.25.143:4000/api/login", async (user, thunkAPI) => {
+
+export const login = createAsyncThunk("http://10.195.25.133:4000/api/login", async (user, thunkAPI) => {
   
   try {
   
@@ -45,7 +48,21 @@ export const login = createAsyncThunk("http://10.195.25.143:4000/api/login", asy
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||
       error.toString();
-      console.log(error);
+      console.log("error ",error);
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+export const loginChild = createAsyncThunk("http://10.195.25.133:4000/api/addchild", async (user, thunkAPI) => {
+  
+  try {
+    return (AuthService.loginChild(user)) 
+  } catch (error) {
+
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+      console.log("error ",error);
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -95,9 +112,24 @@ export const authSlice = createSlice({
         state.message = action.payload;
         state.user = null;
       })
+      .addCase(loginChild.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(loginChild.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(loginChild.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.user = null;
+      })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
-      });
+      })
+
   },
 });
 
