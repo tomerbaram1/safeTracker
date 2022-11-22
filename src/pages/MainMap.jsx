@@ -14,9 +14,10 @@ import * as Permissions from 'expo-permissions';
 import { useRef } from "react";
 import { TextInput } from "react-native-paper"
 import IO, { Socket } from "socket.io-client";
-
+import { useDispatch, useSelector } from 'react-redux';
 
 const TASK_FETCH_LOCATION = 'background-location-task';
+
 
 const SERVER_URL="http://172.20.10.4:4000";
 
@@ -61,6 +62,7 @@ async function registerForPushNotificationsAsync() {
 		}
 	}
 	token = (await Notification.getExpoPushTokenAsync()).data;
+	console.log(token+"%%%%%%%%%%%%%%%%%%%%%%%%");
   
 	await AsyncStorage.setItem("NotificationToken",`${token}`)
   
@@ -81,10 +83,19 @@ export default function MainMap() {
   const [errorMsg, setErrorMsg] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
-  const[kidsLocations,setKidsLocations]=useState([])//To do add socket.on that changes kids array and show on map
+
+  const [parentLatitude, setParentLatitude] = useState(null);
+  const [parentLongitude, setParentLongitude] = useState(null);
+  const { user } = useSelector((state) => state.auth);
 
 
-//   const mapRef = useRef();
+
+
+  const[kidsLocations,setKidsLocations]=useState([])
+  //To do add socket.on that changes kids array and show on map
+
+
+  const mapRef = useRef();
 
 
 const id="63738fb9e33a0195e497e318"
@@ -107,9 +118,14 @@ const id="63738fb9e33a0195e497e318"
   const responseListener = useRef();
 
   useEffect(()=>{
+
+	
+
 	const id="63738fb9e33a0195e497e318"
+console.log("useeffect"+ user)
 
 socket1.on(`${id}`,  (children) => {
+		console.log("ttiti"+children.children[0].phone)
 	setCnt(cnt+1)
 	
 	setKidsLocations([...children.children])
@@ -120,11 +136,37 @@ socket1.on(`${id}`,  (children) => {
 		console.log("user"+socket1.id+" disconnected")
 	  })
   })
-	
+	// socket1.on('connection', function(socket){
+	// 	console.log(`${socket.id} is connected`)
+		
+
+	// 	socket.on(`${id}`, (children) => {
+	// 		console.log(children+"ssss")
+	// 		alert("ttt2")
+	// 		console.log("location**********")
+	// 	   setKidsLocations([...children.children])
+	// 	  })
+	  
+	// //   console.log("*")
+	// // 	socket.on('disOn', (location,id) => {
+	// // 	  console.log("on")
+	// // 	  socket.emit('disTo', getDis(location,String(id)))
+	// // 	  console.log(`user ${socket.id} joined room ${socket.id}`);
+	// // 	})
+	   
+	  
+	//   socket.on('disconnect',()=>{
+	// 	console.log("user"+socket.id+" disconnected")
+	//   })
+
+	//   });
  })
  useEffect(()=> {
 
     responseListener.current = Notification.addNotificationResponseReceivedListener(response => {
+        console.log('--- notification tapped ---');
+        console.log(response);
+        console.log('------');
     })
 },[])
 
@@ -162,9 +204,28 @@ socket1.on(`${id}`,  (children) => {
 	// 	latitudeDelta: 0.1,
 	// 	longitudeDelta: 0.1
 	//   })
-	  console.log("sss")
+	//   console.log("sss")
 
- }, [longitude]); 
+
+	  async function initaliaParentLocation(){
+		let Parentocation = await Location.getCurrentPositionAsync({});
+		setParentLatitude(Parentocation.coords.latitude)
+		setParentLongitude(Parentocation.coords.longitude);}
+		
+		initaliaParentLocation()
+
+
+ }, []); 
+  useEffect(() => {
+  
+
+ }, [ kidsLocations
+ ]);
+
+
+
+
+
 
 
 
@@ -184,13 +245,34 @@ function changeRegion(child){
   const latitude = parseFloat(child.location[child.location.length-1].latitude);
   const longitude = parseFloat(child.location[child.location.length-1].longitude);
 console.log(longitude+""+longitude)
-//   mapRef.current.animateToRegion({
-//     latitude,
-//     longitude,
-//     latitudeDelta: 0.1,
-//     longitudeDelta: 0.1
-//   })
+  mapRef.current.animateToRegion({
+    latitude,
+    longitude,
+    latitudeDelta: 0.1,
+    longitudeDelta: 0.1
+  })
 }
+
+
+async function changeRegionFocusParent(){
+
+
+
+	const latitude = parseFloat(parentLatitude);
+	const longitude = parseFloat(parentLongitude);
+  console.log(longitude+""+longitude)
+	mapRef.current.animateToRegion({
+	  latitude,
+	  longitude,
+	  latitudeDelta: 0.1,
+	  longitudeDelta: 0.1
+	})
+
+
+	let Parentocation = await Location.getCurrentPositionAsync({});
+	setParentLatitude(Parentocation.coords.latitude)
+	setParentLongitude(Parentocation.coords.longitude);
+  }
 
 
 
@@ -199,11 +281,11 @@ console.log(longitude+""+longitude)
 
 	return (
 		<View 	style={styles.container}>
+			<Button title={"my location"} onPress={()=>changeRegionFocusParent()}/>
  	{kidsLocations.map((child,index)=>(
 		 index==0?<Button title={child.childname?child.childname:""} onPress={()=>changeRegion(child)}/>:""
 
-
-		 ))} 
+		 ))}
 			<GooglePlacesAutocomplete
 				placeholder="Search"
 				fetchDetails={true}
@@ -212,6 +294,7 @@ console.log(longitude+""+longitude)
 				}}
 				onPress={(data, details = null) => {
 					// 'details' is provided when fetchDetails = true
+					console.log(data, details)
 					setRegion({
 						latitude: details.geometry.location.lat,
 						longitude: details.geometry.location.lng,
@@ -256,8 +339,8 @@ console.log(longitude+""+longitude)
 			<MapView
 				style={styles.map}
 				initialRegion={{
-          latitude: pin.latitude,
-          longitude: pin.longitude,
+					latitude: 32.07962,
+					longitude: 34.88911,
 					latitudeDelta: 0.0922,
 					longitudeDelta: 0.0421
 				}}
@@ -267,8 +350,7 @@ console.log(longitude+""+longitude)
 				// 	latitudeDelta: 0.0922,
 				// 	longitudeDelta: 0.0421
 				// }}
-				// ref={mapRef}
-
+				ref={mapRef}
 				
 				provider="google"
 			>
@@ -281,6 +363,7 @@ console.log(longitude+""+longitude)
 					pinColor="black"
 					draggable={true}
 					onDragStart={(e) => {
+						console.log("Drag start", e.nativeEvent.coordinate)
 					}}
 					onDragEnd={(e) => {
 						setPin({
@@ -307,6 +390,8 @@ console.log(longitude+""+longitude)
           <>
     <Marker
       key={index}
+	  tracksViewChanges={false}
+	//   icon={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7IryfiWGNIP3ryynOR-msKo7zWUtZUUn6JfHs8RELaw&s"}
       coordinate={{ latitude: parseFloat(marker.location[marker.location.length-1].latitude)
 		, longitude: parseFloat(marker.location[marker.location.length-1].longitude) }}
         title={`${marker.location[marker.location.length-1].time+"--"+marker.batteryLevel}`}

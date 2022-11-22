@@ -11,6 +11,7 @@ const register = async (userData) => {
   const password=userData.password
   const phoneNumber=userData.phoneNumber
 
+
   const response = await axios.post('http://172.20.10.4:4000/api/register', {fullName:fullName,email:email,password:password,phoneNumber:phoneNumber});
   if (response.data) {
     AsyncStorage.setItem("user", JSON.stringify(response.data));
@@ -26,6 +27,7 @@ const login = async (userData) => {
   const email=userData.email;
   const password=userData.password
 
+
     const response = await axios.post("http://172.20.10.4:4000/api/login",{email:email,password:password} );
     
       if (response.data) {
@@ -40,6 +42,7 @@ const login = async (userData) => {
 const loginChild = async (userData) => {
 
   const connectionToken=userData.connectionToken;
+
 
   console.log(userData, "user data");
    const response= await axios.post("http://172.20.10.4:4000/api/childAuth",{connectionToken:connectionToken} );

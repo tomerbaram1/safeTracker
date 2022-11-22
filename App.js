@@ -28,6 +28,7 @@ import Content from "./src/pages/Content";
 
 const Stack = createNativeStackNavigator();
 
+
 const SERVER_URL="http://172.20.10.4:4000";
 const USERID="63738fb9e33a0195e497e318"
 const CONNECTION_TOKEN="c8b682c1-cb6b"/// To do- tomer change dynamicaly
@@ -58,9 +59,10 @@ export default function App() {
 
       <NavigationContainer>
 
-        <EntryScreen />
+        {/* <EntryScreen /> */}
         <Toast/>
-        
+
+        <Content></Content>
 
       </NavigationContainer>
     </Provider>
