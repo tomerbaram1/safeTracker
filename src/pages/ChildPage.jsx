@@ -4,7 +4,6 @@ import axios from "axios";
 import * as React from "react";
 import { useEffect } from "react";
 
-
 import { useState } from "react";
 // import Geolocation from 'react-native-geolocation-service';
 import * as Location from "expo-location";
@@ -20,12 +19,9 @@ import IO from "socket.io-client";
 import * as Battery from "expo-battery";
 import { useSelector } from "react-redux";
 
+const LOCATION_TASK_NAME = "background-location-task";
 
-const LOCATION_TASK_NAME = 'background-location-task';
-
-
-
-const SERVER_URL = "http://10.195.25.133:4000";
+const SERVER_URL = "http://172.20.10.4:4000";
 const USERID = "63738fb9e33a0195e497e318";
 
 async function sendBatteryUpdate() {
@@ -34,12 +30,12 @@ async function sendBatteryUpdate() {
 }
 
 const ChildPage = () => {
-  const { user } = useSelector((state) => state.auth);
+  const { child } = useSelector((state) => state.auth);
 
   const [sosMsg, setSosMsg] = useState(false);
   const [sos, setSos] = useState(false);
   const longhandle = () => {
-    alert(`${user.fullName} SOS called!`);
+    alert(` SOS called!`);
     setSosMsg(false);
     setSos(true);
   };
@@ -62,6 +58,9 @@ const ChildPage = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    console.log(child, "child");
+  }, []);
   async function startLocation() {
     await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: Location.Accuracy.Highest,
@@ -111,7 +110,8 @@ const ChildPage = () => {
 
   return (
     <View>
-
+      <Text style={styles.sosMsg}>Hello {child?.childname}</Text>
+      <Text style={styles.sosMsg}>Your Token: {child?.connectionToken}</Text>
       <Pressable
         style={sosMsg ? styles.sosBtnActive : styles.sosBtn}
         delayLongPress={3000}
@@ -122,7 +122,6 @@ const ChildPage = () => {
       </Pressable>
       {sosMsg && <Text style={styles.sosMsg}>Hold for 3 seconds</Text>}
       {/* MESSAGES */}
-
     </View>
   );
 };

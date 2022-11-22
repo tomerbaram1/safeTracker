@@ -4,9 +4,11 @@ import AuthService from "./AuthService";
 
 // get user from localStorage
 const user = JSON.stringify(AsyncStorage.getItem("user"));
+const child = JSON.stringify(AsyncStorage.getItem("child"));
 
 const initialState = {
   user: user ? user : null,
+  child: child ? child : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -16,7 +18,7 @@ const initialState = {
 // Register user
 export const register = createAsyncThunk(
 
-  "http://10.195.25.133:4000/api/register",
+  "http://172.20.10.4:4000/api/register",
  
   async (user, thunkAPI) => {
     try {
@@ -37,7 +39,7 @@ export const register = createAsyncThunk(
 
 // login user
 
-export const login = createAsyncThunk("http://10.195.25.133:4000/api/login", async (user, thunkAPI) => {
+export const login = createAsyncThunk("http://172.20.10.4:4000/api/login", async (user, thunkAPI) => {
   
   try {
   
@@ -52,10 +54,15 @@ export const login = createAsyncThunk("http://10.195.25.133:4000/api/login", asy
     return thunkAPI.rejectWithValue(message);
   }
 });
-export const loginChild = createAsyncThunk("http://10.195.25.133:4000/api/addchild", async (user, thunkAPI) => {
+
+
+
+export const loginChild = createAsyncThunk("http://172.20.10.4:4000/api/childAuth", async (child, thunkAPI) => {
   
   try {
-    return (AuthService.loginChild(user)) 
+    
+    return (AuthService.loginChild(child)) 
+    
   } catch (error) {
 
     const message =
@@ -118,16 +125,17 @@ export const authSlice = createSlice({
       .addCase(loginChild.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.user = action.payload;
+        state.child = action.payload;
       })
       .addCase(loginChild.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        state.user = null;
+        state.child = null;
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+
       })
 
   },

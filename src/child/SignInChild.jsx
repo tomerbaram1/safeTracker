@@ -5,51 +5,91 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Input } from "@rneui/base";
-import { login, loginChild, reset } from "../redux/AuthSlice";
+import {  loginChild, reset } from "../redux/AuthSlice";
 import { Button } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
 import Toast from 'react-native-toast-message';
 
 
 
-export default function SignIn({ navigation: { goBack } }) {
+export default function SignInChild({ navigation: { goBack },isChild, setIsChild} ) {
 
   const [connectionToken, setConnectionToken] = useState("");
   const dispatch = useDispatch();
   const navigation = useNavigation();
   
 
-  const { user, isError, isSuccess, message } = useSelector(
+  const setChildStateTrue =()=>{
+    setIsChild(true)
+    console.log(isChild,"child state");
+  }
+
+  const { user,child, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
 
-  useEffect(() => {
-    if (isError===true) {
-      Toast.show({
-             type: 'error',
-             text1: 'Error',
-             text2: 'Connection token not correct' 
-           })
-           console.log(message,"message error");
-           navigation.navigate("WelcomePage");
-    }
+// useEffect(()=>{
+//   isChild===true?
+//   navigation.navigate("Content"):
+//   ""
+// },[isChild])
 
-    if (isSuccess===true) {
-      console.log(isSuccess,"success");
-      console.log(user.connectionToken,"connection Token");
-    navigation.navigate("Content");
-    }
+useEffect(() => {
+  if (isError) {
+    console.log(message);
+  }
 
-    dispatch(reset);
-  }, [user, isError, isSuccess, message, navigation, dispatch]);
+  if (isSuccess===true) {
+    setChildStateTrue()
+    console.log("eeeeeeeeeeeee");
+    navigation.navigate("Content")
+  }
+  dispatch(reset);
+
+}, [user, isError, isSuccess, message, navigation, dispatch]);
+// useEffect(()=>{
+//   if(child)
+//  { 
+//   console.log("exicts");
+//   dispatch(reset);}
+// },[child])
+  // useEffect(() => {
+  //   // if (!child) {
+  //   //   Toast.show({
+  //   //          type: 'error',
+  //   //          text1: 'Error',
+  //   //          text2: 'Connection token not correct' 
+  //   //        })
+  //   //        console.log("message error");
+  //   //        navigation.navigate("WelcomePage");
+  //   // }
+
+  //   if ( isSuccess) {
+
+  //     console.log("exists");
+  //     setChildStateTrue()
+  //     console.log(user.connectionToken,"connection Token");
+   
+      
+  //   }
+
+  //   dispatch(reset);
+  // }, [ child,  dispatch]);
 
 
   
-  const onSubmit = (e) => {
+  const onSubmit =  (e) => {
     e.preventDefault();
-    connectionToken
-    console.log(connectionToken, "connection token 1");
-    dispatch(loginChild(connectionToken));
+    const userData = {
+      connectionToken
+    };
+
+    console.log(userData, "connection token 1");
+     dispatch(loginChild(userData));
+    setChildStateTrue()
+    console.log("eeeeeeeeeeeee");
+     navigation.navigate("Content")
+    
     
 
   };
