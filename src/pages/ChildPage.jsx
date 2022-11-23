@@ -76,8 +76,11 @@ const ChildPage = () => {
 
   const [sosMsg, setSosMsg] = useState(false);
   const [sos, setSos] = useState(false);
+  const id="63738fb9e33a0195e497e318"
+  const connectionToken="c8d682c1-cd6b";
   const longhandle = () => {
     alert(` SOS called!`);
+    axios.post(SERVER_URL+"/api/sos",{id:id,connectionToken:connectionToken})
     setSosMsg(false);
     setSos(true);
   };
@@ -110,8 +113,8 @@ const ChildPage = () => {
   async function startLocation() {
     await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
       accuracy: Location.Accuracy.Highest,
-      distanceInterval: 5, // minimum change (in meters) betweens updates
-      deferredUpdatesInterval: 100, // minimum interval (in milliseconds) between updates
+      distanceInterval: 1, // minimum change (in meters) betweens updates
+      deferredUpdatesInterval: 1, // minimum interval (in milliseconds) between updates
      
       // foregroundService is how you get the task to be updated as often as would be if the app was open
       foregroundService: {
@@ -164,10 +167,6 @@ const ChildPage = () => {
         ,batteryLevel:batteryLevel,batteryStatus:"normal"})
 
 
-        // await axios.patch(SERVER_URL+"/api-map/users/parent/addChildrenLocation",{id:id,connectionToken:"c8d682c1-cd6b",
-        // currentLocation:location,token:"ExponentPushToken[Uh8EfSGwGP2wOYky3ImWmQ]"
-        // ,batteryLevel:batteryLevel})
-          // console.log(location.coords.latitude)
          
         } catch (err) {
           console.error(err);

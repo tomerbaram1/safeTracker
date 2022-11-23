@@ -58,7 +58,6 @@ export default function App() {
     <Provider store={store}>
 
       <NavigationContainer>
-
         <EntryScreen />
         <Toast/>
 

@@ -26,6 +26,7 @@ import { useRef } from "react";
 import { TextInput } from "react-native-paper";
 import IO, { Socket } from "socket.io-client";
 import { FAB, Icon } from "@rneui/base";
+import { useSelector } from "react-redux";
 
 const TASK_FETCH_LOCATION = "background-location-task";
 
@@ -73,12 +74,35 @@ async function registerForPushNotificationsAsync() {
   alert(await AsyncStorage.getItem("NotificationToken"));
 }
 
+
+
+const parentAlert = async (kidName) => {
+	
+			// It's useful to save notification id so that you can edit/delete notification later
+			const idOfNotification = await Notification.scheduleNotificationAsync( {
+				content: {
+				  title: `${kidName +"- SOS"}`,
+				  body: `${kidName +"-  activated SOS"}`,
+				  sound: 'default'
+				},
+				trigger: {
+				  hour: 14, // show this notification every day, 14:00
+				  repeats: true
+				},
+			  } );
+	}
+
+
+
+
+
 export default function MainMap() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [kidsLocations, setKidsLocations] = useState([]); //To do add socket.on that changes kids array and show on map
+  const { user } = useSelector((state) => state.auth);
 
   //   const mapRef = useRef();
 
@@ -99,6 +123,23 @@ export default function MainMap() {
   });
   const [baseLocations, setBaseLocations] = React.useState([]);
   //   const responseListener = useRef();
+
+
+  useEffect(() => {
+    const id = "63738fb9e33a0195e497e318";
+
+    socket1.on(`${id+"SOS"}`, (childName) => {
+   
+		parentAlert(childName)
+     
+
+      socket1.emit("disconnect", () => {
+        console.log("user" + socket1.id + " disconnected");
+      });
+    });
+  });
+
+
 
   useEffect(() => {
     const id = "63738fb9e33a0195e497e318";
@@ -184,7 +225,7 @@ export default function MainMap() {
 
   return (
     <View style={styles.container}>
-      <GooglePlacesAutocomplete
+      {/* <GooglePlacesAutocomplete
         placeholder="Search"
         fetchDetails={true}
         GooglePlacesSearchQuery={{
@@ -235,8 +276,12 @@ export default function MainMap() {
             color: "#1faadb",
           },
         }}
-      />
-
+      /> */}
+		<View>
+			<Text style={styles.hello}>
+				Hello, {user?.fullName}
+			</Text>
+		</View>
       <MapView
         style={styles.map}
         initialRegion={{
@@ -255,22 +300,22 @@ export default function MainMap() {
 
         provider="google"
       >
-        {kidsLocations.map((child, index) =>
+        {/* {kidsLocations.map((child, index) =>
           index == 0 ? (
             <View key={index} style={styles.gpsView}>
 
               <FAB
                 icon={{ name: 'location-pin', color:'white'}}
 				title={child.childname ? child.childname : ""}
-                color="#495867"
-				style={{marginTop:10}}
+                color="rgba(73, 88, 103,0.2)"
+				size='small'
                 onPress={() => changeRegion(child)}
 				/>
             </View>
           ) : (
             ""
           )
-        )}
+        )} */}
         <Marker
           coordinate={pin}
           pinColor="black"
@@ -291,60 +336,64 @@ export default function MainMap() {
 
         {kidsLocations.map((marker, index) =>
           marker.location[marker.location.length - 1] ? (
-            <>
+			
+			<View key={index} >
+
               <Marker
-                key={index}
                 coordinate={{
-                  latitude: parseFloat(
-                    marker.location[marker.location.length - 1].latitude
-                  ),
-                  longitude: parseFloat(
-                    marker.location[marker.location.length - 1].longitude
-                  ),
-                }}
-                title={`${
-                  marker.location[marker.location.length - 1].time +
-                  "--" +
-                  marker.batteryLevel
+					latitude: parseFloat(
+						marker.location[marker.location.length - 1].latitude
+						),
+						longitude: parseFloat(
+							marker.location[marker.location.length - 1].longitude
+							),
+						}}
+						title={`${
+							marker.location[marker.location.length - 1].time +
+							"--" +
+							marker.batteryLevel
                 }`}
-              />
+				/>
               <Circle
                 key={index + 199}
                 center={{
-                  latitude: parseFloat(
-                    marker.location[marker.location.length - 1].latitude
-                  ),
-                  longitude: parseFloat(
-                    marker.location[marker.location.length - 1].latitude
-                  ),
-                }}
-                radius={75}
-              />
-            </>
+					latitude: parseFloat(
+						marker.location[marker.location.length - 1].latitude
+						),
+						longitude: parseFloat(
+							marker.location[marker.location.length - 1].latitude
+							),
+						}}
+						radius={75}
+						/>
+						</View>
           ) : (
             ""
           )
         )}
 
         {baseLocations.map((marker, index) => (
-          <>
+          <View
+		  key={index}
+		  >
+
             <Marker
-              key={index}
               coordinate={{
-                latitude: parseFloat(marker.latitude),
-                longitude: parseFloat(marker.longitude),
-              }}
-              title={marker.name && marker.name}
-            />
+				  latitude: parseFloat(marker.latitude),
+				  longitude: parseFloat(marker.longitude),
+				}}
+				title={marker.name && marker.name}
+				/>
             <Circle
               key={index + 199}
               center={{
-                latitude: parseFloat(marker.latitude),
-                longitude: parseFloat(marker.longitude),
-              }}
-              radius={75}
-            />
-          </>
+				  latitude: parseFloat(marker.latitude),
+				  longitude: parseFloat(marker.longitude),
+				}}
+				radius={75}
+				/>
+				</View>
+        
         ))}
       </MapView>
       <View style={{ marginTop: 50, flex: 1, flexDirection: "column" }}>
@@ -377,5 +426,11 @@ const styles = StyleSheet.create({
 	display:'flex',
 	alignItems:'flex-start',
 	marginLeft:10
+  },
+  hello:{
+	marginBottom:10,
+	marginTop:60,
+	fontSize:20,
+	fontWeight:'800'
   }
 });

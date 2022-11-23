@@ -37,7 +37,7 @@ const Settings = () => {
             <List.Icon {...props} icon="account-child-outline" />
           )}
         >
-          <List.Item title="Change location refresh frequency" />
+          <List.Item title="How my child can connect?" />
           <View
             style={{
               display: "flex",
@@ -47,13 +47,29 @@ const Settings = () => {
               marginRight: 50,
             }}
           >
-            <Text>Refresh after</Text>
-            <TextInput
-              defaultValue="10"
-              style={{ width: "16%", textAlign: "center" }}
-              keyboardType="phone-pad"
-            />
-            <Text>meters</Text>
+            <Text style={{marginBottom:20}}>IN the main page, you can see and copy your child's token, and send him/her the token via whatsapp using the message button.</Text>
+            
+          </View>
+        </List.Accordion>
+        <List.Accordion
+          title="FAQ"
+          id="5"
+          left={(props) => (
+            <List.Icon {...props} icon="chat-question" />
+          )}
+        >
+          <List.Item title="How my child can connect?" />
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 50,
+            }}
+          >
+            <Text style={{marginBottom:20}}>IN the main page, you can see and copy your child's token, and send him/her the token via whatsapp using the message button.</Text>
+            
           </View>
         </List.Accordion>
         <List.Accordion

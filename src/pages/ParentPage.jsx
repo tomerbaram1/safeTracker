@@ -12,7 +12,7 @@ import AddChild from './AddChild';
 import { useNavigation } from "@react-navigation/native";
 const Tab = createBottomTabNavigator();
 
-const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => {
+const ParentPage = ({ navigate, sos, setSos } ) => {
   const [infoDown, setInfoDown] = useState(false)
   const [addChildForm, setAddChildForm] = useState(false)
   
@@ -33,13 +33,6 @@ const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => 
 
   return(
   <View>
-    <Text>
-      {user?.fullName}
-    </Text>
-    <Text>
-    {user?.fullName}
-    </Text>
-   
     {sos && (
       <View style={styles.SosCall}>
        <Text style={styles.SosCall}>
@@ -72,7 +65,7 @@ const ParentPage = ({ navigate, sos, setSos, childNumber, setChildNumber } ) => 
           <AddChild/>
         )}
       </View>
-    <ChildList childNumber={childNumber} setChildNumber = {setChildNumber} />
+    <ChildList  />
     </View>
     
   </View>

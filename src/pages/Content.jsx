@@ -3,6 +3,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 
 //components
+// react-native-vector-icons/Ionicons otherwise.
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import ParentPage from "./ParentPage";
 import Settings from "./settings/Settings";
 import ChildPage from "./ChildPage";
@@ -18,7 +20,7 @@ import Chat from "./Chat";
 const Content = ({ isChild, setIsChild }) => {
   const [sos, setSos] = useState(false);
 
-  const [childNumber, setChildNumber] = useState("");
+  // const [childNumber, setChildNumber] = useState("");
 
   const ChildpageComp = (props) => {
     return <ChildPage {...props} sos={sos} setSos={setSos} />;
@@ -29,8 +31,8 @@ const Content = ({ isChild, setIsChild }) => {
         {...props}
         sos={sos}
         setSos={setSos}
-        childNumber={childNumber}
-        setChildNumber={setChildNumber}
+        // childNumber={childNumber}
+        // setChildNumber={setChildNumber}
       />
     );
   };
@@ -42,6 +44,11 @@ const Content = ({ isChild, setIsChild }) => {
           <Tab.Screen
             name="ChildPage"
             component={ChildpageComp}
+            options={{ headerShown: false }}
+          />
+          <Tab.Screen
+            name="Settings"
+            component={Settings}
             options={{ headerShown: false }}
           />
         </Tab.Navigator>
@@ -57,15 +64,14 @@ const Content = ({ isChild, setIsChild }) => {
             component={Settings}
             options={{ headerShown: false }}
           />
-          <Tab.Screen
-            name="Chat"
-            component={Chat}
-            options={{ headerShown: false }}
-          />
+
           <Tab.Screen
             name="AddLocation"
             component={AddLocation}
             options={{ headerShown: false }}
+
+            
+            
           />
         </Tab.Navigator>
       )}

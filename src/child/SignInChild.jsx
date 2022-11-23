@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, StyleSheet, View } from "react-native";
+import { StatusBar, StyleSheet, View, Image, Dimensions } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
@@ -100,6 +100,12 @@ useEffect(() => {
     >
       {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
         <View style={styles.container}>
+                    <View style={styles.imgView}>
+        <Image
+          source={require("../../assets/googlemap.png")}
+          style={styles.img}
+        />
+      </View>
           <StatusBar style="auto" />
           <View style={styles.inputView}>
             <Input
@@ -117,34 +123,8 @@ useEffect(() => {
 
           
           <View>
-            <Button
-              title="Go Back"
-              onPress={() => goBack()}
-              icon={{
-                name: "arrow-right",
-                type: "font-awesome",
-                size: 15,
-                color: "white",
-              }}
-              iconContainerStyle={{ marginRight: 10 }}
-              titleStyle={{ fontWeight: "700" }}
-              buttonStyle={{
-                backgroundColor: "#577399",
-                borderColor: "transparent",
-                borderWidth: 0,
-                borderRadius: 30,
-              }}
-              containerStyle={{
-                width: 200,
-                marginHorizontal: 50,
-                marginVertical: 10,
-              }}
-            />
-          </View>
-
-
           <Button
-            title="Child Log In"
+            title="Log In"
             onPress={onSubmit}
             icon={{
               name: "arrow-right",
@@ -166,6 +146,33 @@ useEffect(() => {
               marginVertical: 10,
             }}
           />
+            <Button
+              title="Go Back"
+              onPress={() => goBack()}
+              icon={{
+                name: "arrow-right",
+                type: "font-awesome",
+                size: 15,
+                color: "white",
+              }}
+              iconContainerStyle={{ marginRight: 10 }}
+              titleStyle={{ fontWeight: "700" }}
+              buttonStyle={{
+                backgroundColor: "#495867",
+                borderColor: "transparent",
+                borderWidth: 0,
+                borderRadius: 30,
+              }}
+              containerStyle={{
+                width: 200,
+                marginHorizontal: 50,
+                marginVertical: 10,
+              }}
+            />
+          </View>
+
+
+          
         </View>
       )}
     </Formik>
@@ -175,9 +182,11 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    height:  Dimensions.get("window").height,
+    marginBottom:400,
+
   },
 
   image: {
@@ -212,6 +221,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#FF1493",
+  },
+  imgView: {
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    overflow: "hidden",
+  },
+  img: {
+    height: 600,
+    width: 420,
+    top: -200,
+    position: "relative",
+    borderRadius: 50,
   },
 });
 

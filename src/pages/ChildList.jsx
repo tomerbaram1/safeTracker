@@ -17,10 +17,10 @@ import { useSelector } from "react-redux";
 
 const api = axios.create({ baseURL: "http://172.20.10.4:4000" });
 
-const ChildList = ({ childNumber, setChildNumber }) => {
+const ChildList = ({ }) => {
   const [kids, setKids] = useState([]);
   const [openHistory, setOpenHistory] = useState(false);
-  const { user } = useSelector((state) => state.auth);
+  const { user, child } = useSelector((state) => state.auth);
   const id = user?._id;
   const getKidsData = () => {
     console.log(id+" user's id")
@@ -66,8 +66,7 @@ const ChildList = ({ childNumber, setChildNumber }) => {
                   type="font-awesome"
                   name="phone"
                 />
-                {data.phone || data.childPhone}
-                {setChildNumber(data.phone)}
+                {data.phone}
               </Text>
               <Text style={{ fontWeight: "700", fontSize:10 }} selectable={true}>
                 <Icon

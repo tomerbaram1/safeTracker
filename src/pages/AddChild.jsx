@@ -24,7 +24,6 @@ const AddChild = () => {
   const [childname, setChildName] = useState("");
   const [phone, setChildPhone] = useState("");
   const [token, setToken] = useState("");
-  const [showToken, setShowToken] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const [image, setImage] = useState("");
 
@@ -75,7 +74,6 @@ const AddChild = () => {
 
   const submit = () => {
     addChild();
-    setShowToken(!showToken);
   };
 
 
@@ -107,29 +105,14 @@ console.log(image + '----------------------------useEFFECT-------------------->>
         onChangeText={(e) => setChildPhone(e)}
         value={phone}
       />
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button title="Pick an image from camera roll" onPress={pickImage} />
+      <View style={{ flex: 1, alignItems: 'center'}}>
+        <Button title="Pick from camera roll" onPress={pickImage} />
         {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      </View>
       <Button
        onPress={submit}
        title="Add" 
-       color='#495867'/>
-      {showToken && (
-        <View style={styles.overlay}>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={true}
-            style={styles.modal}>
-            <Text style={styles.overlayText}>Your Child's Token</Text>
-            <Text selectable={true} style={styles.overlayToken}>
-              {token}
-            </Text>
-            <Button title="close" onPress={() => setShowToken(!showToken)} />
-          </Modal>
-        </View>
-      )}
+       />
+       </View>
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, StyleSheet, View } from "react-native";
+import { StatusBar, StyleSheet, View, Image,Dimensions } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
@@ -91,6 +91,7 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
   };
 
   return (
+
     <Formik
       initialValue={{
         email: "",
@@ -103,6 +104,12 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
     >
       {({ values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
         <View style={styles.container}>
+          <View style={styles.imgView}>
+        <Image
+          source={require("../../assets/googlemap.png")}
+          style={styles.img}
+        />
+      </View>
           <StatusBar style="auto" />
           <View style={styles.inputView}>
             <Input
@@ -234,9 +241,11 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    marginBottom:400,
+    height:  Dimensions.get("window").height,
+
   },
 
   image: {
@@ -270,5 +279,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#FF1493",
+  },
+  imgView: {
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    overflow: "hidden",
+  },
+  img: {
+    height: 600,
+    width: 420,
+    top: -100,
+    position: "relative",
+    borderRadius: 50,
   },
 });
