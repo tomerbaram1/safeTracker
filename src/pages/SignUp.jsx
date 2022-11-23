@@ -10,6 +10,8 @@ import { Button } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
 import Toast from 'react-native-toast-message';
 
+import RegisterErrors from "../error-messages/RegisterErrors";
+
 const SignupSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email")
@@ -49,34 +51,50 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
+  const [errorTxtFullName, setErrorTxtFullName] = useState("")
+  const [errorTxtEmail, setErrorTxtEmail] = useState("")
+  const [errorTxtPhoneNumber, setErrorTxtPhoneNumber] = useState("")
+  const [errorTxtPassword, setErrorTxtPassword] = useState("")
+  const [errorTxtConfirmPassword, setErrorTxtConfirmPassword] = useState("")
+
   const { user, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
 
-  // useEffect(() => {
-  //   if (isError) {
-  //     console.log(message);
-  //   }
+  useEffect(() => {
+    if (isError) {
+      console.log(message);
+    }
 
-  //   // if ( isSuccess || user) {
-  //   //   alert("User Registered")
+    if ( isSuccess == true) {
+      alert("User Registered")
+      console.log(isSuccess);
+    }
 
-  //   // }
-
-  //   dispatch(reset);
-  // }, [user, isError, isSuccess, message, dispatch]);
-
+    dispatch(reset);
+  }, [user, isError, isSuccess, message, dispatch]);
 
 
   const onSubmit = (e) => {
     e.preventDefault();
 
+    if (fullName.length == 0) { 
+      setErrorTxtFullName(RegisterErrors.fullName.required)
+    } 
+    if (email.length == 0) {
+      setErrorTxtEmail(RegisterErrors.email.required)
+    } 
+    if (phoneNumber.length == 0) {
+      setErrorTxtPhoneNumber(RegisterErrors.phoneNumber.required)
+    }
+    if (password == 0) {
+      setErrorTxtPassword(RegisterErrors.password.required)
+    }
     if (password !== confirmPassword ) {
-      Toast.show({
-        type: 'error',
-        text1: 'Passwords do not match',
-        text2: 'Please try again 🚀' 
-      })
+      setErrorTxtConfirmPassword(RegisterErrors.confirmPassword.doNotMatch)
+    } 
+    if (confirmPassword == 0) {
+      setErrorTxtConfirmPassword(RegisterErrors.confirmPassword.required)
     } else {
       const userData = {
         fullName,
@@ -86,9 +104,11 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
       };
       dispatch(register(userData))
       navigate("Content");
-
     }
   };
+
+  var validRegexEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  var validRegexPhoneNumber =  /^\d+$/;
 
   return (
     <Formik
@@ -101,30 +121,39 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
       }}
       validationSchema={SignupSchema}
     >
-      {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
+      {({ touched, handleChange, handleBlur, setFieldTouched, handleSubmit, values }) => (
         <View style={styles.container}>
           <StatusBar style="auto" />
           <View style={styles.inputView}>
             <Input
               value={fullName}
               style={styles.TextInput}
-              placeholder="  Full name"
+              placeholder="Full name"
               placeholderTextColor="#003f5c"
               onChangeText={(text) => {
-                setFullName(text), handleChange('fullName')
+                setFullName(text);
+                if (text.length == 0) {
+                  setErrorTxtFullName(RegisterErrors.fullName.required)
+                } else if (text.length < 3) {
+                  setErrorTxtFullName(RegisterErrors.fullName.tooShort)
+                } else if (text.length > 20) {
+                  setErrorTxtFullName(RegisterErrors.fullName.tooLong)
+                } else {
+                  setErrorTxtFullName("")
+                }
               }}
-              onBlur={() => setFieldTouched('fullName')}
             />
           </View>
 
-          {touched.fullName && errors.fullName && (
-            <Text style={styles.errorTxt}>{errors.fullName}</Text>
-          )}
+          {errorTxtFullName ?
+          <Text style={styles.errorText}>{errorTxtFullName}</Text> : 
+          ""}
 
           <View style={styles.inputView}>
             <Input
               value={email}
               style={styles.Input}
+              type='email'
               autoComplete='email'
               clearButtonMode='while-editing'
               keyboardType='email-address'
@@ -132,9 +161,20 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               placeholderTextColor="#003f5c"
               onChangeText={(text) => {
                 setEmail(text);
+                if (text.length == 0) {
+                  setErrorTxtEmail(RegisterErrors.email.required)
+                } else if (!text.match(validRegexEmail)) {
+                  setErrorTxtEmail(RegisterErrors.email.notValid)
+                } else {
+                  setErrorTxtEmail("")
+                }
               }}
             />
-          </View>
+          </View> 
+
+          {errorTxtEmail ?
+          <Text style={styles.errorText}>{errorTxtEmail}</Text> : 
+          ""}
 
           <View style={styles.inputView}>
             <Input
@@ -144,9 +184,22 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               placeholderTextColor="#003f5c"
               onChangeText={(text) => {
                 setPhoneNumber(text);
+                if (text.length == 0) {
+                  setErrorTxtPhoneNumber(RegisterErrors.phoneNumber.required)
+                } else if (text.length !== 10) {
+                  setErrorTxtPhoneNumber(RegisterErrors.phoneNumber.notValid)
+                } else if (!text.match(validRegexPhoneNumber) ) {
+                  setErrorTxtPhoneNumber(RegisterErrors.phoneNumber.notValid)
+                } else {
+                  setErrorTxtPhoneNumber('')
+                }
               }}
             />
           </View>
+
+          {errorTxtPhoneNumber ?
+          <Text style={styles.errorText}>{errorTxtPhoneNumber}</Text> : 
+          ""}
 
           <View style={styles.inputView}>
             <Input
@@ -157,9 +210,23 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               secureTextEntry={true}
               onChangeText={(text) => {
                 setPassword(text);
+                if (text.length == 0) {
+                    setErrorTxtPassword(RegisterErrors.password.required)
+                } else if (text.length < 8) {
+                  setErrorTxtPassword(RegisterErrors.password.tooShort)
+                } else if (text.length > 16) {
+                  setErrorTxtPassword(RegisterErrors.password.tooLong)
+                } else {
+                  setErrorTxtPassword('')
+                }
               }}
             />
           </View>
+
+          {errorTxtPassword ?
+          <Text style={styles.errorText}>{errorTxtPassword}</Text> : 
+          ""}
+
           <View style={styles.inputView}>
             <Input
               value={confirmPassword}
@@ -169,9 +236,20 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               secureTextEntry={true}
               onChangeText={(text) => {
                 setConfirmPassword(text);
+                if (text.length == 0) {
+                  setErrorTxtConfirmPassword(RegisterErrors.confirmPassword.required)
+              } else if ((password !== text )) {
+                setErrorTxtConfirmPassword(RegisterErrors.confirmPassword.doNotMatch)
+              } else {
+                setErrorTxtConfirmPassword('')
+              }
               }}
             />
           </View>
+
+          {errorTxtConfirmPassword ?
+          <Text style={styles.errorText}>{errorTxtConfirmPassword}</Text> : 
+          ""}
 
           <Button
             title="Register"
@@ -265,4 +343,8 @@ const styles = StyleSheet.create({
     marginTop: 40,
     backgroundColor: "#FF1493",
   },
+
+  errorText: {
+    color: "red"
+  }
 });
