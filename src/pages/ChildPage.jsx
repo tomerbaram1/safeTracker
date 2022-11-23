@@ -29,9 +29,6 @@ const USERID="63738fb9e33a0195e497e318"
 import { useSelector } from "react-redux";
 
 
-
-
-
 // const socket1 = IO(SERVER_URL, {
 // });
 

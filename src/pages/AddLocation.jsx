@@ -275,6 +275,7 @@ useEffect(() => {
 			</MapView>
      :"" }
       <View style={{ marginTop: 50, flex: 1 ,flexDirection:"column"}}>
+        <Text style={{textAlign:'center'}}>Name Of Your Location</Text>
       <TextInput value={locationName}onChangeText={(input) =>  setLocationName(`${input}`)} style={styles.inputStyle}/>
         <Button title="add place" onPress={()=>handleAddPlace()}/>
       <Text> {"lat:" + initailLocation?.coords.longitude+ " long :"+" text-"}</Text>
@@ -298,10 +299,6 @@ const styles = StyleSheet.create({
 		height: Dimensions.get("window").height/2
 	},
   inputStyle: {
-    borderColor: '#16213E',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
     height:50,
     width:200
 

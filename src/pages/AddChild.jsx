@@ -73,9 +73,8 @@ const AddChild = () => {
       .catch((error) => console.log(error));
   };
 
-  const submit = (e) => {
-    e.preventDefault();
-    addChild(image);
+  const submit = () => {
+    addChild();
     setShowToken(!showToken);
   };
 

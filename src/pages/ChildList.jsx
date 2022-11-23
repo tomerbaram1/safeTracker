@@ -5,8 +5,10 @@ import {
   Dimensions,
   Button,
   ScrollView,
+  Linking,
 } from "react-native";
 import axios from "axios";
+import * as Clipboard from 'expo-clipboard';
 import { FAB, Icon, Tooltip } from "@rneui/base";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -38,9 +40,11 @@ const ChildList = ({ childNumber, setChildNumber }) => {
     getKidsData();
   }, []);
 
+
   return (
     <View style={styles.listView}>
-      <ScrollView>
+      <ScrollView horizontal={true}>
+
         {kids?kids.map((data, index) => {
           if (kids.length == 0) {
             return <Text>no kids registerd</Text>;
@@ -65,13 +69,22 @@ const ChildList = ({ childNumber, setChildNumber }) => {
                 {data.phone || data.childPhone}
                 {setChildNumber(data.phone)}
               </Text>
-              <Text style={{ fontWeight: "700" }}>
+              <Text style={{ fontWeight: "700", fontSize:11 }} selectable={true}>
                 <Icon
                   style={{ marginRight: 10 }}
                   type="font-awesome"
                   name="key"
                 />
                 {data.connectionToken}
+  
+                <Icon
+                  style={{ marginLeft: 10 }}
+                  type="font-awesome"
+                  name="clone"
+                  size={20}
+                  onPress={()=>Clipboard.setStringAsync(`Your Connection Token Is: ${data.connectionToken}`)&& alert('Token Copied!')}
+                  
+                />
               </Text>
               <View style={styles.battery}>
                 <Text>
@@ -84,18 +97,22 @@ const ChildList = ({ childNumber, setChildNumber }) => {
                   {data.batteryLevel}%
                 </Text>
               </View>
+              <View style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+
               <FAB
                 icon={{ name: "message", color: "white" }}
                 color="#495867"
-                style={!openHistory ? styles.msg : styles.msgTwo}
-              />
+                style={styles.msg}
+                onPress={() => Linking.openURL(`https://wa.me/972${(data.phone).slice(1,10)}`)}
+                />
               <FAB
-                title="Location History"
+                // title="Location History"
                 icon={{ name: "place", color: "white" }}
                 color="#495867"
-                style={{ marginTop: 15, marginRight: 150 }}
+                style={{ marginTop: 15}}
                 onPress={() => setOpenHistory(!openHistory)}
-              />
+                />
+                </View>
               {openHistory && (
                 <ScrollView horizontal={true}>
                   <View>
@@ -131,13 +148,15 @@ export default ChildList;
 const styles = StyleSheet.create({
   kidView: {
     backgroundColor: "#9fbad6",
-    width: Dimensions.get("window").width - 15,
+    width: Dimensions.get("window").width /2 +10,
     height: "auto",
     minHeight: 210,
     padding: 30,
     borderRadius: 20,
     margin: 5,
-    overflow: "scroll",
+    display:'flex',
+    // alignItems:'center',
+    alignContent:'center'
   },
   kidName: {
     fontSize: 20,
@@ -156,13 +175,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   msg: {
-    position: "absolute",
-    bottom: 28,
-    right: 20,
+    marginTop:20
   },
-  msgTwo: {
-    position: "absolute",
-    bottom: 83,
-    right: 20,
-  },
+
 });
