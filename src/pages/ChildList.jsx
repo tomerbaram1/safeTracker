@@ -69,7 +69,7 @@ const ChildList = ({ childNumber, setChildNumber }) => {
                 {data.phone || data.childPhone}
                 {setChildNumber(data.phone)}
               </Text>
-              <Text style={{ fontWeight: "700", fontSize:11 }} selectable={true}>
+              <Text style={{ fontWeight: "700", fontSize:10 }} selectable={true}>
                 <Icon
                   style={{ marginRight: 10 }}
                   type="font-awesome"
