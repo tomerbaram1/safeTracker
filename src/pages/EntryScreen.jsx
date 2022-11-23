@@ -6,10 +6,17 @@ const Stack = createNativeStackNavigator();
 
 import WelcomePage from "./WelcomePage";
 import SignIn from "./SignIn";
+import SignInChild from "../child/SignInChild";
 import SignUp from "./SignUp";
 import Content from "./Content";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 const EntryScreen = () => {
+  const [isChild,setIsChild] = useState(false)
+
+  const SignInChildPage = props =>  { return (<SignInChild  {...props} isChild={isChild} setIsChild={setIsChild} />)}
+  const ContentPage = props =>  { return (<Content  {...props} isChild={isChild} setIsChild={setIsChild}/>)}
+
   return (
     <>
       <Stack.Navigator>
@@ -29,8 +36,13 @@ const EntryScreen = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="SignInChild"
+          component={SignInChildPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Content"
-          component={Content}
+          component={ContentPage}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
