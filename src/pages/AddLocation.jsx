@@ -21,7 +21,6 @@ const TASK_FETCH_LOCATION = 'background-location-task';
 
 
 const SERVER_URL="http://172.20.10.4:4000";
-const SERVER_URL="http://172.20.10.3:4000";
 
 
 const USERID="63738fb9e33a0195e497e318"
