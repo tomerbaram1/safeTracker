@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-<<<<<<< HEAD
 import { StatusBar, StyleSheet, View, Image,Dimensions } from "react-native";
-=======
-import { StatusBar, StyleSheet, View, Text } from "react-native";
->>>>>>> b6e8f7e (whatsapp link)
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
@@ -106,11 +102,7 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
       }}
       validationSchema={SignupSchema}
     >
-<<<<<<< HEAD
-      {({ values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
-=======
       {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
->>>>>>> b6e8f7e (whatsapp link)
         <View style={styles.container}>
           <View style={styles.imgView}>
         <Image
@@ -131,17 +123,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               onBlur={() => setFieldTouched('fullName')}
             />
           </View>
-<<<<<<< HEAD
           {touched.fullName && errors.fullName && (
             <Text style={styles.errorTxt}>{errors.fullName}</Text>
           )}
-=======
-
-          {touched.fullName && errors.fullName && (
-            <Text style={styles.errorTxt}>{errors.fullName}</Text>
-          )}
-
->>>>>>> b6e8f7e (whatsapp link)
           <View style={styles.inputView}>
             <Input
               value={email}

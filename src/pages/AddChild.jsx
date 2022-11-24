@@ -16,8 +16,7 @@ import { useSelector } from "react-redux";
 import * as ImagePicker from 'expo-image-picker'
 // let url;
 
-
-const api = axios.create({ baseURL: "http://172.20.10.4:4000" });
+const api = axios.create({ baseURL: "http://10.195.25.116:4000" });
 let imageURL;
 const AddChild = () => {
 
@@ -52,7 +51,6 @@ const AddChild = () => {
 
    await axios.post('https://api.cloudinary.com/v1_1/dsk7a1p4y/image/upload', data)
     .then(res => setImage(res.data.secure_url))
-    
   }
 
   const id = user?._id;

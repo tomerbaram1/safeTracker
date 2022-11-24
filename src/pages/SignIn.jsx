@@ -11,6 +11,8 @@ import { Button } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
 import Toast from 'react-native-toast-message';
 
+import signInErrors from "../error-messages/SignInErrors";
+
 const SigninSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email")
@@ -33,6 +35,8 @@ export default function SignIn({ navigation: { goBack } }) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   
+  const [errorTxtEmail, setErrorTxtEmail] = useState("")
+  const [errorTxtPassword, setErrorTxtPassword] = useState("")
 
   const { user, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -70,7 +74,31 @@ export default function SignIn({ navigation: { goBack } }) {
     dispatch(login(userData));
     
 
+    if (email.length == 0) {
+      setErrorTxtEmail(signInErrors.email.required)
+    }
+
+    if (password == 0) {
+      setErrorTxtPassword(signInErrors.password.required)
+    } 
+    
+    else {
+      dispatch(login({ email, password }));
+      if (user) {
+        navigation.navigate("Content");
+
+      } else {
+        navigation.navigate("SignIn");
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Please try again later 🚀' 
+        })
+      }
+    }
   };
+
+  var validRegexEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
   return (
     <Formik initialValue={{ email: "", password: "" }}
@@ -94,14 +122,21 @@ export default function SignIn({ navigation: { goBack } }) {
               placeholderTextColor="#003f5c"
               onChangeText={(text) => {
                 setEmail(text);
+                if (text.length == 0) {
+                  setErrorTxtEmail(signInErrors.email.required)
+                } else if (!text.match(validRegexEmail)) {
+                  setErrorTxtEmail(signInErrors.email.notValid)
+                } else {
+                  setErrorTxtEmail("")
+                }
               }}
             
             />
           </View>
 
-          {touched.email && errors.email && (
-            <Text style={styles.errorTxt}>{errors.email}</Text>
-          )}
+          {errorTxtEmail ?
+          <Text style={styles.errorText}>{errorTxtEmail}</Text> : 
+          ""}
 
           <View style={styles.inputView}>
             <Input
@@ -112,12 +147,23 @@ export default function SignIn({ navigation: { goBack } }) {
               secureTextEntry={true}
               onChangeText={(text) => {
                 setPassword(text);
+                if (text.length == 0) {
+                  setErrorTxtPassword(signInErrors.password.required)
+              } else if (text.length < 8) {
+                  setErrorTxtPassword(signInErrors.password.tooShort)
+              } else if (text.length > 16) {
+                  setErrorTxtPassword(signInErrors.password.tooLong)
+              } else {
+                  setErrorTxtPassword('')
+              }
               }}
             />
           </View>
-          {touched.password && errors.password && (
-            <Text style={styles.errorTxt}>{errors.password}</Text>
-          )}
+
+          {errorTxtPassword ?
+          <Text style={styles.errorText}>{errorTxtPassword}</Text> : 
+          ""}
+
           <View>
           <Button
             title="Log In"
@@ -232,5 +278,9 @@ const styles = StyleSheet.create({
     position: "relative",
     borderRadius: 50,
   },
+
+  errorText: {
+    color: "red"
+  }
 });
 

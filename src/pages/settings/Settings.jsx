@@ -14,7 +14,7 @@ const Settings = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const onLogout = () => {
-    console.log(user?.fullName, "logging out");
+    console.log(user.fullName, "logging out");
     dispatch(logout())
       .then(navigation.navigate("WelcomePage"))
       .catch((error) => console.log(error));
