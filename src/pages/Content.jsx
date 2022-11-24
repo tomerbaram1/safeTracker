@@ -70,8 +70,7 @@ const Content = ({ isChild, setIsChild }) => {
             component={AddLocation}
             options={{ headerShown: false }}
 
-            
-            
+
           />
         </Tab.Navigator>
       )}
