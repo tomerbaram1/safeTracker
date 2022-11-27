@@ -13,11 +13,11 @@ const register = async (userData) => {
   const phoneNumber=userData.phoneNumber
 
 
-  // const response = await axios.post('http://172.20.10.4:4000/api/register', {fullName:fullName,email:email,password:password,phoneNumber:phoneNumber});
-  // if (response.data) {
-  const response = await axios.post('http://10.195.25.116:4000/api/register', {fullName:fullName,email:email,password:password,phoneNumber:phoneNumber});
-  if (response.data!== '400') {
-    console.log('------------------------in if on the status--------------------------------------'+response.data);
+  const response = await axios.post('http://10.195.25.115:4000/api/register', {fullName:fullName,email:email,password:password,phoneNumber:phoneNumber});
+  if (response.data) {
+  // const response = await axios.post('http://10.195.25.115:4000/api/register', {fullName:fullName,email:email,password:password,phoneNumber:phoneNumber});
+  // if (response.data!== '400') {
+  //   console.log('------------------------in if on the status--------------------------------------'+response.data);
     AsyncStorage.setItem("user", JSON.stringify(response.data));
   }
   else console.log("frontent nro nahash")
@@ -31,7 +31,7 @@ const login = async (userData) => {
 
   const email=userData.email;
   const password=userData.password
-    const response = await axios.post("http://10.195.25.116:4000/api/login",{email:email,password:password} );
+    const response = await axios.post("http://10.195.25.115:4000/api/login",{email:email,password:password} );
 
 
     

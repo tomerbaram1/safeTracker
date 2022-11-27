@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 import * as ImagePicker from 'expo-image-picker'
 // let url;
 
-const api = axios.create({ baseURL: "http://10.195.25.116:4000" });
+const api = axios.create({ baseURL: "http://10.195.25.115:4000" });
 let imageURL;
 const AddChild = () => {
 

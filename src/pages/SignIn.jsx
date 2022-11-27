@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { StatusBar, StyleSheet, View, Image, Dimensions } from "react-native";
+import { StatusBar, StyleSheet, View, Image, Dimensions, Text } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";

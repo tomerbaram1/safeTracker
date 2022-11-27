@@ -27,7 +27,7 @@ import Toast from 'react-native-toast-message';
 import Content from "./src/pages/Content";
 
 const Stack = createNativeStackNavigator();
-const SERVER_URL="http://10.195.25.116:4000";
+const SERVER_URL="http://10.195.25.115:4000";
 const USERID="63738fb9e33a0195e497e318"
 const CONNECTION_TOKEN="c8b682c1-cb6b"/// To do- tomer change dynamicaly
 const PARENT_ID="63738fb9e33a0195e497e318"/// To do- tomer change dynamicaly
