@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, View, Image, Dimensions } from "react-native";
 import { Formik } from "formik";
@@ -6,80 +5,102 @@ import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Input } from "@rneui/base";
-import { login, reset } from "../redux/AuthSlice";
+import {  loginChild, reset } from "../redux/AuthSlice";
 import { Button } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
 import Toast from 'react-native-toast-message';
 
-const SigninSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email")
-    .required("Please enter your email address"),
-
-  password: Yup.string()
-    .min(8)
-    .required("Please enter your password")
-    .matches(
-      /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/,
-      "Must contain at least 8 chracters, at least one uppercase letter, one lowercase letter, one number and one special character"
-    ),
-});
 
 
-export default function SignIn({ navigation: { goBack } }) {
+export default function SignInChild({ navigation: { goBack },isChild, setIsChild} ) {
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [connectionToken, setConnectionToken] = useState("");
   const dispatch = useDispatch();
   const navigation = useNavigation();
   
 
-  const { user, isError, isSuccess, message } = useSelector(
+  const setChildStateTrue =()=>{
+    setIsChild(true)
+    console.log(isChild,"child state");
+  }
+
+  const { user,child, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
 
-  useEffect(() => {
-    if (isError===true) {
-      Toast.show({
-             type: 'error',
-             text1: 'Error',
-             text2: 'Please try again later 🚀' 
-           })
-           console.log(message,"message error");
-           navigation.navigate("SignIn");
+// useEffect(()=>{
+//   isChild===true?
+//   navigation.navigate("Content"):
+//   ""
+// },[isChild])
 
-    }
+useEffect(() => {
+  if (isError) {
+    console.log(message);
+  }
 
-    if (isSuccess===true) {
-      console.log(isSuccess,"success");
-      console.log(user.fullName,"user");
-    navigation.navigate("Content");
-    }
+  if (isSuccess===true) {
+    setChildStateTrue()
+    console.log("eeeeeeeeeeeee");
+    navigation.navigate("Content")
+  }
+  dispatch(reset);
 
-    dispatch(reset);
-  }, [user, isError, isSuccess, message, navigation, dispatch]);
+}, [user, isError, isSuccess, message, navigation, dispatch]);
+// useEffect(()=>{
+//   if(child)
+//  { 
+//   console.log("exicts");
+//   dispatch(reset);}
+// },[child])
+  // useEffect(() => {
+  //   // if (!child) {
+  //   //   Toast.show({
+  //   //          type: 'error',
+  //   //          text1: 'Error',
+  //   //          text2: 'Connection token not correct' 
+  //   //        })
+  //   //        console.log("message error");
+  //   //        navigation.navigate("WelcomePage");
+  //   // }
+
+  //   if ( isSuccess) {
+
+  //     console.log("exists");
+  //     setChildStateTrue()
+  //     console.log(user.connectionToken,"connection Token");
+   
+      
+  //   }
+
+  //   dispatch(reset);
+  // }, [ child,  dispatch]);
 
 
   
-  const onSubmit = (e) => {
+  const onSubmit =  (e) => {
     e.preventDefault();
     const userData = {
-      email,
-      password,
+      connectionToken
     };
-    dispatch(login(userData));
+
+    console.log(userData, "connection token 1");
+     dispatch(loginChild(userData));
+    setChildStateTrue()
+    console.log("eeeeeeeeeeeee");
+     navigation.navigate("Content")
+    
     
 
   };
 
   return (
-    <Formik initialValue={{ email: "", password: "" }}
-    validationSchema={SigninSchema}
+    <Formik initialValue={{ connectionToken: "" }}
 
     >
       {({values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
         <View style={styles.container}>
-      <View style={styles.imgView}>
+                    <View style={styles.imgView}>
         <Image
           source={require("../../assets/googlemap.png")}
           style={styles.img}
@@ -88,36 +109,19 @@ export default function SignIn({ navigation: { goBack } }) {
           <StatusBar style="auto" />
           <View style={styles.inputView}>
             <Input
-              value={email}
+              value={connectionToken}
               style={styles.Input}
-              placeholder="Email."
+              placeholder="Enter Your Connection Token"
               placeholderTextColor="#003f5c"
               onChangeText={(text) => {
-                setEmail(text);
+                setConnectionToken(text);
               }}
             
             />
           </View>
 
-          {touched.email && errors.email && (
-            <Text style={styles.errorTxt}>{errors.email}</Text>
-          )}
 
-          <View style={styles.inputView}>
-            <Input
-              value={password}
-              style={styles.Input}
-              placeholder="Password."
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-              onChangeText={(text) => {
-                setPassword(text);
-              }}
-            />
-          </View>
-          {touched.password && errors.password && (
-            <Text style={styles.errorTxt}>{errors.password}</Text>
-          )}
+          
           <View>
           <Button
             title="Log In"

@@ -1,6 +1,3 @@
-//react
-// import { useState } from 'react';
-
 //navigation
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 const Stack = createNativeStackNavigator();
@@ -9,29 +6,18 @@ const Stack = createNativeStackNavigator();
 
 import WelcomePage from "./WelcomePage";
 import SignIn from "./SignIn";
+import SignInChild from "../child/SignInChild";
 import SignUp from "./SignUp";
 import Content from "./Content";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
-
+import { useState } from "react";
 const EntryScreen = () => {
-  const { user } = useSelector((state) => state.auth);
+  const [isChild,setIsChild] = useState(false)
 
-  // const [User, setUser] = useState(false)
+  const SignInChildPage = props =>  { return (<SignInChild  {...props} isChild={isChild} setIsChild={setIsChild} />)}
+  const ContentPage = props =>  { return (<Content  {...props} isChild={isChild} setIsChild={setIsChild}/>)}
 
   return (
-    // <Stack.Navigator>
-    //     { (User) ?
-    //         (
-    //             <Stack.Screen name="Content" component={Content} options={{headerShown:false}}/>
-    //         ) :
-    //         (
-    //             <Stack.Screen name="WelcomePage" component={WelcomePage} options={{headerShown:false}}/>
-    //             <Stack.Screen name="SignUp" component={SignUp} options={{headerShown:false}}/>
-    //             <Stack.Screen name="SignIn" component={SignIn} options={{headerShown:false}}/>
-    //         )
-    //     }
-    // </Stack.Navigator>
     <>
       <Stack.Navigator>
         <Stack.Screen
@@ -50,8 +36,13 @@ const EntryScreen = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="SignInChild"
+          component={SignInChildPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Content"
-          component={Content}
+          component={ContentPage}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

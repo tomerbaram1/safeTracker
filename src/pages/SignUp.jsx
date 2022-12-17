@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { StatusBar, StyleSheet, View } from "react-native";
-import { Form, Formik } from "formik";
-import axios from "axios";
+import { StatusBar, StyleSheet, View, Image,Dimensions } from "react-native";
+import { Formik } from "formik";
 import * as Yup from "yup";
-import Spinner from "react-native-loading-spinner-overlay";
-
-import SignUp from "./SignUp";
-import WelcomePage from "./WelcomePage";
-import ParentPage from "./ParentPage";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { register, reset } from "../redux/AuthSlice";
 import { Input } from "@rneui/base";
 import { Button } from "@rneui/base";
+import { useNavigation } from "@react-navigation/native";
+import Toast from 'react-native-toast-message';
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string()
@@ -50,38 +46,37 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  // const { email, password } = formData;
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const { user, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
 
-  useEffect(() => {
-    if (isError) {
-      console.log(message);
-    }
+  // useEffect(() => {
+  //   if (isError) {
+  //     console.log(message);
+  //   }
 
-    // if ( isSuccess || user) {
-    //   alert("User Registered")
+  //   // if ( isSuccess || user) {
+  //   //   alert("User Registered")
 
-    // }
+  //   // }
 
-    dispatch(reset);
-  }, [user, isError, isSuccess, message, dispatch]);
+  //   dispatch(reset);
+  // }, [user, isError, isSuccess, message, dispatch]);
 
-  const onChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
+
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
+    if (password !== confirmPassword ) {
+      Toast.show({
+        type: 'error',
+        text1: 'Passwords do not match',
+        text2: 'Please try again 🚀' 
+      })
     } else {
       const userData = {
         fullName,
@@ -89,14 +84,14 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
         password,
         phoneNumber,
       };
-      dispatch(register(userData));
+      dispatch(register(userData))
       navigate("Content");
 
-      // navigate('Content')
     }
   };
 
   return (
+
     <Formik
       initialValue={{
         email: "",
@@ -105,10 +100,16 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
         phoneNumber: "",
         confirmPassword: "",
       }}
-      // validationSchema={SignupSchema}
+      validationSchema={SignupSchema}
     >
-      {({ handleChange, handleBlur, handleSubmit, values }) => (
+      {({ values, errors, touched, handleChange, setFieldTouched, isValid, handleSubmit}) => (
         <View style={styles.container}>
+          <View style={styles.imgView}>
+        <Image
+          source={require("../../assets/googlemap.png")}
+          style={styles.img}
+        />
+      </View>
           <StatusBar style="auto" />
           <View style={styles.inputView}>
             <Input
@@ -121,11 +122,16 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
-
+          {touched.fullName && errors.fullName && (
+            <Text style={styles.errorTxt}>{errors.fullName}</Text>
+          )}
           <View style={styles.inputView}>
             <Input
               value={email}
               style={styles.Input}
+              autoComplete='email'
+              clearButtonMode='while-editing'
+              keyboardType='email-address'
               placeholder="Email"
               placeholderTextColor="#003f5c"
               onChangeText={(text) => {
@@ -133,7 +139,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
-
+          {touched.email && errors.email && (
+            <Text style={styles.errorTxt}>{errors.email}</Text>
+          )}
           <View style={styles.inputView}>
             <Input
               value={phoneNumber}
@@ -145,7 +153,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
-
+          {touched.phoneNumber && errors.phoneNumber && (
+            <Text style={styles.errorTxt}>{errors.phoneNumber}</Text>
+          )}
           <View style={styles.inputView}>
             <Input
               value={password}
@@ -158,6 +168,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
+          {touched.password && errors.password && (
+            <Text style={styles.errorTxt}>{errors.password}</Text>
+          )}
           <View style={styles.inputView}>
             <Input
               value={confirmPassword}
@@ -170,33 +183,9 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
               }}
             />
           </View>
-
-          <View>
-            <Button
-              title="Go Back"
-              onPress={() => goBack()}
-              icon={{
-                name: "home",
-                type: "font-awesome",
-                size: 15,
-                color: "white",
-              }}
-              iconContainerStyle={{ marginRight: 10 }}
-              titleStyle={{ fontWeight: "700" }}
-              buttonStyle={{
-                backgroundColor: "rgba(90, 154, 230, 1)",
-                borderColor: "transparent",
-                borderWidth: 0,
-                borderRadius: 30,
-              }}
-              containerStyle={{
-                width: 200,
-                marginHorizontal: 50,
-                marginVertical: 10,
-              }}
-            />
-          </View>
-
+          {touched.confirmPassword && errors.confirmPassword && (
+            <Text style={styles.errorTxt}>{errors.confirmPassword}</Text>
+          )}
           <Button
             title="Register"
             onPress={onSubmit}
@@ -209,7 +198,30 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
             iconContainerStyle={{ marginRight: 10 }}
             titleStyle={{ fontWeight: "700" }}
             buttonStyle={{
-              backgroundColor: "rgba(90, 154, 230, 1)",
+              backgroundColor: "#577399",
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 30,
+            }}
+            containerStyle={{
+              width: 200,
+              marginHorizontal: 50,
+              marginVertical: 10,
+            }}
+          />
+          <Button
+            title="Go Back"
+            onPress={() => goBack()}
+            icon={{
+              name: "home",
+              type: "font-awesome",
+              size: 15,
+              color: "white",
+            }}
+            iconContainerStyle={{ marginRight: 10 }}
+            titleStyle={{ fontWeight: "700" }}
+            buttonStyle={{
+              backgroundColor: "#495867",
               borderColor: "transparent",
               borderWidth: 0,
               borderRadius: 30,
@@ -229,9 +241,11 @@ export default function SignIn({ navigation: { navigate, goBack } }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+    marginBottom:400,
+    height:  Dimensions.get("window").height,
+
   },
 
   image: {
@@ -265,5 +279,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#FF1493",
+  },
+  imgView: {
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    overflow: "hidden",
+  },
+  img: {
+    height: 600,
+    width: 420,
+    top: -100,
+    position: "relative",
+    borderRadius: 50,
   },
 });

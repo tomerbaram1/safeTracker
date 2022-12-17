@@ -4,9 +4,11 @@ import AuthService from "./AuthService";
 
 // get user from localStorage
 const user = JSON.stringify(AsyncStorage.getItem("user"));
+const child = JSON.stringify(AsyncStorage.getItem("child"));
 
 const initialState = {
   user: user ? user : null,
+  child: child ? child : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -15,7 +17,10 @@ const initialState = {
 
 // Register user
 export const register = createAsyncThunk(
-  "http://10.195.25.169:4000/api/register",
+
+
+  "http://172.20.10.4:4000/api/register",
+ 
   async (user, thunkAPI) => {
     try {
 
@@ -34,7 +39,9 @@ export const register = createAsyncThunk(
 );
 
 // login user
-export const login = createAsyncThunk("http://10.195.25.169:4000/api/login", async (user, thunkAPI) => {
+
+
+export const login = createAsyncThunk("http://172.20.10.4:4000/api/login", async (user, thunkAPI) => {
   
   try {
   
@@ -45,7 +52,27 @@ export const login = createAsyncThunk("http://10.195.25.169:4000/api/login", asy
       (error.response && error.response.data && error.response.data.message) ||
       error.message ||
       error.toString();
-      console.log(error);
+      console.log("error ",error);
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+
+
+
+export const loginChild = createAsyncThunk("http://172.20.10.4:4000/api/childAuth", async (child, thunkAPI) => {
+  
+  try {
+    
+    return (AuthService.loginChild(child)) 
+    
+  } catch (error) {
+
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+      console.log("error ",error);
     return thunkAPI.rejectWithValue(message);
   }
 });
@@ -95,9 +122,25 @@ export const authSlice = createSlice({
         state.message = action.payload;
         state.user = null;
       })
+      .addCase(loginChild.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(loginChild.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.child = action.payload;
+      })
+      .addCase(loginChild.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.child = null;
+      })
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
-      });
+
+      })
+
   },
 });
 
